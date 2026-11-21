@@ -45,8 +45,43 @@
   .ans{width:100%;text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:18px;padding:12px 14px;margin-top:9px;cursor:pointer;font-family:var(--font);font-size:13px;color:var(--text);line-height:1.5;display:flex;gap:11px;align-items:center;transition:all .18s}.ans:active{transform:scale(.98)}.ans .key{width:29px;height:29px;border-radius:11px;background:var(--card);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:var(--muted);border:1.5px solid var(--line)}.ans.on{border-color:var(--blue);background:var(--blue-soft)}.ans.on .key{background:var(--blue);border-color:var(--blue);color:#fff}.ans:disabled{cursor:default}
   .field-label{font-size:13px;font-weight:700;color:var(--text);margin-top:18px;display:flex;align-items:center;gap:8px}.why-ico{width:22px;height:22px;border-radius:8px;background:var(--blue);display:inline-flex;align-items:center;justify-content:center;font-size:13px;color:#fff}.tarea{width:100%;margin-top:9px;border:1.5px solid var(--line);border-radius:16px;background:var(--card);padding:13px 15px;font-family:var(--font);font-size:13px;color:var(--text);resize:none;min-height:92px;outline:none;line-height:1.55}.tarea:focus{border-color:var(--blue)}.tarea::placeholder{color:var(--muted)}.tarea.warn{border-color:var(--orange)}.hint{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.5}.warn-note{display:none;font-size:11.5px;color:#B57708;margin-top:7px}.warn-note.show{display:block}[data-theme="dark"] .warn-note{color:#F0C070}
   .next-btn{width:100%;padding:16px;margin-top:18px;background:var(--nav-dark);color:#F6F6F9;font-size:14.5px;font-weight:700}.next-btn:disabled{opacity:.4}.save-note{text-align:center;font-size:11px;color:var(--muted);margin-top:9px}
-  .thinking{position:absolute;inset:0;background:rgba(246,246,249,.93);z-index:65;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;backdrop-filter:blur(4px)}[data-theme="dark"] .thinking{background:rgba(26,36,52,.93)}.thinking.show{display:flex}.orb{width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--blue),var(--purple),var(--pink),var(--blue));animation:spin 1.6s linear infinite;position:relative}.orb::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--bg)}@keyframes spin{to{transform:rotate(360deg)}}.thinking p{font-size:14px;font-weight:600;color:var(--text)}.thinking small{font-size:12px;color:var(--muted)}.cancel-btn{margin-top:6px;background:var(--card);color:var(--text);border:1.5px solid var(--line);padding:10px 24px;font-size:13px}
-  .fb-verdict{margin-top:16px;border-radius:26px;padding:22px 20px;background:var(--green);color:#15161C;position:relative;overflow:hidden}.fb-verdict::after{content:"✨";position:absolute;right:14px;top:12px;font-size:22px;transform:rotate(14deg);pointer-events:none}.fb-verdict.partial{background:var(--orange)}.fb-verdict.wrong{background:var(--pink)}.fb-verdict h2{font-size:19px;line-height:1.3;max-width:86%}.fb-verdict p{font-size:12px;font-weight:600;margin-top:5px;opacity:.8;max-width:86%}.fb-panel{background:var(--card);border-radius:24px;padding:18px;margin-top:13px;box-shadow:var(--shadow)}.fb-panel h4{font-size:13.5px;color:var(--text)}.fb-panel p{font-size:12.5px;line-height:1.65;color:var(--text);margin-top:8px}.your-answer{margin-top:10px;background:var(--bg);border:1.5px dashed var(--line);border-radius:14px;padding:11px 13px;font-size:12px;color:var(--muted);line-height:1.55}.your-answer b{color:var(--text)}
+  /* ============ PAD AGEN: membaca & menganalisis (PRD §21) ============ */
+  .thinking{position:absolute;inset:0;background:rgba(246,246,249,.93);z-index:65;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+  [data-theme="dark"] .thinking{background:rgba(26,36,52,.93)}
+  .thinking.show{display:flex}
+  .t-pad{width:308px;max-width:calc(100% - 36px);background:var(--card);border-radius:26px;padding:20px 20px 16px;box-shadow:0 24px 60px rgba(30,25,80,.18);display:flex;flex-direction:column;align-items:center;text-align:center}
+  /* hero: Bimo membaca (bila WebGL2 ada); orbe berputar sebagai fallback */
+  .t-hero{width:160px;height:120px;position:relative;margin-bottom:2px}
+  .t-hero .orb{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;background:conic-gradient(var(--blue),var(--purple),var(--pink),var(--blue));animation:spin 1.6s linear infinite}
+  .t-hero .orb::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--card)}
+  @keyframes spin{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+  .t-hero .slot{position:absolute;inset:0}
+  .t-hero .slot canvas{width:100%;height:100%;display:block}
+  .t-pad .t-title{font-size:15.5px;font-weight:700;color:var(--text);line-height:1.35}
+  .t-pad .t-sub{font-size:12px;color:var(--muted);margin-top:4px}
+  /* staged checklist */
+  .t-stages{width:100%;margin-top:14px;display:flex;flex-direction:column;gap:9px;text-align:left}
+  .t-step{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--muted);transition:color .25s}
+  .t-step .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;position:relative;transition:all .25s;background:var(--card)}
+  .t-step.on{color:var(--text)}
+  .t-step.on .dot{border-color:var(--purple);animation:pulse 1s ease-in-out infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 5px rgba(124,107,240,.18)}}
+  .t-step.done{color:var(--text)}
+  .t-step.done .dot{border-color:#4CAF2E;background:#4CAF2E;animation:none}
+  .t-step.done .dot::after{content:"";position:absolute;left:4.5px;top:1.5px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  /* progress bar */
+  .t-bar{width:100%;height:6px;border-radius:3px;background:var(--line);margin-top:14px;overflow:hidden}
+  .t-bar i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#8574F4,#6555E6);transition:width .6s ease}
+  /* chip: apa yang sedang dibaca agen */
+  .t-chips{width:100%;margin-top:12px;display:flex;flex-direction:column;gap:6px;text-align:left}
+  .t-chip{background:var(--bg);border-radius:12px;padding:8px 11px;font-size:11.5px;color:var(--muted);line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .t-chip b{color:var(--text);font-weight:700}
+  .t-chip.wrap{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .cancel-btn{margin-top:14px;background:transparent;color:var(--muted);border:1.5px solid var(--line);border-radius:var(--r-pill);padding:10px 24px;font-size:13px;font-family:var(--font);font-weight:600;cursor:pointer;transition:transform .15s}
+  .cancel-btn:active{transform:scale(.96)}
+  .fb-verdict{margin-top:16px;border-radius:26px;padding:22px 20px;background:var(--green);color:#15161C;position:relative;overflow:hidden;display:flex;gap:8px;align-items:flex-end}.fb-verdict.partial{background:var(--orange)}.fb-verdict.wrong{background:var(--pink)}.fb-verdict .fv-t{flex:1;min-width:0}.fb-verdict h2{font-size:19px;line-height:1.3}.fb-verdict p{font-size:12px;font-weight:600;margin-top:5px;opacity:.8}
+  .fb-verdict .fv-m{width:108px;height:106px;flex-shrink:0;align-self:flex-end;margin-bottom:-4px;position:relative}
+  .fv-m>svg,.fv-m>canvas{width:100%;height:100%;display:block}.fb-panel{background:var(--card);border-radius:24px;padding:18px;margin-top:13px;box-shadow:var(--shadow)}.fb-panel h4{font-size:13.5px;color:var(--text)}.fb-panel p{font-size:12.5px;line-height:1.65;color:var(--text);margin-top:8px}.your-answer{margin-top:10px;background:var(--bg);border:1.5px dashed var(--line);border-radius:14px;padding:11px 13px;font-size:12px;color:var(--muted);line-height:1.55}.your-answer b{color:var(--text)}
   .mastery-update{display:flex;align-items:center;gap:13px;background:var(--purple-soft);border-radius:24px;padding:18px;margin-top:14px}.mastery-update .mi{font-size:28px}.mastery-update b{display:block;font-size:13.5px;color:var(--text)}.mastery-update p{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:3px}.quote{margin-top:13px;background:var(--blue-soft);border-left:4px solid var(--blue);border-radius:0 14px 14px 0;padding:13px 15px;font-size:12px;line-height:1.6;color:var(--text)}[data-theme="dark"] .quote{color:#C9DBF2}.quote button{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:11px;font-weight:700;color:var(--blue-deep);cursor:pointer;border:0;background:none;font-family:var(--font);padding:0}[data-theme="dark"] .quote button{color:#9CC4F5}
   .overlay{position:absolute;inset:0;background:rgba(10,12,20,.45);z-index:75;opacity:0;visibility:hidden;transition:all .28s;backdrop-filter:blur(3px)}.overlay.show{opacity:1;visibility:visible}.sheet{position:absolute;left:0;right:0;bottom:0;z-index:76;background:var(--bg);border-radius:30px 30px 0 0;padding:14px 22px 30px;transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.25,1);max-height:75%;overflow-y:auto}.sheet.show{transform:translateY(0)}.grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 16px}.sheet h3{font-size:16px;color:var(--text);line-height:1.4}.sheet .meta{font-size:11px;color:var(--muted);margin-top:5px}.sheet .content{margin-top:14px;background:var(--card);border-radius:16px;padding:16px;font-size:12.5px;line-height:1.7;color:var(--text);white-space:pre-line}.verified{display:inline-block;margin-top:13px;font-size:11px;font-weight:700;color:#3F7A1E;background:var(--green);border-radius:var(--r-pill);padding:6px 13px}
 
@@ -61,7 +96,8 @@
   .fb2 p{font-size:12.5px;font-weight:600;color:#4A5A3C;line-height:1.55;margin-top:7px}
   .fb2.partial p{color:#7A5A1E}
   .fb2.wrong p{color:#8A3A6E}
-  .fb2 .fb2-m{width:108px;flex-shrink:0;align-self:flex-end;margin-bottom:-4px}
+  .fb2 .fb2-m{width:108px;height:106px;flex-shrink:0;align-self:flex-end;margin-bottom:-4px;position:relative}
+  .fb2-m>svg,.fb2-m>canvas{width:100%;height:100%;display:block}
   .blk{margin-top:18px}
   .blk-h{display:flex;align-items:center;gap:9px;font-size:15.5px;font-weight:700;color:var(--text)}
   .blk-h .bico{width:30px;height:30px;border-radius:10px;background:var(--purple-soft);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
@@ -83,6 +119,44 @@
   .prog-track i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#8574F4,#6555E6);width:0;transition:width .5s}
   .next-btn{display:flex;align-items:center;justify-content:center;gap:9px}
   .next-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+  /* ============ PENJELASAN DETAIL + RUMUS ============ */
+  .expl{margin-top:14px;background:var(--card);border-radius:24px;padding:20px 18px;box-shadow:var(--shadow)}
+  .expl h3{font-size:16px;font-weight:700;color:var(--text);display:flex;gap:8px;align-items:center}
+  .expl h4{font-size:14.5px;font-weight:700;color:var(--text);margin-top:18px}
+  .expl p{font-size:13.5px;line-height:1.8;color:var(--text);margin-top:10px}
+  .expl p b{color:#37306B}[data-theme="dark"] .expl p b{color:#C5B8F0}
+  .expl ul{margin-top:9px;padding-left:20px}
+  .expl li{font-size:13.5px;line-height:1.75;color:var(--text);margin-top:5px}
+  .fml{margin-top:13px;background:#F6F4FF;border:1.5px solid #E4DEFC;border-radius:14px;padding:16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px;font-family:Georgia,'Times New Roman',serif;font-size:16px;color:#2A2650;font-style:italic;text-align:center}
+  [data-theme="dark"] .fml{background:#221F45;border-color:#34306B;color:#D9D3FA}
+  .fml .rm{font-style:normal}
+  .fml sub{font-size:10.5px}
+  .fml sup{font-size:10.5px}
+  .fml .big{font-size:22px;font-style:normal;font-weight:700;line-height:1}
+  .piece{display:inline-flex;flex-direction:column;gap:5px;position:relative;padding-left:15px;font-style:italic;text-align:left}
+  .piece::before{content:"{";position:absolute;left:0;top:50%;transform:translateY(-52%);font-style:normal;font-size:40px;font-weight:400;color:#6B5BB5;line-height:.9}
+  [data-theme="dark"] .piece::before{color:#B7A6F6}
+  .piece .cond{font-size:11.5px;font-style:normal;color:var(--muted);font-family:var(--font);margin-left:8px}
+  .fml-cap{display:block;font-size:11.5px;font-weight:600;color:var(--muted);font-family:var(--font);font-style:normal;text-align:center;margin-top:8px}
+  .stack{margin-top:14px;display:flex;flex-direction:column;gap:6px;align-items:center}
+  .stk{width:100%;max-width:250px;display:flex;align-items:center;gap:10px;background:#EDE8FB;border:1.5px solid #DCD3FA;border-radius:12px;padding:10px 14px;font-family:Consolas,monospace;font-size:13px;font-weight:700;color:#37306B}
+  [data-theme="dark"] .stk{background:#2A2750;border-color:#3B367A;color:#D9D3FA}
+  .stk .st-tag{margin-left:auto;font-size:10.5px;font-weight:700;font-family:var(--font);color:#6B5BB5;background:#fff;border-radius:999px;padding:3px 9px}
+  [data-theme="dark"] .stk .st-tag{background:#1F1C40}
+  .stk.top{background:linear-gradient(135deg,#8574F4,#6555E6);border-color:transparent;color:#fff;box-shadow:0 10px 22px rgba(105,87,235,.35)}
+  .stk.top .st-tag{background:rgba(255,255,255,.22);color:#fff}
+  .stk.down .st-tag{color:#2E7BD6}
+  .stack .cap{font-size:11.5px;font-weight:600;color:var(--muted);margin-top:6px;text-align:center;line-height:1.5}
+  .stack .arr{font-size:15px;color:#9A97B8;font-weight:700;line-height:1}
+
+  /* Beberapa latihan di bawah penjelasan */
+  .lat-h{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;color:var(--text);margin-top:20px}
+  .lat-h .bico{width:30px;height:30px;border-radius:10px;background:var(--purple-soft);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+  .qcard+.qcard{margin-top:12px}
+  .qcard .qnum{position:absolute;left:18px;top:18px;font-size:10.5px;font-weight:700;background:var(--blue-soft);color:var(--blue-deep);border-radius:999px;padding:4px 10px}
+  [data-theme="dark"] .qcard .qnum{color:#9CC4F5}
+  .qcard.has-num{padding-top:48px}
 </style>
 </head>
 <body>
@@ -91,30 +165,73 @@
   <div class="statusbar"><span>9:41</span><span><svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zm5-3h3v7H7zm5-4h3v11h-3zm5-5h3v16h-3z"/></svg><svg viewBox="0 0 24 24"><path d="M12 18.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM7.7 14.4a6.2 6.2 0 018.6 0l1.4-1.5a8.2 8.2 0 00-11.4 0z"/></svg><svg viewBox="0 0 24 24"><path d="M15.7 4H8.3C7 4 6 5 6 6.3v11.4C6 19 7 20 8.3 20h7.4c1.3 0 2.3-1 2.3-2.3V6.3C18 5 17 4 15.7 4z"/></svg></span></div>
   <button class="theme-fab" id="themeBtn" title="Ganti tema">🌙</button>
 
-  <!-- LATIHAN TARGET: penjelasan dari sudut berbeda + satu soal -->
+  <!-- LATIHAN TARGET: penjelasan detail + beberapa latihan -->
   <section class="screen active" id="s-target">
     <div class="pad">
       <div class="sess-head">
-        <button class="back" onclick="location.href='soal.html'" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>
+        <button class="back" onclick="location.href='diagnostik.html'" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>
         <div class="st"><b>Latihan target</b><span>Fokus: jejak eksekusi</span></div>
       </div>
       <div class="steps"><i class="now"></i><i></i><i></i></div>
 
-      <div class="analogy">
+      <!-- Penjelasan materi: panjang, detail, bersimbol -->
+      <div class="expl">
         <h3>🍽️ Seperti tumpukan piring</h3>
-        <p>Pemanggilan baru diletakkan di atas. Pemanggilan lama <b>menunggu</b>, bukan hilang. Piring paling atas selesai lebih dulu, lalu piring di bawahnya melanjutkan pekerjaan.</p>
-        <div class="trace"><span>faktorial(3)</span><b>→</b><span>faktorial(2)</span><b>→</b><span>faktorial(1)</span><b>→</b><span>faktorial(0)</span></div>
-        <p class="trace-caption">Turun: menambah piring. Kembali: menyelesaikan satu per satu dari kanan.</p>
+        <p>Bayangkan setiap pemanggilan fungsi adalah <b>piring yang ditumpuk</b>. Ketika <b>faktorial(3)</b> memanggil <b>faktorial(2)</b>, piring faktorial(3) tidak hilang — ia diletakkan di bawah dan <b>menunggu</b>. Pemanggilan baru selalu diletakkan di <b>atas</b>, sehingga piring paling atas (pemanggilan paling akhir) adalah yang pertama selesai.</p>
+        <p>Prinsipnya berlaku dua arah, dan ini yang perlu kamu pegang:</p>
+        <ul>
+          <li><b>Saat turun (memanggil):</b> piring baru ditambahkan ke atas tumpukan. Fungsi yang sedang berjalan <b>ditahan</b> di baris pemanggilannya.</li>
+          <li><b>Saat kembali (mengembalikan nilai):</b> piring paling atas diangkat lebih dulu, lalu giliran piring di bawahnya melanjutkan pekerjaannya.</li>
+        </ul>
+
+        <h4>📐 Rumusnya</h4>
+        <p>Faktorial didefinisikan rekursif — sebuah kasus dasar, plus satu langkah menunggu pemanggilan sebelumnya:</p>
+        <div class="fml">
+          <span class="rm">faktorial(n)</span> =
+          <span class="piece">
+            <span>n × faktorial(n − 1)<span class="cond">jika n &gt; 0</span></span>
+            <span>1<span class="cond">jika n = 0</span></span>
+          </span>
+        </div>
+        <span class="fml-cap">Kasus dasar (n = 0) menghentikan penumpukan; kasus rekursif menambah satu piring.</span>
+        <p style="margin-top:14px">Penjumlahan rekursif memakai pola yang sama — dan bentuk tertutupnya bisa ditulis dengan simbol Σ:</p>
+        <div class="fml">
+          <span class="rm">jumlah(n)</span> = <span class="big">Σ</span><sub>i=1</sub><sup>n</sup> <span class="rm">i</span> = <span class="rm">n + jumlah(n − 1)</span>,&nbsp; <span class="rm">jumlah(0) = 0</span>
+        </div>
+        <span class="fml-cap">Σ adalah cara singkat menyebut “jumlahkan dari i = 1 sampai n” — di baliknya tetap tumpukan yang sama.</span>
+
+        <h4>🧱 Tumpukannya saat faktorial(3)</h4>
+        <div class="stack">
+          <div class="stk top">faktorial(0) <span class="st-tag">paling atas · selesai dulu</span></div>
+          <div class="arr">↑ angkat</div>
+          <div class="stk">faktorial(1) <span class="st-tag">menunggu</span></div>
+          <div class="stk">faktorial(2) <span class="st-tag">menunggu</span></div>
+          <div class="stk down">faktorial(3) <span class="st-tag">dasar · menunggu</span></div>
+          <div class="cap">Turun: 3 → 2 → 1 → 0 (menambah piring).<br>Kembali: 0 → 1 → 2 → 3 (menyelesaikan satu per satu).</div>
+        </div>
       </div>
+
+      <div class="lat-h"><span class="bico">✏️</span>Beberapa latihan</div>
 
       <div class="qcard">
         <span class="concept">Latihan 1 · Call stack</span>
         <h2>Setelah faktorial(0) mengembalikan 1, pemanggilan mana yang lebih dulu selesai?</h2>
-        <div id="targetAnswers"></div>
+        <div id="tAns0"></div>
       </div>
+      <div class="qcard">
+        <span class="concept">Latihan 2 · Urutan kembali</span>
+        <h2>Manakah urutan kembalinya yang benar?</h2>
+        <div id="tAns1"></div>
+      </div>
+      <div class="qcard">
+        <span class="concept">Latihan 3 · Kasus dasar</span>
+        <h2>Apa yang dikembalikan faktorial(0), dan mengapa rekursi berhenti di sana?</h2>
+        <div id="tAns2"></div>
+      </div>
+
       <div class="field-label"><span class="why-ico">?</span>Kenapa jawabanmu begitu?</div>
       <textarea class="tarea" id="targetWhy" placeholder="Petunjuk: siapa yang langsung menunggu faktorial(0)?"></textarea>
-      <div class="hint">Satu langkah saja: jelaskan urutan kembali dari kasus dasar.</div>
+      <div class="hint">Jelaskan urutan turun dan kembali dari tumpukan tadi.</div>
       <div class="warn-note" id="targetWarn">Alasanmu masih kosong. Kirim sekali lagi jika memang belum bisa menjelaskan — akan dicatat sebagai “alasan belum ada”.</div>
       <button class="pill-btn next-btn" id="targetSend" disabled onclick="submitTarget()">Kirim & periksa alasan</button>
       <div class="save-note" id="targetSave">Draf tersimpan otomatis</div>
@@ -134,7 +251,8 @@
           <h2 id="targetVerdictTitle"></h2>
           <p id="targetVerdictSub"></p>
         </div>
-        <svg class="fb2-m" viewBox="0 0 120 118" aria-hidden="true">
+        <div class="fb2-m" id="fb2Mascot" aria-hidden="true">
+        <svg viewBox="0 0 120 118">
           <line x1="58" y1="20" x2="52" y2="9" stroke="#7C6BF0" stroke-width="4.5" stroke-linecap="round"/>
           <circle cx="51" cy="7" r="5.5" fill="#FFC94D"/>
           <circle cx="30" cy="48" r="9" fill="#7C6BF0"/>
@@ -156,6 +274,7 @@
           <path d="M18 96l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#FFC94D"/>
           <path d="M104 34l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z" fill="#9C8CF5"/>
         </svg>
+        </div>
       </div>
 
       <div class="blk">
@@ -185,7 +304,7 @@
     </div>
   </section>
 
-  <!-- CEK ULANG -->
+  <!-- CEK ULANG: penjelasan detail + beberapa latihan -->
   <section class="screen" id="s-check">
     <div class="pad">
       <div class="sess-head">
@@ -193,17 +312,51 @@
         <div class="st"><b>Cek ulang</b><span>Soal baru, konsep yang sama</span></div>
       </div>
       <div class="steps"><i class="done"></i><i class="now"></i><i></i></div>
-      <div class="qcard">
-        <span class="concept">Cek ulang · Call stack</span>
-        <h2>Apa keluaran <b>sapa(2)</b> dari kode ini?</h2>
-        <div class="code"><span class="kw">def</span> <span class="fn">sapa</span>(n):
+
+      <!-- Penjelasan detail: kode + simbol + diagram, bukan teks biasa saja -->
+      <div class="expl">
+        <h3>🔍 Menelusuri sapa(2) baris demi baris</h3>
+        <div class="code" style="margin-top:12px"><span class="kw">def</span> <span class="fn">sapa</span>(n):
     <span class="kw">if</span> n == <span class="num">0</span>:
         <span class="kw">return</span>
     <span class="fn">print</span>(n)
     sapa(n - <span class="num">1</span>)
     <span class="fn">print</span>(n)</div>
-        <div id="checkAnswers"></div>
+        <p>Perhatikan urutan tiga baris di dalam cabang rekursif: <b>print(n)</b> dijalankan <b>sebelum</b> memanggil sapa(n − 1), lalu <b>print(n) kedua</b> dijalankan <b>setelah</b> pemanggilan itu selesai. Inilah titik awal dan titik kembali — dua tempat berbeda untuk satu nilai yang sama.</p>
+        <div class="fml">
+          <span class="rm">sapa(n)</span> = <span class="big">↓</span> <span class="rm">print(n); sapa(n − 1)</span> <span class="big">↑</span> <span class="rm">print(n)</span>
+        </div>
+        <span class="fml-cap">↓ saat turun mencetak sekali · ↑ saat kembali mencetak sekali lagi — kecuali n = 0 yang hanya berhenti.</span>
+
+        <h4>🧱 Tumpukannya saat sapa(2)</h4>
+        <div class="stack">
+          <div class="stk top">sapa(0) <span class="st-tag">return · tak mencetak</span></div>
+          <div class="arr">↑ angkat</div>
+          <div class="stk">sapa(1) <span class="st-tag">cetak 1 (kembali)</span></div>
+          <div class="stk">sapa(2) <span class="st-tag">cetak 2 (kembali)</span></div>
+          <div class="cap">Turun mencetak dulu: <b>2, 1</b> — lalu sapa(0) berhenti tanpa mencetak 0.<br>Kembali mencetak lagi: <b>1, 2</b>. Gabungan: <b>2, 1, 1, 2</b>.</div>
+        </div>
+        <p style="margin-top:14px">Karena itu keluarannya bukan <span class="rm" style="font-family:Consolas,monospace">2, 1, 0, 1, 2</span> — kasus dasar tidak pernah mencetak 0 — dan bukan pula <span class="rm" style="font-family:Consolas,monospace">2, 1</span> berhenti, karena dua pemanggilan yang menunggu masih punya satu print tertunda.</p>
       </div>
+
+      <div class="lat-h"><span class="bico">✏️</span>Beberapa latihan</div>
+
+      <div class="qcard">
+        <span class="concept">Latihan 1 · Keluaran</span>
+        <h2>Apa keluaran <b>sapa(2)</b> dari kode di atas?</h2>
+        <div id="cAns0"></div>
+      </div>
+      <div class="qcard">
+        <span class="concept">Latihan 2 · Kasus dasar</span>
+        <h2>Apa yang dilakukan <b>sapa(0)</b>?</h2>
+        <div id="cAns1"></div>
+      </div>
+      <div class="qcard">
+        <span class="concept">Latihan 3 · Saat kembali</span>
+        <h2>Setelah sapa(0) selesai, apa yang terjadi <b>pertama</b>?</h2>
+        <div id="cAns2"></div>
+      </div>
+
       <div class="field-label"><span class="why-ico">?</span>Kenapa urutannya begitu?</div>
       <textarea class="tarea" id="checkWhy" placeholder="Ceritakan kapan print pertama dan print kedua dijalankan…"></textarea>
       <div class="hint">Yang dinilai: kamu menelusuri saat masuk dan saat kembali, bukan hanya menebak pola.</div>
@@ -218,7 +371,33 @@
     <div class="pad">
       <div class="sess-head"><div class="st"><b>Hasil cek ulang</b><span>Peta penguasaan diperbarui</span></div></div>
       <div class="steps"><i class="done"></i><i class="done"></i><i class="now"></i></div>
-      <div class="fb-verdict" id="checkVerdict"><h2 id="checkVerdictTitle"></h2><p id="checkVerdictSub"></p></div>
+      <div class="fb-verdict" id="checkVerdict">
+        <div class="fv-t"><h2 id="checkVerdictTitle"></h2><p id="checkVerdictSub"></p></div>
+        <div class="fv-m" id="fvMascot" aria-hidden="true">
+          <svg viewBox="0 0 120 118">
+            <line x1="58" y1="20" x2="52" y2="9" stroke="#7C6BF0" stroke-width="4.5" stroke-linecap="round"/>
+            <circle cx="51" cy="7" r="5.5" fill="#FFC94D"/>
+            <circle cx="30" cy="48" r="9" fill="#7C6BF0"/>
+            <circle cx="90" cy="48" r="9" fill="#7C6BF0"/>
+            <circle cx="30" cy="48" r="4" fill="#5D4BD6"/>
+            <circle cx="90" cy="48" r="4" fill="#5D4BD6"/>
+            <rect x="26" y="24" width="68" height="56" rx="25" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+            <rect x="37" y="37" width="46" height="32" rx="15" fill="#171A2E"/>
+            <path d="M46 50q5-7 10 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+            <path d="M64 50q5-7 10 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+            <path d="M54 59q6 6 12 0" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M40 82c11-6 29-6 40 0l5 30c-16 7-34 7-50 0z" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+            <path d="M84 92c8-3 13-9 13-17" stroke="#E4E1F7" stroke-width="9" fill="none" stroke-linecap="round"/>
+            <path d="M92 76v-9" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"/>
+            <path d="M92 76v-9" stroke="#E4E1F7" stroke-width="11" stroke-linecap="round" fill="none"/>
+            <path d="M92 75V66" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/>
+            <circle cx="95" cy="78" r="9" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="2.5"/>
+            <path d="M93 74v-7" stroke="#FFF" stroke-width="6" stroke-linecap="round"/>
+            <path d="M18 96l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#FFC94D"/>
+            <path d="M104 34l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z" fill="#9C8CF5"/>
+          </svg>
+        </div>
+      </div>
       <div class="fb-panel"><h4>🔍 Penilaian alasanmu</h4><p id="checkReasonFb"></p><div class="your-answer"><b>Alasanmu:</b> <span id="checkYourWhy"></span></div></div>
       <div class="fb-panel"><h4>🧭 Telusuri sekali lagi</h4><p id="checkTraceFb">Saat turun, <b>sapa(2)</b> mencetak 2 dan <b>sapa(1)</b> mencetak 1. Setelah <b>sapa(0)</b> selesai, pemanggilan yang menunggu kembali bekerja: <b>sapa(1)</b> mencetak 1, lalu <b>sapa(2)</b> mencetak 2.</p></div>
       <div class="mastery-update"><span class="mi" id="masteryIcon">🌱</span><div><b id="masteryTitle"></b><p id="masteryText"></p></div></div>
@@ -227,7 +406,26 @@
     </div>
   </section>
 
-  <div class="thinking" id="thinking"><div class="orb"></div><p>Agen membaca jejak penalaranmu…</p><small>Menilai dengan rubrik yang disetujui dosen</small><button class="pill-btn cancel-btn" onclick="cancelThinking()">Batal</button></div>
+  <!-- Pad agen: membaca & menganalisis (PRD §21) — Bimo membaca, tahap + batal -->
+  <div class="thinking" id="thinking" role="status" aria-live="polite">
+    <div class="t-pad">
+      <div class="t-hero">
+        <div class="orb" id="thinkOrb"></div>
+        <div class="slot" id="agentSlot"></div>
+      </div>
+      <div class="t-title" id="thinkTitle">Agen membaca jawabanmu…</div>
+      <div class="t-sub">Lalu menganalisis dengan rubrik dosen</div>
+      <div class="t-stages" id="thinkSteps">
+        <div class="t-step"><span class="dot"></span>Membaca jawaban &amp; alasan</div>
+        <div class="t-step"><span class="dot"></span>Membaca jejak penalaran</div>
+        <div class="t-step"><span class="dot"></span>Menganalisis dengan rubrik</div>
+        <div class="t-step"><span class="dot"></span>Menyusun umpan balik + kutipan</div>
+      </div>
+      <div class="t-bar"><i id="thinkBar"></i></div>
+      <div class="t-chips" id="thinkChips"></div>
+      <button class="cancel-btn" onclick="cancelThinking()">Batal</button>
+    </div>
+  </div>
   <div class="overlay" id="overlay" onclick="closeSource()"></div>
   <div class="sheet" id="sheet"><div class="grab"></div><h3>Modul Matematika Diskrit — Bab 4.2 “Rekursi”</h3><div class="meta">Catatan kuliah dosen pengampu · hlm. 57 · sumber terverifikasi</div><div class="content">Setiap pemanggilan menunggu hasil pemanggilan berikutnya hingga kasus dasar tercapai, lalu hasil dikalikan berurutan saat kembali.
 
@@ -241,16 +439,36 @@ let toastT;function toast(msg){const el=document.getElementById('toast');el.text
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.getElementById(id).scrollTop=0}
 function escapeHTML(value){const d=document.createElement('div');d.textContent=value;return d.innerHTML}
 
-const TARGET={answers:['faktorial(3)','faktorial(2)','faktorial(1)','Semua selesai bersamaan'],correct:2};
-const CHECK={answers:['2, 1, 0, 1, 2','2, 1, 1, 2','1, 2, 2, 1','2, 1 lalu berhenti'],correct:1};
-let targetPick=-1,checkPick=-1,targetWarned=false,checkWarned=false,thinkTimer=null,pendingAction=null;
+/* Beberapa latihan per layar (bukan satu soal) */
+const TARGET=[
+  {answers:['faktorial(3)','faktorial(2)','faktorial(1)','Semua selesai bersamaan'],correct:2},
+  {answers:['faktorial(3) → faktorial(2) → faktorial(1) → faktorial(0)','faktorial(0) → faktorial(1) → faktorial(2) → faktorial(3)','Semua selesai bersamaan','faktorial(1) → faktorial(0) → faktorial(3) → faktorial(2)'],correct:1},
+  {answers:['0','1','n','Tidak mengembalikan apa-apa'],correct:1},
+];
+const CHECK=[
+  {answers:['2, 1, 0, 1, 2','2, 1, 1, 2','1, 2, 2, 1','2, 1 lalu berhenti'],correct:1},
+  {answers:['Mencetak 0 lalu berhenti','Menghentikan rekursi tanpa mencetak','Memanggil sapa(−1)','Mencetak 0 dua kali'],correct:1},
+  {answers:['sapa(2) langsung mencetak 2','sapa(1) yang tertunda mencetak 1','Rekursi berjalan ulang dari awal','Program langsung selesai'],correct:1},
+];
+let targetPicks=[-1,-1,-1],checkPicks=[-1,-1,-1],targetWarned=false,checkWarned=false;
+const scoreOf=(data,picks)=>data.reduce((s,q,i)=>s+(picks[i]===q.correct?1:0),0);
 
-function renderAnswers(data,containerId,type){
-  document.getElementById(containerId).innerHTML=data.answers.map((a,i)=>`<button class="ans" data-i="${i}" onclick="pickAnswer('${type}',${i},this)"><span class="key">${'ABCD'[i]}</span><span>${a}</span></button>`).join('');
+function renderAnswers(data,type){
+  data.forEach((q,idx)=>{
+    const el=document.getElementById((type==='target'?'tAns':'cAns')+idx);
+    if(!el)return;
+    el.innerHTML=q.answers.map((a,i)=>`<button class="ans" data-i="${i}" onclick="pickAnswer('${type}',${idx},${i},this)"><span class="key">${'ABCD'[i]}</span><span>${a}</span></button>`).join('');
+  });
 }
-function pickAnswer(type,i,el){
+function pickAnswer(type,idx,i,el){
   const parent=el.parentElement;parent.querySelectorAll('.ans').forEach(a=>a.classList.remove('on'));el.classList.add('on');
-  if(type==='target'){targetPick=i;document.getElementById('targetSend').disabled=false}else{checkPick=i;document.getElementById('checkSend').disabled=false}
+  if(type==='target'){
+    targetPicks[idx]=i;
+    document.getElementById('targetSend').disabled=targetPicks.some(p=>p<0);
+  }else{
+    checkPicks[idx]=i;
+    document.getElementById('checkSend').disabled=checkPicks.some(p=>p<0);
+  }
 }
 function setupDraft(id,key,onInput){
   const el=document.getElementById(id);try{el.value=localStorage.getItem(key)||''}catch(e){}
@@ -258,66 +476,193 @@ function setupDraft(id,key,onInput){
 }
 setupDraft('targetWhy','reason_target_why');setupDraft('checkWhy','reason_check_why');
 
-function think(callback){
-  pendingAction=callback;document.getElementById('thinking').classList.add('show');
-  thinkTimer=setTimeout(()=>{document.getElementById('thinking').classList.remove('show');callback()},1500);
+/* ============ PAD AGEN: membaca → analisis → umpan balik (PRD §21) ============ */
+const thinkEl = document.getElementById('thinking');
+const thinkSteps = Array.from(document.querySelectorAll('#thinkSteps .t-step'));
+const thinkBar = document.getElementById('thinkBar');
+const thinkTitle = document.getElementById('thinkTitle');
+const THINK_STAGES = [
+  { at: 0,    title: 'Agen membaca jawabanmu…',      bar: 25 },
+  { at: 600,  title: 'Membaca jejak penalaranmu…',   bar: 50 },
+  { at: 1200, title: 'Menganalisis dengan rubrik…',  bar: 75 },
+  { at: 1800, title: 'Menyusun umpan balik…',        bar: 100 },
+];
+const THINK_DONE = 2400;
+let thinkTimers = [];
+function clearThink(){ thinkTimers.forEach(clearTimeout); thinkTimers = []; }
+
+function think(callback, chipsHTML){
+  document.getElementById('thinkChips').innerHTML = chipsHTML || '';
+  clearThink();
+  thinkSteps.forEach(s => s.classList.remove('on', 'done'));
+  thinkBar.style.width = '0%';
+  void thinkBar.offsetWidth;              // reflow supaya transisi 0% → 25% jalan
+  thinkEl.classList.add('show');
+  if (window.__bimoPad) window.__bimoPad.show();   // Bimo membaca (bila WebGL2 ada)
+  THINK_STAGES.forEach((st, i) => {
+    thinkTimers.push(setTimeout(() => {
+      if (i > 0) thinkSteps[i - 1].classList.replace('on', 'done');
+      thinkSteps[i].classList.add('on');
+      thinkTitle.textContent = st.title;
+      thinkBar.style.width = st.bar + '%';
+    }, st.at));
+  });
+  thinkTimers.push(setTimeout(() => {
+    thinkSteps[thinkSteps.length - 1].classList.replace('on', 'done');
+    thinkEl.classList.remove('show');
+    if (window.__bimoPad) window.__bimoPad.hide();
+    callback();
+  }, THINK_DONE));
 }
-function cancelThinking(){clearTimeout(thinkTimer);pendingAction=null;document.getElementById('thinking').classList.remove('show');toast('Dibatalkan — drafmu tetap tersimpan')}
+function cancelThinking(){
+  clearThink();
+  thinkEl.classList.remove('show');
+  if (window.__bimoPad) window.__bimoPad.hide();
+  toast('Dibatalkan — drafmu tetap tersimpan');
+}
 
 function submitTarget(){
   const why=document.getElementById('targetWhy');
   if(!why.value.trim()&&!targetWarned){targetWarned=true;why.classList.add('warn');document.getElementById('targetWarn').classList.add('show');why.focus();return}
-  think(showTargetFeedback);
+  // chip: apa yang sedang dibaca agen (semua jawaban + alasan + jejak)
+  const ansChips = TARGET.map((q,i)=>`<div class="t-chip"><b>Latihan ${i+1}:</b> ${escapeHTML(q.answers[targetPicks[i]]||'belum memilih')}</div>`).join('');
+  const whyChip = why.value.trim() || 'alasan belum ada — agen akan menandainya';
+  think(showTargetFeedback,
+    ansChips +
+    `<div class="t-chip"><b>Alasan:</b> ${escapeHTML(whyChip)}</div>` +
+    `<div class="t-chip wrap"><b>Jejak penalaran:</b> faktorial(3) → faktorial(2) → faktorial(1) → faktorial(0) → 1</div>`);
 }
 function showTargetFeedback(){
   const why=document.getElementById('targetWhy').value.trim();
-  const correct=targetPick===TARGET.correct;
+  const score=scoreOf(TARGET,targetPicks);
+  const all=score===TARGET.length;
   const reasonOK=/tunggu|langsung|dasar|kembali|atas/.test(why.toLowerCase());
-  const best=correct&&reasonOK;
-  const verdict=document.getElementById('targetVerdict');verdict.className='fb2 '+(best?'':correct?'partial':'wrong');
-  document.getElementById('targetVerdictTitle').textContent=best?'Jawabanmu sudah tepat!':correct?'Jawaban tepat, alasannya perlu satu langkah lagi.':'Belum tepat, dan itu petunjuk yang berguna.';
-  document.getElementById('targetVerdictSub').textContent=best?'Penjelasanmu juga menunjukkan penalaran yang baik.':correct?'Kita cek dengan soal yang berbeda.':'Kita luruskan dulu sebelum cek ulang.';
-  document.getElementById('targetReasonFb').textContent=!why?'Alasan belum ada, jadi agen belum bisa menilai proses berpikirmu. Jawaban akhir saja belum cukup untuk menandai konsep ini stabil.':best?'Kamu berhasil menjelaskan alasannya dengan tepat: faktorial(1) langsung menunggu faktorial(0), lalu meneruskan hasilnya saat kembali. Itu inti jejak eksekusi pada rubrik.':correct?'Pilihanmu benar, tetapi alasan belum menyebut hubungan “faktorial(1) langsung menunggu faktorial(0)”. Tambahkan hubungan itu agar bukan sekadar menebak posisi.':'faktorial(1) adalah pemanggilan yang langsung meminta faktorial(0). Begitu nilai 1 tersedia, faktorial(1) dapat menyelesaikan 1 × 1 lebih dulu.';
+  const best=all&&reasonOK;
+  const verdict=document.getElementById('targetVerdict');verdict.className='fb2 '+(best?'':all?'partial':score>0?'partial':'wrong');
+  document.getElementById('targetVerdictTitle').textContent=best?'Jawabanmu sudah tepat!':all?'Jawaban tepat, alasannya perlu satu langkah lagi.':score>0?`Tepat ${score} dari ${TARGET.length} latihan.`:'Belum tepat, dan itu petunjuk yang berguna.';
+  document.getElementById('targetVerdictSub').textContent=best?'Penjelasanmu juga menunjukkan penalaran yang baik.':all?'Kita cek dengan soal yang berbeda.':score>0?'Bagian yang belum tepat kita luruskan dulu.':'Kita luruskan dulu sebelum cek ulang.';
+  document.getElementById('targetReasonFb').textContent=!why?'Alasan belum ada, jadi agen belum bisa menilai proses berpikirmu. Jawaban akhir saja belum cukup untuk menandai konsep ini stabil.':best?`Kamu menjawab benar ${score}/${TARGET.length} dan alasannya tepat: faktorial(1) langsung menunggu faktorial(0), lalu meneruskan hasilnya saat kembali. Itu inti jejak eksekusi pada rubrik.`:all?'Ketiga latihanmu benar, tetapi alasan belum menyebut hubungan “faktorial(1) langsung menunggu faktorial(0)”. Tambahkan hubungan itu agar bukan sekadar menebak urutan.':`Benar ${score}/${TARGET.length}. Fokus perbaikan: urutan kembali adalah kebalikan urutan masuk — faktorial(0) selesai lebih dulu, baru faktorial(1), dan seterusnya. Kasus dasar faktorial(0) mengembalikan 1, bukan 0.`;
   document.getElementById('targetConceptFb').textContent='Konsep yang perlu dipegang: urutan kembali adalah kebalikan urutan masuk — faktorial(0) → faktorial(1) → faktorial(2) → faktorial(3). Yang lain tetap menunggu sampai gilirannya.';
-  const pct=best?90:correct?75:55, delta=best?'+10%':correct?'+5%':'0%';
+  const pct=best?90:all||score>=2?75:55, delta=best?'+10%':score>=2?'+5%':'0%';
   document.getElementById('targetPct').textContent=pct+'%';
   document.getElementById('targetProgFill').style.width=pct+'%';
   const deltaEl=document.getElementById('targetDelta');deltaEl.textContent=delta;deltaEl.classList.toggle('flat',!best);
   showScreen('s-target-fb');
+  // Bimo di hero umpan balik (bila WebGL2 ada)
+  if (window.__bimoFb2) window.__bimoFb2.show(best ? 'celebrating' : 'happy');
 }
 function goCheck(){showScreen('s-check')}
 
 function submitCheck(){
   const why=document.getElementById('checkWhy');
   if(!why.value.trim()&&!checkWarned){checkWarned=true;why.classList.add('warn');document.getElementById('checkWarn').classList.add('show');why.focus();return}
-  think(showCheckResult);
+  // chip: apa yang sedang dibaca agen
+  const ansChips = CHECK.map((q,i)=>`<div class="t-chip"><b>Latihan ${i+1}:</b> ${escapeHTML(q.answers[checkPicks[i]]||'belum memilih')}</div>`).join('');
+  const whyChip = why.value.trim() || 'alasan belum ada — agen akan menandainya';
+  think(showCheckResult,
+    ansChips +
+    `<div class="t-chip"><b>Alasan:</b> ${escapeHTML(whyChip)}</div>` +
+    `<div class="t-chip wrap"><b>Jejak penalaran:</b> sapa(2) → sapa(1) → sapa(0) → cetak 1 → cetak 2</div>`);
 }
 function showCheckResult(){
   const why=document.getElementById('checkWhy').value.trim();
-  const correct=checkPick===CHECK.correct;
+  const score=scoreOf(CHECK,checkPicks);
+  const correct=score===CHECK.length;
   const reasonOK=/(kembali|setelah|menunggu|tunggu)/.test(why.toLowerCase())&&/(print|cetak|kedua|terakhir)/.test(why.toLowerCase());
   const stable=correct&&reasonOK;
-  const verdict=document.getElementById('checkVerdict');verdict.className='fb-verdict '+(stable?'':correct?'partial':'wrong');
-  document.getElementById('checkVerdictTitle').textContent=stable?'Konsepnya mulai stabil.':correct?'Jawabanmu benar; penelusurannya belum lengkap.':'Masih goyah — kita punya arah perbaikannya.';
-  document.getElementById('checkVerdictSub').textContent=stable?'Kamu bisa menjelaskan, bukan hanya memilih jawaban.':'Kemajuan tetap tercatat; satu konsep ini bisa ditinjau lagi.';
-  document.getElementById('checkReasonFb').textContent=!why?'Alasan belum ada. Keluaran yang benar adalah 2, 1, 1, 2, tetapi peta penguasaan belum menandai konsep ini stabil tanpa penjelasan.':stable?'Alasanmu menunjukkan bahwa print kedua baru berjalan setelah pemanggilan rekursif selesai. Itu membuktikan kamu memahami keadaan “menunggu”, bukan sekadar hafal keluaran.':correct?'Keluaranmu benar. Namun rubrik meminta penjelasan bahwa print kedua dijalankan saat kembali, setelah pemanggilan rekursif selesai. Bagian itu belum terlihat dari alasanmu.':'Keluaran yang benar adalah 2, 1, 1, 2. Kasus dasar sapa(0) tidak mencetak 0; ia hanya menghentikan rekursi. Setelah itu, dua pemanggilan yang menunggu mencetak nilainya sekali lagi.';
+  const verdict=document.getElementById('checkVerdict');verdict.className='fb-verdict '+(stable?'':correct?'partial':score>0?'partial':'wrong');
+  document.getElementById('checkVerdictTitle').textContent=stable?'Konsepnya mulai stabil.':correct?'Jawabanmu benar; penelusurannya belum lengkap.':score>0?`Tepat ${score} dari ${CHECK.length} latihan.`:'Masih goyah — kita punya arah perbaikannya.';
+  document.getElementById('checkVerdictSub').textContent=stable?'Kamu bisa menjelaskan, bukan hanya memilih jawaban.':'Kemajuan tetap tercatat; konsep ini bisa ditinjau lagi.';
+  document.getElementById('checkReasonFb').textContent=!why?'Alasan belum ada. Keluaran yang benar adalah 2, 1, 1, 2, tetapi peta penguasaan belum menandai konsep ini stabil tanpa penjelasan.':stable?`Semua ${CHECK.length} latihan benar dan alasanmu menunjukkan print kedua baru berjalan setelah pemanggilan rekursif selesai — bukti kamu memahami keadaan “menunggu”.`:correct?'Semua jawabanmu benar. Namun rubrik meminta penjelasan bahwa print kedua dijalankan saat kembali, setelah pemanggilan rekursif selesai. Bagian itu belum terlihat dari alasanmu.':`Benar ${score}/${CHECK.length}. Ingat: kasus dasar sapa(0) tidak mencetak 0 — ia hanya menghentikan rekursi. Setelah itu, dua pemanggilan yang menunggu mencetak nilainya sekali lagi: 1 dulu, lalu 2.`;
   document.getElementById('checkYourWhy').textContent=why||'Belum diisi.';
   document.getElementById('masteryIcon').textContent=stable?'🌿':'🌱';
   document.getElementById('masteryTitle').textContent=stable?'Jejak eksekusi: stabil':'Jejak eksekusi: masih goyah';
   document.getElementById('masteryText').textContent=stable?'Naik dari “dibangun” setelah jawaban dan alasan cek ulang sesuai rubrik.':'Belum turun atau dihakimi. Saran tinjauan akan disiapkan di ringkasan sesi.';
-  const result={correct,reasonOK,stable,answer:CHECK.answers[checkPick],why,concept:'Jejak eksekusi (call stack)',updatedAt:new Date().toISOString()};
+  const result={correct,reasonOK,stable,score,total:CHECK.length,answer:checkPicks.map((p,i)=>CHECK[i].answers[p]).join(' | '),why,concept:'Jejak eksekusi (call stack)',updatedAt:new Date().toISOString()};
   try{
     localStorage.setItem('reason_recheck',JSON.stringify(result));
     const mastery=JSON.parse(localStorage.getItem('reason_mastery')||'{}');
-    mastery.callStack={status:stable?'stabil':'goyah',score:stable?82:55,updatedAt:result.updatedAt};
+    mastery.callStack={status:stable?'stabil':'goyah',score:stable?82:score>=2?68:55,updatedAt:result.updatedAt};
     localStorage.setItem('reason_mastery',JSON.stringify(mastery));
     localStorage.setItem('reason_session_stage','ringkasan');
   }catch(e){}
   showScreen('s-result');
+  // Bimo di hero hasil cek ulang (bila WebGL2 ada)
+  if (window.__bimoFv) window.__bimoFv.show(stable ? 'celebrating' : 'happy');
 }
 function openSource(){document.getElementById('sheet').classList.add('show');document.getElementById('overlay').classList.add('show')}
 function closeSource(){document.getElementById('sheet').classList.remove('show');document.getElementById('overlay').classList.remove('show')}
-renderAnswers(TARGET,'targetAnswers','target');renderAnswers(CHECK,'checkAnswers','check');setTheme('light');
+renderAnswers(TARGET,'target');renderAnswers(CHECK,'check');setTheme('light');
+</script>
+
+<script type="module">
+/* Bimo 3D (wobnimo) — tiga titik mount di latihan:
+   1. pad agen: mount saat pad PERTAMA tampil (slot di overlay display:none = ukuran 0)
+   2. hero umpan balik target & 3. hero hasil cek ulang: mount saat layar feedback tampil
+   Fallback bila WebGL2 absen: orbe berputar (pad) / SVG statis (hero). */
+import { mount } from '../vendor/wobnimo.js';
+import { bimo } from '../mascots/bimo.js';
+
+/* --- 1. pad agen: Bimo membaca --- */
+const slot = document.getElementById('agentSlot');
+const orb = document.getElementById('thinkOrb');
+let mascot = null;
+let currentState = 'idle';
+function setState(s){
+  currentState = s;
+  if (mascot) { try { mascot.setState(s); } catch (e) { console.warn('[bimo] setState', e); } }
+}
+window.__bimoPad = {
+  get mounted(){ return !!mascot; },
+  get state(){ return currentState; },
+  show(){
+    if (!mascot) {
+      try {
+        if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
+        mascot = mount(slot, bimo, { state: 'working' });   // chin menunduk ke buku = membaca
+        if (orb) orb.style.display = 'none';
+      } catch (err) {
+        console.warn('[bimo] WebGL2 absen — pakai orbe:', err && err.message);
+      }
+    } else {
+      setState('working');
+    }
+  },
+  hide(){ setState('idle'); },
+  setState
+};
+
+/* --- helper hero: mount sekali saat layar feedback tampil --- */
+function makeHero(slotId, label){
+  const el = document.getElementById(slotId);
+  if (!el) return null;
+  const fallback = el.innerHTML;
+  let m = null, st = 'idle';
+  const set = s => { st = s; if (m) { try { m.setState(s); } catch (e) { console.warn('[bimo] ' + label + ' setState', e); } } };
+  return {
+    get mounted(){ return !!m; },
+    get state(){ return st; },
+    show(state){
+      if (!m) {
+        try {
+          if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
+          void el.offsetWidth;                 // reflow: pastikan slot berukuran sebelum mount
+          el.innerHTML = '';
+          m = mount(el, bimo, { state: state || 'happy' });
+        } catch (err) {
+          console.warn('[bimo] WebGL2 absen — pakai SVG ' + label + ':', err && err.message);
+          el.innerHTML = fallback;             // SVG statis robot tetap tampil
+        }
+      } else {
+        set(state || 'happy');
+      }
+    },
+    hide(){ set('idle'); },
+    setState: set
+  };
+}
+window.__bimoFb2 = makeHero('fb2Mascot', 'umpan balik');
+window.__bimoFv  = makeHero('fvMascot', 'hasil cek ulang');
 </script>
 </body>
 </html>

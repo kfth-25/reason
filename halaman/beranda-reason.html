@@ -45,7 +45,10 @@
   .screen{
     position:absolute;inset:0;padding-top:52px;overflow-y:auto;overflow-x:hidden;
     padding-bottom:126px;-webkit-overflow-scrolling:touch;
+    opacity:0;visibility:hidden;transform:translateX(18px);
+    transition:opacity .3s ease,transform .3s ease,visibility .3s;
   }
+  .screen.active{opacity:1;visibility:visible;transform:translateX(0)}
   .screen::-webkit-scrollbar{display:none}
   .pad{padding:0 20px}
 
@@ -188,6 +191,36 @@
     padding:5px 11px;font-size:11px;font-weight:600;color:var(--purple-deep);
   }
   [data-theme="dark"] .newbie .steps span{color:#C5B8F0}
+
+  /* ============ LAYAR MULAI SESI: mau belajar apa? ============ */
+  .goal-head{position:relative;display:flex;align-items:center;padding-top:12px;min-height:42px}
+  .goal-head .htitle{position:absolute;left:52px;right:52px;text-align:center;pointer-events:none;font-size:17px;font-weight:700;color:var(--text)}
+  .goal-head .back{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+  .goal-head .back svg{width:19px;height:19px;stroke:#3D3A66;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .goal-q{font-size:24px;font-weight:700;color:var(--text);line-height:1.3;margin-top:30px;letter-spacing:-.3px}
+  .goal-sub{font-size:13.5px;color:var(--muted);margin-top:9px;line-height:1.6}
+  .goal-input{
+    width:100%;margin-top:22px;border:2px solid var(--line);border-radius:16px;background:var(--card);
+    padding:16px 17px;font-family:var(--font);font-size:15px;color:var(--text);outline:none;transition:border-color .2s;
+  }
+  .goal-input:focus{border-color:#8574F4}
+  .goal-input::placeholder{color:#A9A3C7}
+  .goal-chips-label{font-size:13px;font-weight:700;color:var(--text);margin-top:22px}
+  .goal-chips{display:flex;gap:9px;margin-top:11px;flex-wrap:wrap}
+  .gchip{
+    border:2px solid var(--line);background:var(--card);border-radius:999px;padding:10px 17px;
+    font-family:var(--font);font-size:13.5px;font-weight:600;color:#3D3A66;cursor:pointer;transition:all .18s;
+  }
+  .gchip:active{transform:scale(.96)}
+  .gchip.on{background:linear-gradient(135deg,#8574F4,#6555E6);border-color:transparent;color:#fff;box-shadow:0 10px 22px rgba(105,87,235,.35)}
+  .goal-go{
+    margin-top:30px;width:100%;padding:17px;border-radius:16px;
+    background:linear-gradient(135deg,#8574F4 0%,#6555E6 100%);
+    color:#fff;font-size:15.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;
+    box-shadow:0 14px 30px rgba(105,87,235,.4);
+  }
+  .goal-go:active{transform:scale(.97)}
+  .goal-go svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 </style>
 </head>
 <body>
@@ -205,7 +238,7 @@
 
   <button class="theme-fab" id="themeBtn" title="Ganti tema">🌙</button>
 
-  <section class="screen" id="s-home">
+  <section class="screen active" id="s-home">
     <div class="pad">
       <div class="home-head">
         <div class="hello">
@@ -268,7 +301,7 @@
       </div>
 
       <!-- Sesi berjalan -->
-      <button class="resume" onclick="location.href='soal.html'">
+      <button class="resume" onclick="location.href='latihan.html'">
         <span class="r-ico">
           <svg viewBox="0 0 24 24"><path d="M12 2.5c-3.9 0-7 3.1-7 7 0 2.4 1.2 4.2 2.6 5.5.9.9 1.4 1.8 1.4 3h6c0-1.2.5-2.1 1.4-3 1.4-1.3 2.6-3.1 2.6-5.5 0-3.9-3.1-7-7-7z"/><rect x="9" y="19.2" width="6" height="2.4" rx="1.2"/></svg>
         </span>
@@ -313,6 +346,35 @@
           <span>1 · Diagnostik</span><span>2 · Soal + alasan</span><span>3 · Umpan balik</span><span>4 · Cek ulang</span>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- MULAI SESI: user memasukkan dulu mau belajar apa, baru diagnostik -->
+  <section class="screen" id="s-goal">
+    <div class="pad">
+      <div class="goal-head">
+        <button class="back" onclick="showScreen('s-home')" aria-label="Kembali">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="htitle">Mulai Sesi</span>
+      </div>
+
+      <h2 class="goal-q">Mau belajar apa hari ini?</h2>
+      <p class="goal-sub">Tulis topik spesifik yang ingin kamu dalami — REASON akan menyiapkan diagnostiknya.</p>
+
+      <input class="goal-input" id="goalInput" type="text" placeholder="misal: Rekursi — jejak eksekusi" autocomplete="off">
+
+      <div class="goal-chips-label">Atau pilih cepat:</div>
+      <div class="goal-chips" id="goalChips">
+        <button class="gchip" onclick="pickGoal(this,'Rekursi — jejak eksekusi')">Rekursi</button>
+        <button class="gchip" onclick="pickGoal(this,'Induksi — bukti matematika')">Induksi</button>
+        <button class="gchip" onclick="goalLocked(this)">Teori Graf</button>
+      </div>
+
+      <button class="pill-btn goal-go" onclick="startGoal()">
+        Mulai Diagnostik
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
     </div>
   </section>
 
@@ -364,7 +426,11 @@ function toast(msg){
   toastT = setTimeout(() => el.classList.remove('show'), 2600);
 }
 
-/* ============ PILIH TOPIK & MULAI (logika sama dengan versi sebelumnya) ============ */
+/* ============ PILIH TOPIK & MULAI SESI ============ */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+  const sc = document.getElementById(id); if (sc) sc.scrollTop = 0;
+}
 let topic = 'rekursi';
 function pickTopic(el){
   document.querySelectorAll('.ttile').forEach(t => t.classList.remove('on'));
@@ -379,6 +445,26 @@ function startSession(){
     toast('Rubrik topik ini masih draf — menunggu persetujuan dosen');
     return;
   }
+  showScreen('s-goal');
+  document.getElementById('goalInput').value = '';
+  document.querySelectorAll('.gchip').forEach(c => c.classList.remove('on'));
+}
+function pickGoal(el, text){
+  document.querySelectorAll('.gchip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('goalInput').value = text;
+}
+function goalLocked(el){
+  toast('Rubrik Teori Graf masih draf — menunggu persetujuan dosen');
+}
+function startGoal(){
+  const val = document.getElementById('goalInput').value.trim();
+  if(!val){
+    toast('Tulis dulu mau belajar apa hari ini');
+    document.getElementById('goalInput').focus();
+    return;
+  }
+  try{ localStorage.setItem('reason_goal', val); }catch(e){}
   location.href = 'diagnostik.html';
 }
 
