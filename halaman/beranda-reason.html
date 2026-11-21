@@ -476,6 +476,12 @@ setTheme('light');
 import { mount } from '../vendor/wobnimo.js';
 import { bimo } from '../mascots/bimo.js';
 
+/* Profil ringan utk HP (layar high-DPR / RAM kecil): pixel ratio 1 & tanpa
+   interaksi pointer — beban GPU & baterai jauh lebih rendah. */
+const LIGHT = matchMedia('(pointer: coarse)').matches || (navigator.deviceMemory || 8) <= 4;
+const M_OPTS = LIGHT ? { maxPixelRatio: 1, interactive: false } : {};
+window.__bimoLight = LIGHT;
+
 const slot = document.getElementById('bimoSlot');
 const fallbackMarkup = slot ? slot.innerHTML : '';
 let mascot = null;
@@ -486,16 +492,21 @@ function setState(s){
   if (mascot) { try { mascot.setState(s); } catch (e) { console.warn('[bimo] setState', e); } }
 }
 
-if (slot) {
+function boot(){
+  if (!slot) return;
   try {
     if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
     slot.innerHTML = '';
-    mascot = mount(slot, bimo, { state: 'idle' });
+    mascot = mount(slot, bimo, { state: currentState, ...M_OPTS });
   } catch (err) {
     console.warn('[bimo] WebGL2 absen — pakai SVG statis:', err && err.message);
     slot.innerHTML = fallbackMarkup;   // kembalikan SVG statis
   }
 }
+/* HP: mount saat browser longgar supaya kompilasi shader tak menahan load awal
+   (SVG statis tampil dulu, lalu berganti 3D) */
+if (LIGHT && 'requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 1200 });
+else boot();
 
 /* reaksi maskot saat topik dipilih (pickTopic ada di script klasik → global) */
 function hook(name, after){
@@ -515,8 +526,24 @@ hook('pickTopic', () => {
 window.__bimo = {
   get mounted(){ return !!mascot; },
   get state(){ return currentState; },
+  /* layar non-aktif hanya opacity:0 (IntersectionObserver tetap anggap terlihat)
+     → pause manual supaya maskot tak terus merender di belakang layar */
+  sync(){
+    if (!mascot) return;
+    const scr = slot.closest('.screen');
+    const on = !scr || scr.classList.contains('active');
+    try { if (on) mascot.play(); else mascot.pause(); } catch (e) {}
+  },
   setState
 };
+
+/* Sinkronkan pause/play tiap kali class .screen berubah (s-home ↔ s-goal) */
+function syncHeroes(){
+  try { window.__bimo?.sync?.(); } catch (e) { console.warn('[bimo] sync', e); }
+}
+const heroObserver = new MutationObserver(syncHeroes);
+document.querySelectorAll('.screen').forEach(s => heroObserver.observe(s, { attributes: true, attributeFilter: ['class'] }));
+syncHeroes();
 </script>
 </body>
 </html>

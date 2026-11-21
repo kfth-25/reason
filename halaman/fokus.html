@@ -692,6 +692,12 @@ setTheme('light', true);
 import { mount } from '../vendor/wobnimo.js';
 import { foku } from '../mascots/foku.js';
 
+/* Profil ringan utk HP (layar high-DPR / RAM kecil): pixel ratio 1 & tanpa
+   interaksi pointer — beban GPU & baterai jauh lebih rendah. */
+const LIGHT = matchMedia('(pointer: coarse)').matches || (navigator.deviceMemory || 8) <= 4;
+const M_OPTS = LIGHT ? { maxPixelRatio: 1, interactive: false } : {};
+window.__bimoLight = LIGHT;
+
 const slot = document.getElementById('fokuSlot');
 const stage = slot ? slot.parentElement : null;            // .focus-stage
 const stageStats = stage ? stage.querySelector('.stats') : null;
@@ -704,16 +710,20 @@ function setState(s){
   if (mascot) { try { mascot.setState(s); } catch (e) { console.warn('[foku] setState', e); } }
 }
 
-if (slot) {
+function boot(){
+  if (!slot) return;
   try {
     if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
     slot.innerHTML = '';
-    mascot = mount(slot, foku, { state: 'idle' });
+    mascot = mount(slot, foku, { state: currentState, ...M_OPTS });
   } catch (err) {
     console.warn('[foku] WebGL2 absen — pakai SVG statis:', err && err.message);
     slot.innerHTML = fallbackMarkup;   // kembalikan SVG statis
   }
 }
+/* HP: mount saat browser longgar supaya kompilasi shader tak menahan load awal */
+if (LIGHT && 'requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 1200 });
+else boot();
 
 /* pindahkan mascot antar panel supaya state selalu terlihat */
 function placeHome(){

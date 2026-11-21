@@ -83,7 +83,9 @@
   .fb-verdict .fv-m{width:108px;height:106px;flex-shrink:0;align-self:flex-end;margin-bottom:-4px;position:relative}
   .fv-m>svg,.fv-m>canvas{width:100%;height:100%;display:block}.fb-panel{background:var(--card);border-radius:24px;padding:18px;margin-top:13px;box-shadow:var(--shadow)}.fb-panel h4{font-size:13.5px;color:var(--text)}.fb-panel p{font-size:12.5px;line-height:1.65;color:var(--text);margin-top:8px}.your-answer{margin-top:10px;background:var(--bg);border:1.5px dashed var(--line);border-radius:14px;padding:11px 13px;font-size:12px;color:var(--muted);line-height:1.55}.your-answer b{color:var(--text)}
   .mastery-update{display:flex;align-items:center;gap:13px;background:var(--purple-soft);border-radius:24px;padding:18px;margin-top:14px}.mastery-update .mi{font-size:28px}.mastery-update b{display:block;font-size:13.5px;color:var(--text)}.mastery-update p{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:3px}.quote{margin-top:13px;background:var(--blue-soft);border-left:4px solid var(--blue);border-radius:0 14px 14px 0;padding:13px 15px;font-size:12px;line-height:1.6;color:var(--text)}[data-theme="dark"] .quote{color:#C9DBF2}.quote button{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:11px;font-weight:700;color:var(--blue-deep);cursor:pointer;border:0;background:none;font-family:var(--font);padding:0}[data-theme="dark"] .quote button{color:#9CC4F5}
-  .overlay{position:absolute;inset:0;background:rgba(10,12,20,.45);z-index:75;opacity:0;visibility:hidden;transition:all .28s;backdrop-filter:blur(3px)}.overlay.show{opacity:1;visibility:visible}.sheet{position:absolute;left:0;right:0;bottom:0;z-index:76;background:var(--bg);border-radius:30px 30px 0 0;padding:14px 22px 30px;transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.25,1);max-height:75%;overflow-y:auto}.sheet.show{transform:translateY(0)}.grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 16px}.sheet h3{font-size:16px;color:var(--text);line-height:1.4}.sheet .meta{font-size:11px;color:var(--muted);margin-top:5px}.sheet .content{margin-top:14px;background:var(--card);border-radius:16px;padding:16px;font-size:12.5px;line-height:1.7;color:var(--text);white-space:pre-line}.verified{display:inline-block;margin-top:13px;font-size:11px;font-weight:700;color:#3F7A1E;background:var(--green);border-radius:var(--r-pill);padding:6px 13px}
+  .overlay{position:absolute;inset:0;background:rgba(10,12,20,.45);z-index:75;opacity:0;visibility:hidden;transition:all .28s;backdrop-filter:blur(3px)}.overlay.show{opacity:1;visibility:visible}
+  /* HP: blur layar penuh mahal di GPU saat konten di belakangnya beranimasi — nonaktifkan */
+  @media (pointer: coarse){.thinking{backdrop-filter:none}.overlay{backdrop-filter:none}}.sheet{position:absolute;left:0;right:0;bottom:0;z-index:76;background:var(--bg);border-radius:30px 30px 0 0;padding:14px 22px 30px;transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.25,1);max-height:75%;overflow-y:auto}.sheet.show{transform:translateY(0)}.grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 16px}.sheet h3{font-size:16px;color:var(--text);line-height:1.4}.sheet .meta{font-size:11px;color:var(--muted);margin-top:5px}.sheet .content{margin-top:14px;background:var(--card);border-radius:16px;padding:16px;font-size:12.5px;line-height:1.7;color:var(--text);white-space:pre-line}.verified{display:inline-block;margin-top:13px;font-size:11px;font-weight:700;color:#3F7A1E;background:var(--green);border-radius:var(--r-pill);padding:6px 13px}
 
   /* ============ UMPAN BALIK LATIHAN — ala mockup hasil ============ */
   .fhead{position:relative;display:flex;align-items:center;padding-top:10px;min-height:42px}
@@ -603,6 +605,12 @@ renderAnswers(TARGET,'target');renderAnswers(CHECK,'check');setTheme('light');
 import { mount } from '../vendor/wobnimo.js';
 import { bimo } from '../mascots/bimo.js';
 
+/* Profil ringan utk HP (layar high-DPR / RAM kecil): pixel ratio 1 & tanpa
+   interaksi pointer — beban GPU & baterai jauh lebih rendah. */
+const LIGHT = matchMedia('(pointer: coarse)').matches || (navigator.deviceMemory || 8) <= 4;
+const M_OPTS = LIGHT ? { maxPixelRatio: 1, interactive: false } : {};
+window.__bimoLight = LIGHT;
+
 /* --- 1. pad agen: Bimo membaca --- */
 const slot = document.getElementById('agentSlot');
 const orb = document.getElementById('thinkOrb');
@@ -619,7 +627,7 @@ window.__bimoPad = {
     if (!mascot) {
       try {
         if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
-        mascot = mount(slot, bimo, { state: 'working' });   // chin menunduk ke buku = membaca
+        mascot = mount(slot, bimo, { state: 'working', ...M_OPTS });   // chin menunduk ke buku = membaca
         if (orb) orb.style.display = 'none';
       } catch (err) {
         console.warn('[bimo] WebGL2 absen — pakai orbe:', err && err.message);
@@ -648,7 +656,7 @@ function makeHero(slotId, label){
           if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
           void el.offsetWidth;                 // reflow: pastikan slot berukuran sebelum mount
           el.innerHTML = '';
-          m = mount(el, bimo, { state: state || 'happy' });
+          m = mount(el, bimo, { state: state || 'happy', ...M_OPTS });
         } catch (err) {
           console.warn('[bimo] WebGL2 absen — pakai SVG ' + label + ':', err && err.message);
           el.innerHTML = fallback;             // SVG statis robot tetap tampil
@@ -658,11 +666,28 @@ function makeHero(slotId, label){
       }
     },
     hide(){ set('idle'); },
+    /* layar non-aktif hanya opacity:0 (IntersectionObserver tetap anggap terlihat)
+       → pause manual supaya maskot tak terus merender di belakang layar */
+    sync(){
+      if (!m) return;
+      const scr = el.closest('.screen');
+      const on = !scr || scr.classList.contains('active');
+      try { if (on) m.play(); else m.pause(); } catch (e) {}
+    },
     setState: set
   };
 }
 window.__bimoFb2 = makeHero('fb2Mascot', 'umpan balik');
 window.__bimoFv  = makeHero('fvMascot', 'hasil cek ulang');
+
+/* Sinkronkan pause/play tiap kali class .screen berubah (showScreen, tombol
+   kembali, dll) — maskot di layar tersembunyi jangan ikut merender. */
+function syncHeroes(){
+  try { window.__bimoFb2?.sync?.(); window.__bimoFv?.sync?.(); } catch (e) { console.warn('[bimo] sync', e); }
+}
+const heroObserver = new MutationObserver(syncHeroes);
+document.querySelectorAll('.screen').forEach(s => heroObserver.observe(s, { attributes: true, attributeFilter: ['class'] }));
+syncHeroes();
 </script>
 </body>
 </html>
