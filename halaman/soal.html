@@ -762,8 +762,41 @@ window.__bimoPad = {
 
 /* Bimo di hero umpan balik (varian "belum tepat") — dipanggil fillFeedback()
    SETELAH class .wrong dipasang, supaya slot sudah display:block saat mount */
+/* Gate fallback: SVG statis TIDAK dihapus saat mount — canvas menumpuk di atasnya,
+   SVG disembunyikan hanya setelah canvas berisi gambar nyata. Gagal → SVG tetap. */
+function canvasHasInk(c){
+  try{
+    const s=document.createElement('canvas');s.width=32;s.height=32;
+    const x=s.getContext('2d');x.drawImage(c,0,0,32,32);
+    const d=x.getImageData(0,0,32,32).data;
+    for(let i=3;i<d.length;i+=4){if(d[i]>8)return true}
+    return false;
+  }catch(e){return true}
+}
+function gateSlot(host,m,tag){
+  const svg=host.querySelector('svg');
+  const canvas=host.querySelector('canvas');
+  if(canvas){
+    if(getComputedStyle(host).position==='static')host.style.position='relative';
+    canvas.style.position='absolute';canvas.style.inset='0';canvas.style.zIndex='1';
+  }
+  if(!svg||!canvas)return;
+  let done=false,blank=0;
+  const poll=setInterval(()=>{
+    if(done){clearInterval(poll);return}
+    if(m.drawn){
+      if(canvasHasInk(canvas)){done=true;svg.style.visibility='hidden';clearInterval(poll)}
+      else if(++blank>=4){
+        done=true;clearInterval(poll);
+        try{if(typeof m.dispose==='function')m.dispose()}catch(e){}
+        if(canvas.parentNode)canvas.parentNode.removeChild(canvas);
+        svg.style.visibility='';
+        console.warn('['+tag+'] canvas kosong — SVG statis dipertahankan');
+      }
+    }
+  },150);
+}
 const fbSlot = document.getElementById('fbMascot');
-const fbFallback = fbSlot ? fbSlot.innerHTML : '';
 let fbMascot = null;
 let fbState = 'idle';
 function fbSetState(s){
@@ -778,11 +811,12 @@ window.__bimoFb = {
       try {
         if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
         void fbSlot.offsetWidth;                       // reflow: pastikan slot berukuran sebelum mount
-        fbSlot.innerHTML = '';
         fbMascot = mount(fbSlot, bimo, { state: state || 'happy', ...M_OPTS });
+        gateSlot(fbSlot, fbMascot, 'bimo-fb');
       } catch (err) {
         console.warn('[bimo] WebGL2 absen — pakai SVG hero:', err && err.message);
-        fbSlot.innerHTML = fbFallback;                 // SVG statis robot tetap tampil
+        const c = fbSlot.querySelector('canvas');      // buang canvas parsial; SVG tak pernah disentuh
+        if (c && c.parentNode) c.parentNode.removeChild(c);
       }
     } else {
       fbSetState(state || 'happy');

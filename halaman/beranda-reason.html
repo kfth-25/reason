@@ -483,7 +483,6 @@ const M_OPTS = LIGHT ? { maxPixelRatio: 1, interactive: false } : {};
 window.__bimoLight = LIGHT;
 
 const slot = document.getElementById('bimoSlot');
-const fallbackMarkup = slot ? slot.innerHTML : '';
 let mascot = null;
 let currentState = 'idle';
 
@@ -492,15 +491,53 @@ function setState(s){
   if (mascot) { try { mascot.setState(s); } catch (e) { console.warn('[bimo] setState', e); } }
 }
 
+/* Gate fallback: SVG statis TIDAK dihapus saat mount. Canvas menumpuk di atasnya
+   (absolutely positioned), dan SVG baru disembunyikan setelah canvas benar-benar
+   berisi gambar. Canvas kosong / tak pernah terisi → canvas dibuang, SVG tetap. */
+function canvasHasInk(c){
+  try{
+    const s=document.createElement('canvas');s.width=32;s.height=32;
+    const x=s.getContext('2d');x.drawImage(c,0,0,32,32);
+    const d=x.getImageData(0,0,32,32).data;
+    for(let i=3;i<d.length;i+=4){if(d[i]>8)return true}
+    return false;
+  }catch(e){return true}
+}
+function gateSlot(host,m,tag){
+  const svg=host.querySelector('svg');
+  const canvas=host.querySelector('canvas');
+  if(canvas){
+    if(getComputedStyle(host).position==='static')host.style.position='relative';
+    canvas.style.position='absolute';canvas.style.inset='0';canvas.style.zIndex='1';
+  }
+  if(!svg||!canvas)return;
+  let done=false,blank=0;
+  const poll=setInterval(()=>{
+    if(done){clearInterval(poll);return}
+    if(m.drawn){
+      if(canvasHasInk(canvas)){done=true;svg.style.visibility='hidden';clearInterval(poll)}
+      else if(++blank>=4){                 // sudah "menggambar" tapi tetap kosong → gagal
+        done=true;clearInterval(poll);
+        try{if(typeof m.dispose==='function')m.dispose()}catch(e){}
+        if(canvas.parentNode)canvas.parentNode.removeChild(canvas);
+        svg.style.visibility='';
+        console.warn('['+tag+'] canvas kosong — SVG statis dipertahankan');
+      }
+    }
+    /* belum pernah menggambar: terus menunggu (mungkin belum terlihat di viewport) */
+  },150);
+}
+
 function boot(){
   if (!slot) return;
   try {
     if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
-    slot.innerHTML = '';
     mascot = mount(slot, bimo, { state: currentState, ...M_OPTS });
+    gateSlot(slot, mascot, 'bimo');
   } catch (err) {
     console.warn('[bimo] WebGL2 absen — pakai SVG statis:', err && err.message);
-    slot.innerHTML = fallbackMarkup;   // kembalikan SVG statis
+    const c = slot.querySelector('canvas');   // buang canvas parsial; SVG tak pernah disentuh
+    if (c && c.parentNode) c.parentNode.removeChild(c);
   }
 }
 /* HP: mount saat browser longgar supaya kompilasi shader tak menahan load awal
