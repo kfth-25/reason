@@ -171,6 +171,10 @@
   }
   .thinking .orb::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--bg)}
   @keyframes spin{to{transform:rotate(360deg)}}
+  /* slot maskot 3D — menumpuk di atas orb; orb disembunyikan hanya setelah mount sukses */
+  .thinking .hero{position:relative;width:120px;height:104px;display:flex;align-items:center;justify-content:center}
+  .thinking .slot{position:absolute;inset:0}
+  .thinking .slot canvas{width:100%;height:100%;display:block}
   .thinking p{font-size:14px;font-weight:600;color:var(--text)}
   .thinking small{font-size:12px;color:var(--muted)}
   .cancel-btn{
@@ -317,9 +321,12 @@
     </div>
   </section>
 
-  <!-- Agen berpikir: indikator manusiawi + batal (PRD §21) -->
+  <!-- Agen berpikir: Bimo membaca jawaban (3D bila WebGL2 ada; orb cadangan) + batal (PRD §21) -->
   <div class="thinking" id="thinking">
-    <div class="orb"></div>
+    <div class="hero">
+      <div class="orb" id="thinkOrb"></div>
+      <div class="slot" id="agentSlot"></div>
+    </div>
     <p>Agen sedang membaca jawabanmu…</p>
     <small>Biasanya 2–5 detik</small>
     <button class="pill-btn cancel-btn" onclick="cancelThinking()">Batal</button>
@@ -424,10 +431,12 @@ function updateNext(){
 }
 function submitAnswer(){
   results.push({q:qi, picked, conf});
-  // Indikator berpikir + opsi batal (PRD §21)
+  // Indikator berpikir + opsi batal (PRD §21) — Bimo membaca (bila WebGL2 ada)
   document.getElementById('thinking').classList.add('show');
+  if (window.__bimoPad) window.__bimoPad.show();
   thinkTimer = setTimeout(() => {
     document.getElementById('thinking').classList.remove('show');
+    if (window.__bimoPad) window.__bimoPad.hide();
     qi++;
     if(qi < QUESTIONS.length){
       renderQ();
@@ -440,6 +449,7 @@ function submitAnswer(){
 function cancelThinking(){
   clearTimeout(thinkTimer);
   document.getElementById('thinking').classList.remove('show');
+  if (window.__bimoPad) window.__bimoPad.hide();
   toast('Dibatalkan — jawabanmu tetap tersimpan sebagai draf');
 }
 
@@ -450,6 +460,49 @@ function quickCheck(name){
 
 renderQ();
 setTheme('light');
+</script>
+
+<script type="module">
+/* Bimo 3D (wobnimo) di pad "Agen sedang membaca jawabanmu" — mount saat pad
+   PERTAMA kali tampil (submitAnswer → show) supaya canvas berukuran benar;
+   slot di dalam overlay display:none = ukuran 0. Fallback: orb berputar. */
+import { mount } from '../vendor/wobnimo.js';
+import { bimo } from '../mascots/bimo.js';
+
+/* Profil ringan utk HP (layar high-DPR / RAM kecil): pixel ratio 1 & tanpa
+   interaksi pointer — beban GPU & baterai jauh lebih rendah. */
+const LIGHT = matchMedia('(pointer: coarse)').matches || (navigator.deviceMemory || 8) <= 4;
+const M_OPTS = LIGHT ? { maxPixelRatio: 1, interactive: false } : {};
+
+const slot = document.getElementById('agentSlot');
+const orb = document.getElementById('thinkOrb');
+let mascot = null;
+let currentState = 'idle';
+
+function setState(s){
+  currentState = s;
+  if (mascot) { try { mascot.setState(s); } catch (e) { console.warn('[bimo] setState', e); } }
+}
+
+window.__bimoPad = {
+  get mounted(){ return !!mascot; },
+  get state(){ return currentState; },
+  show(){
+    if (!mascot) {
+      try {
+        if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
+        mascot = mount(slot, bimo, { state: 'working', ...M_OPTS });   // chin menunduk ke buku = membaca
+        if (orb) orb.style.display = 'none';
+      } catch (err) {
+        console.warn('[bimo] WebGL2 absen — pakai orb:', err && err.message);
+      }
+    } else {
+      setState('working');
+    }
+  },
+  hide(){ setState('idle'); },
+  setState
+};
 </script>
 </body>
 </html>
