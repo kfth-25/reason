@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>REASON — Latihan & Cek Ulang</title>
+<style>
+  :root{
+    --blue:#4392F0; --blue-deep:#2E7BD6; --blue-soft:#D6E8FF;
+    --purple:#B7A6F6; --purple-soft:#EFEAFD; --orange:#F5A93F;
+    --pink:#F9A9E8; --pink-soft:#FCE3F8; --green:#C5EE93;
+    --bg:#F5F3FE; --card:#FFFFFF; --text:#171A2E; --muted:#8A8B98;
+    --line:#ECECF1; --nav-dark:#15161C; --r-card:22px; --r-pill:999px;
+    --shadow:0 8px 24px rgba(20,22,40,.07);
+    --font:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  [data-theme="dark"]{
+    --bg:#1A2434; --card:#152030; --text:#F2F4F8; --muted:#8B97AB;
+    --line:#253147; --nav-dark:#0F1724; --blue-soft:#1E3A5F;
+    --purple-soft:#2A2750; --pink-soft:#402A45;
+    --shadow:0 8px 24px rgba(0,0,0,.28);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:var(--font);background:#DDE1EA;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  .phone{width:390px;height:844px;max-height:100vh;background:var(--bg);border-radius:44px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35}
+  @media (max-width:520px){body{padding:0}.phone{width:100%;height:100vh;border-radius:0;box-shadow:none}}
+  .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;background:#0B0D12;border-radius:20px;z-index:60}
+  .statusbar{position:absolute;top:0;left:0;right:0;height:52px;z-index:55;display:flex;align-items:center;justify-content:space-between;padding:16px 28px 0;font-size:14px;font-weight:600;color:var(--text);pointer-events:none}
+  .statusbar span:last-child{display:flex;gap:6px}.statusbar svg{width:16px;height:16px;fill:var(--text)}
+  .screen{position:absolute;inset:0;padding-top:52px;padding-bottom:36px;overflow-y:auto;opacity:0;visibility:hidden;transform:translateX(18px);transition:opacity .3s,transform .3s,visibility .3s}
+  .screen.active{opacity:1;visibility:visible;transform:translateX(0)}
+  .screen::-webkit-scrollbar,.sheet::-webkit-scrollbar{display:none}.pad{padding:0 20px}
+  .home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:50}
+  .pill-btn{border:none;font-family:var(--font);cursor:pointer;border-radius:var(--r-pill);font-weight:600;transition:transform .15s}.pill-btn:active{transform:scale(.96)}
+  .theme-fab{position:absolute;top:60px;right:16px;z-index:70;width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;background:var(--card);box-shadow:var(--shadow);font-size:16px}
+  .toast{position:absolute;left:50%;bottom:40px;transform:translateX(-50%) translateY(20px);background:var(--nav-dark);color:#F6F6F9;font-size:12.5px;font-weight:600;padding:12px 20px;border-radius:var(--r-pill);z-index:85;max-width:86%;text-align:center;opacity:0;pointer-events:none;transition:all .3s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .sess-head{display:flex;align-items:center;gap:12px;padding:12px 44px 0 0}.back{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}.back svg{width:19px;height:19px;stroke:var(--text);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .sess-head .st{flex:1}.sess-head b{display:block;font-size:15px;font-weight:700;color:var(--text)}.sess-head span{font-size:12px;color:var(--muted)}
+  .steps{display:flex;gap:8px;margin-top:15px}.steps i{flex:1;height:8px;border-radius:6px;background:#E7E2F7}.steps i.now{background:var(--blue)}.steps i.done{background:var(--green)}
+  .hero{margin-top:16px;background:#D9E7FB;border-radius:24px;padding:22px 18px;position:relative;overflow:hidden;min-height:118px}.hero::after{content:"🌈";position:absolute;right:16px;top:16px;font-size:27px;transform:rotate(10deg);pointer-events:none}.hero .tag{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--blue-deep)}[data-theme="dark"] .hero .tag{color:#9CC4F5}.hero h2{font-size:22px;font-weight:700;letter-spacing:-.3px;line-height:1.3;color:var(--text);margin-top:7px;max-width:88%}.hero p{font-size:13px;color:var(--muted);line-height:1.6;margin-top:9px;max-width:88%}[data-theme="dark"] .hero p{color:#C9DBF2}
+  .analogy{margin-top:14px;background:var(--card);border-radius:24px;padding:20px 18px;box-shadow:var(--shadow)}.analogy h3{font-size:15px;font-weight:700;color:var(--text);display:flex;gap:8px;align-items:center}.analogy p{font-size:13px;line-height:1.65;color:var(--text);margin-top:10px}.analogy .muted{color:var(--muted)}
+  .trace{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:15px;flex-wrap:wrap}.trace span{font-family:Consolas,monospace;font-size:12px;font-weight:700;background:var(--purple-soft);color:var(--text);padding:8px 10px;border-radius:10px}.trace b{color:var(--muted);font-size:13px}.trace-caption{text-align:center;font-size:12px!important;color:var(--muted)!important;margin-top:9px!important}
+  .qcard{margin-top:16px;background:var(--card);border-radius:24px;padding:22px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden}.qcard::after{content:"🧩";position:absolute;right:15px;top:15px;font-size:25px;transform:rotate(12deg);pointer-events:none}.qcard .concept{display:inline-block;font-size:11.5px;font-weight:700;background:var(--purple-soft);color:#6B5BB5;border-radius:var(--r-pill);padding:6px 14px}[data-theme="dark"] .qcard .concept{color:#C5B8F0}.qcard h2{font-size:18px;font-weight:700;color:var(--text);line-height:1.45;margin-top:14px;padding-right:34px}
+  .code{margin-top:14px;background:var(--nav-dark);border-radius:14px;padding:15px 17px;font-family:Consolas,monospace;font-size:12.5px;line-height:1.65;color:#E8ECF4;white-space:pre;overflow-x:auto}.code .kw{color:#8FB8FF}.code .num{color:#F5C97B}.code .fn{color:#C5EE93}
+  .ans{width:100%;text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:18px;padding:12px 14px;margin-top:9px;cursor:pointer;font-family:var(--font);font-size:13px;color:var(--text);line-height:1.5;display:flex;gap:11px;align-items:center;transition:all .18s}.ans:active{transform:scale(.98)}.ans .key{width:29px;height:29px;border-radius:11px;background:var(--card);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;color:var(--muted);border:1.5px solid var(--line)}.ans.on{border-color:var(--blue);background:var(--blue-soft)}.ans.on .key{background:var(--blue);border-color:var(--blue);color:#fff}.ans:disabled{cursor:default}
+  .field-label{font-size:13px;font-weight:700;color:var(--text);margin-top:18px;display:flex;align-items:center;gap:8px}.why-ico{width:22px;height:22px;border-radius:8px;background:var(--blue);display:inline-flex;align-items:center;justify-content:center;font-size:13px;color:#fff}.tarea{width:100%;margin-top:9px;border:1.5px solid var(--line);border-radius:16px;background:var(--card);padding:13px 15px;font-family:var(--font);font-size:13px;color:var(--text);resize:none;min-height:92px;outline:none;line-height:1.55}.tarea:focus{border-color:var(--blue)}.tarea::placeholder{color:var(--muted)}.tarea.warn{border-color:var(--orange)}.hint{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.5}.warn-note{display:none;font-size:11.5px;color:#B57708;margin-top:7px}.warn-note.show{display:block}[data-theme="dark"] .warn-note{color:#F0C070}
+  .next-btn{width:100%;padding:16px;margin-top:18px;background:var(--nav-dark);color:#F6F6F9;font-size:14.5px;font-weight:700}.next-btn:disabled{opacity:.4}.save-note{text-align:center;font-size:11px;color:var(--muted);margin-top:9px}
+  .thinking{position:absolute;inset:0;background:rgba(246,246,249,.93);z-index:65;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;backdrop-filter:blur(4px)}[data-theme="dark"] .thinking{background:rgba(26,36,52,.93)}.thinking.show{display:flex}.orb{width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--blue),var(--purple),var(--pink),var(--blue));animation:spin 1.6s linear infinite;position:relative}.orb::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--bg)}@keyframes spin{to{transform:rotate(360deg)}}.thinking p{font-size:14px;font-weight:600;color:var(--text)}.thinking small{font-size:12px;color:var(--muted)}.cancel-btn{margin-top:6px;background:var(--card);color:var(--text);border:1.5px solid var(--line);padding:10px 24px;font-size:13px}
+  .fb-verdict{margin-top:16px;border-radius:26px;padding:22px 20px;background:var(--green);color:#15161C;position:relative;overflow:hidden}.fb-verdict::after{content:"✨";position:absolute;right:14px;top:12px;font-size:22px;transform:rotate(14deg);pointer-events:none}.fb-verdict.partial{background:var(--orange)}.fb-verdict.wrong{background:var(--pink)}.fb-verdict h2{font-size:19px;line-height:1.3;max-width:86%}.fb-verdict p{font-size:12px;font-weight:600;margin-top:5px;opacity:.8;max-width:86%}.fb-panel{background:var(--card);border-radius:24px;padding:18px;margin-top:13px;box-shadow:var(--shadow)}.fb-panel h4{font-size:13.5px;color:var(--text)}.fb-panel p{font-size:12.5px;line-height:1.65;color:var(--text);margin-top:8px}.your-answer{margin-top:10px;background:var(--bg);border:1.5px dashed var(--line);border-radius:14px;padding:11px 13px;font-size:12px;color:var(--muted);line-height:1.55}.your-answer b{color:var(--text)}
+  .mastery-update{display:flex;align-items:center;gap:13px;background:var(--purple-soft);border-radius:24px;padding:18px;margin-top:14px}.mastery-update .mi{font-size:28px}.mastery-update b{display:block;font-size:13.5px;color:var(--text)}.mastery-update p{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:3px}.quote{margin-top:13px;background:var(--blue-soft);border-left:4px solid var(--blue);border-radius:0 14px 14px 0;padding:13px 15px;font-size:12px;line-height:1.6;color:var(--text)}[data-theme="dark"] .quote{color:#C9DBF2}.quote button{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:11px;font-weight:700;color:var(--blue-deep);cursor:pointer;border:0;background:none;font-family:var(--font);padding:0}[data-theme="dark"] .quote button{color:#9CC4F5}
+  .overlay{position:absolute;inset:0;background:rgba(10,12,20,.45);z-index:75;opacity:0;visibility:hidden;transition:all .28s;backdrop-filter:blur(3px)}.overlay.show{opacity:1;visibility:visible}.sheet{position:absolute;left:0;right:0;bottom:0;z-index:76;background:var(--bg);border-radius:30px 30px 0 0;padding:14px 22px 30px;transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.25,1);max-height:75%;overflow-y:auto}.sheet.show{transform:translateY(0)}.grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 16px}.sheet h3{font-size:16px;color:var(--text);line-height:1.4}.sheet .meta{font-size:11px;color:var(--muted);margin-top:5px}.sheet .content{margin-top:14px;background:var(--card);border-radius:16px;padding:16px;font-size:12.5px;line-height:1.7;color:var(--text);white-space:pre-line}.verified{display:inline-block;margin-top:13px;font-size:11px;font-weight:700;color:#3F7A1E;background:var(--green);border-radius:var(--r-pill);padding:6px 13px}
+
+  /* ============ UMPAN BALIK LATIHAN — ala mockup hasil ============ */
+  .fhead{position:relative;display:flex;align-items:center;padding-top:10px;min-height:42px}
+  .fhead .htitle{position:absolute;left:52px;right:52px;text-align:center;pointer-events:none;font-size:17px;font-weight:700;color:var(--text)}
+  .fb2{margin-top:14px;background:#E7F7D4;border-radius:22px;padding:20px 16px;display:flex;gap:8px;align-items:flex-end;position:relative;overflow:hidden}
+  .fb2.partial{background:#FDEBCB}
+  .fb2.wrong{background:#FCE3F8}
+  .fb2 .fb2-t{flex:1;min-width:0}
+  .fb2 h2{font-size:21px;font-weight:700;color:#171A2E;line-height:1.3;letter-spacing:-.2px}
+  .fb2 p{font-size:12.5px;font-weight:600;color:#4A5A3C;line-height:1.55;margin-top:7px}
+  .fb2.partial p{color:#7A5A1E}
+  .fb2.wrong p{color:#8A3A6E}
+  .fb2 .fb2-m{width:108px;flex-shrink:0;align-self:flex-end;margin-bottom:-4px}
+  .blk{margin-top:18px}
+  .blk-h{display:flex;align-items:center;gap:9px;font-size:15.5px;font-weight:700;color:var(--text)}
+  .blk-h .bico{width:30px;height:30px;border-radius:10px;background:var(--purple-soft);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+  .blk p{font-size:13.5px;line-height:1.7;color:var(--text);margin-top:10px}
+  .blk p.sub{font-size:12.5px;color:var(--muted);margin-top:8px}
+  .qc{margin-top:16px;background:#EDE8FB;border-radius:18px;padding:16px 16px 15px;position:relative}
+  .qc .qc-h{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;color:var(--text)}
+  .qc .qc-h .bico{background:#fff}
+  .qc .ext{position:absolute;right:15px;top:15px;width:26px;height:26px;border:none;background:none;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center}
+  .qc .ext svg{width:17px;height:17px;stroke:#6B5BB5;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .qc blockquote{font-size:13px;line-height:1.7;color:var(--text);margin-top:10px;font-weight:500}
+  .qc .qc-src{display:block;margin-top:10px;font-size:12px;color:var(--muted)}
+  .prog-h .delta{margin-left:auto;font-size:12.5px;font-weight:700;color:#2E7A12;background:#DFF6D0;border-radius:var(--r-pill);padding:5px 11px}
+  .prog-h .delta.flat{color:#6B5BB5;background:var(--purple-soft)}
+  .prog-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:13.5px;font-weight:600;color:var(--text)}
+  .prog-row b{font-size:13.5px}
+  .prog-track{height:10px;background:#E7E2F7;border-radius:6px;margin-top:8px;overflow:hidden}
+  [data-theme="dark"] .prog-track{background:#2A2750}
+  .prog-track i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#8574F4,#6555E6);width:0;transition:width .5s}
+  .next-btn{display:flex;align-items:center;justify-content:center;gap:9px}
+  .next-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="notch"></div>
+  <div class="statusbar"><span>9:41</span><span><svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zm5-3h3v7H7zm5-4h3v11h-3zm5-5h3v16h-3z"/></svg><svg viewBox="0 0 24 24"><path d="M12 18.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM7.7 14.4a6.2 6.2 0 018.6 0l1.4-1.5a8.2 8.2 0 00-11.4 0z"/></svg><svg viewBox="0 0 24 24"><path d="M15.7 4H8.3C7 4 6 5 6 6.3v11.4C6 19 7 20 8.3 20h7.4c1.3 0 2.3-1 2.3-2.3V6.3C18 5 17 4 15.7 4z"/></svg></span></div>
+  <button class="theme-fab" id="themeBtn" title="Ganti tema">🌙</button>
+
+  <!-- LATIHAN TARGET: penjelasan dari sudut berbeda + satu soal -->
+  <section class="screen active" id="s-target">
+    <div class="pad">
+      <div class="sess-head">
+        <button class="back" onclick="location.href='soal.html'" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>
+        <div class="st"><b>Latihan target</b><span>Fokus: jejak eksekusi</span></div>
+      </div>
+      <div class="steps"><i class="now"></i><i></i><i></i></div>
+
+      <div class="analogy">
+        <h3>🍽️ Seperti tumpukan piring</h3>
+        <p>Pemanggilan baru diletakkan di atas. Pemanggilan lama <b>menunggu</b>, bukan hilang. Piring paling atas selesai lebih dulu, lalu piring di bawahnya melanjutkan pekerjaan.</p>
+        <div class="trace"><span>faktorial(3)</span><b>→</b><span>faktorial(2)</span><b>→</b><span>faktorial(1)</span><b>→</b><span>faktorial(0)</span></div>
+        <p class="trace-caption">Turun: menambah piring. Kembali: menyelesaikan satu per satu dari kanan.</p>
+      </div>
+
+      <div class="qcard">
+        <span class="concept">Latihan 1 · Call stack</span>
+        <h2>Setelah faktorial(0) mengembalikan 1, pemanggilan mana yang lebih dulu selesai?</h2>
+        <div id="targetAnswers"></div>
+      </div>
+      <div class="field-label"><span class="why-ico">?</span>Kenapa jawabanmu begitu?</div>
+      <textarea class="tarea" id="targetWhy" placeholder="Petunjuk: siapa yang langsung menunggu faktorial(0)?"></textarea>
+      <div class="hint">Satu langkah saja: jelaskan urutan kembali dari kasus dasar.</div>
+      <div class="warn-note" id="targetWarn">Alasanmu masih kosong. Kirim sekali lagi jika memang belum bisa menjelaskan — akan dicatat sebagai “alasan belum ada”.</div>
+      <button class="pill-btn next-btn" id="targetSend" disabled onclick="submitTarget()">Kirim & periksa alasan</button>
+      <div class="save-note" id="targetSave">Draf tersimpan otomatis</div>
+    </div>
+  </section>
+
+  <!-- UMPAN BALIK LATIHAN — ala mockup hasil -->
+  <section class="screen" id="s-target-fb">
+    <div class="pad">
+      <div class="fhead">
+        <button class="back" onclick="showScreen('s-target')" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>
+        <span class="htitle">Umpan Balik</span>
+      </div>
+
+      <div class="fb2" id="targetVerdict">
+        <div class="fb2-t">
+          <h2 id="targetVerdictTitle"></h2>
+          <p id="targetVerdictSub"></p>
+        </div>
+        <svg class="fb2-m" viewBox="0 0 120 118" aria-hidden="true">
+          <line x1="58" y1="20" x2="52" y2="9" stroke="#7C6BF0" stroke-width="4.5" stroke-linecap="round"/>
+          <circle cx="51" cy="7" r="5.5" fill="#FFC94D"/>
+          <circle cx="30" cy="48" r="9" fill="#7C6BF0"/>
+          <circle cx="90" cy="48" r="9" fill="#7C6BF0"/>
+          <circle cx="30" cy="48" r="4" fill="#5D4BD6"/>
+          <circle cx="90" cy="48" r="4" fill="#5D4BD6"/>
+          <rect x="26" y="24" width="68" height="56" rx="25" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+          <rect x="37" y="37" width="46" height="32" rx="15" fill="#171A2E"/>
+          <path d="M46 50q5-7 10 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+          <path d="M64 50q5-7 10 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+          <path d="M54 59q6 6 12 0" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M40 82c11-6 29-6 40 0l5 30c-16 7-34 7-50 0z" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+          <path d="M84 92c8-3 13-9 13-17" stroke="#E4E1F7" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <path d="M92 76v-9" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"/>
+          <path d="M92 76v-9" stroke="#E4E1F7" stroke-width="11" stroke-linecap="round" fill="none"/>
+          <path d="M92 75V66" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/>
+          <circle cx="95" cy="78" r="9" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="2.5"/>
+          <path d="M93 74v-7" stroke="#FFF" stroke-width="6" stroke-linecap="round"/>
+          <path d="M18 96l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#FFC94D"/>
+          <path d="M104 34l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z" fill="#9C8CF5"/>
+        </svg>
+      </div>
+
+      <div class="blk">
+        <div class="blk-h"><span class="bico">📈</span>Analisis Penalaran</div>
+        <p id="targetReasonFb"></p>
+        <p class="sub" id="targetConceptFb"></p>
+      </div>
+
+      <div class="qc">
+        <div class="qc-h"><span class="bico">📖</span>Kutipan Materi Kuliah</div>
+        <button class="ext" onclick="openSource()" aria-label="Buka sumber"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v6a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h6"/></svg></button>
+        <blockquote>“Setiap pemanggilan menunggu hasil pemanggilan berikutnya hingga kasus dasar tercapai, lalu hasil dikalikan berurutan saat kembali.”</blockquote>
+        <span class="qc-src">— Modul Matematika Diskrit, Bab 4.2, hlm. 57</span>
+      </div>
+
+      <div class="blk">
+        <div class="blk-h prog-h"><span class="bico">🎯</span>Progress Konsep <span class="delta" id="targetDelta">+10%</span></div>
+        <div class="prog-row"><span id="targetProgName">Jejak eksekusi</span><b id="targetPct">90%</b></div>
+        <div class="prog-track"><i id="targetProgFill" style="width:90%"></i></div>
+      </div>
+
+      <button class="pill-btn next-btn" onclick="goCheck()">
+        <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 11-2.6-6.4"/><path d="M21 3v6h-6"/></svg>
+        Lanjut ke cek ulang
+      </button>
+      <div class="save-note">Satu soal berbeda untuk memastikan konsepnya benar-benar menempel.</div>
+    </div>
+  </section>
+
+  <!-- CEK ULANG -->
+  <section class="screen" id="s-check">
+    <div class="pad">
+      <div class="sess-head">
+        <button class="back" onclick="showScreen('s-target')" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>
+        <div class="st"><b>Cek ulang</b><span>Soal baru, konsep yang sama</span></div>
+      </div>
+      <div class="steps"><i class="done"></i><i class="now"></i><i></i></div>
+      <div class="qcard">
+        <span class="concept">Cek ulang · Call stack</span>
+        <h2>Apa keluaran <b>sapa(2)</b> dari kode ini?</h2>
+        <div class="code"><span class="kw">def</span> <span class="fn">sapa</span>(n):
+    <span class="kw">if</span> n == <span class="num">0</span>:
+        <span class="kw">return</span>
+    <span class="fn">print</span>(n)
+    sapa(n - <span class="num">1</span>)
+    <span class="fn">print</span>(n)</div>
+        <div id="checkAnswers"></div>
+      </div>
+      <div class="field-label"><span class="why-ico">?</span>Kenapa urutannya begitu?</div>
+      <textarea class="tarea" id="checkWhy" placeholder="Ceritakan kapan print pertama dan print kedua dijalankan…"></textarea>
+      <div class="hint">Yang dinilai: kamu menelusuri saat masuk dan saat kembali, bukan hanya menebak pola.</div>
+      <div class="warn-note" id="checkWarn">Alasanmu masih kosong. Kirim sekali lagi untuk lanjut dengan catatan “alasan belum ada”.</div>
+      <button class="pill-btn next-btn" id="checkSend" disabled onclick="submitCheck()">Kirim cek ulang</button>
+      <div class="save-note" id="checkSave">Draf tersimpan otomatis</div>
+    </div>
+  </section>
+
+  <!-- HASIL CEK ULANG + PETA DIPERBARUI -->
+  <section class="screen" id="s-result">
+    <div class="pad">
+      <div class="sess-head"><div class="st"><b>Hasil cek ulang</b><span>Peta penguasaan diperbarui</span></div></div>
+      <div class="steps"><i class="done"></i><i class="done"></i><i class="now"></i></div>
+      <div class="fb-verdict" id="checkVerdict"><h2 id="checkVerdictTitle"></h2><p id="checkVerdictSub"></p></div>
+      <div class="fb-panel"><h4>🔍 Penilaian alasanmu</h4><p id="checkReasonFb"></p><div class="your-answer"><b>Alasanmu:</b> <span id="checkYourWhy"></span></div></div>
+      <div class="fb-panel"><h4>🧭 Telusuri sekali lagi</h4><p id="checkTraceFb">Saat turun, <b>sapa(2)</b> mencetak 2 dan <b>sapa(1)</b> mencetak 1. Setelah <b>sapa(0)</b> selesai, pemanggilan yang menunggu kembali bekerja: <b>sapa(1)</b> mencetak 1, lalu <b>sapa(2)</b> mencetak 2.</p></div>
+      <div class="mastery-update"><span class="mi" id="masteryIcon">🌱</span><div><b id="masteryTitle"></b><p id="masteryText"></p></div></div>
+      <div class="quote">“Setiap pemanggilan menunggu hasil pemanggilan berikutnya hingga kasus dasar tercapai, lalu hasil dikalikan berurutan saat kembali.”<button onclick="openSource()">Modul Matematika Diskrit, Bab 4.2, hlm. 57 — buka sumber ↗</button></div>
+      <button class="pill-btn next-btn" onclick="location.href='ringkasan.html'">Lihat ringkasan sesi</button>
+    </div>
+  </section>
+
+  <div class="thinking" id="thinking"><div class="orb"></div><p>Agen membaca jejak penalaranmu…</p><small>Menilai dengan rubrik yang disetujui dosen</small><button class="pill-btn cancel-btn" onclick="cancelThinking()">Batal</button></div>
+  <div class="overlay" id="overlay" onclick="closeSource()"></div>
+  <div class="sheet" id="sheet"><div class="grab"></div><h3>Modul Matematika Diskrit — Bab 4.2 “Rekursi”</h3><div class="meta">Catatan kuliah dosen pengampu · hlm. 57 · sumber terverifikasi</div><div class="content">Setiap pemanggilan menunggu hasil pemanggilan berikutnya hingga kasus dasar tercapai, lalu hasil dikalikan berurutan saat kembali.
+
+Ketika fungsi dipanggil, keadaan pemanggilan sebelumnya disimpan pada tumpukan pemanggilan. Setelah pemanggilan baru selesai, fungsi sebelumnya melanjutkan instruksi berikutnya dari titik tempat ia menunggu.</div><span class="verified">✓ Sumber diverifikasi dosen</span></div>
+  <div class="home-ind"></div><div class="toast" id="toast"></div>
+</div>
+<script>
+function setTheme(mode){document.getElementById('phone').dataset.theme=mode;document.getElementById('themeBtn').textContent=mode==='dark'?'☀️':'🌙'}
+document.getElementById('themeBtn').addEventListener('click',()=>setTheme(document.getElementById('phone').dataset.theme==='dark'?'light':'dark'));
+let toastT;function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2600)}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.getElementById(id).scrollTop=0}
+function escapeHTML(value){const d=document.createElement('div');d.textContent=value;return d.innerHTML}
+
+const TARGET={answers:['faktorial(3)','faktorial(2)','faktorial(1)','Semua selesai bersamaan'],correct:2};
+const CHECK={answers:['2, 1, 0, 1, 2','2, 1, 1, 2','1, 2, 2, 1','2, 1 lalu berhenti'],correct:1};
+let targetPick=-1,checkPick=-1,targetWarned=false,checkWarned=false,thinkTimer=null,pendingAction=null;
+
+function renderAnswers(data,containerId,type){
+  document.getElementById(containerId).innerHTML=data.answers.map((a,i)=>`<button class="ans" data-i="${i}" onclick="pickAnswer('${type}',${i},this)"><span class="key">${'ABCD'[i]}</span><span>${a}</span></button>`).join('');
+}
+function pickAnswer(type,i,el){
+  const parent=el.parentElement;parent.querySelectorAll('.ans').forEach(a=>a.classList.remove('on'));el.classList.add('on');
+  if(type==='target'){targetPick=i;document.getElementById('targetSend').disabled=false}else{checkPick=i;document.getElementById('checkSend').disabled=false}
+}
+function setupDraft(id,key,onInput){
+  const el=document.getElementById(id);try{el.value=localStorage.getItem(key)||''}catch(e){}
+  let timer;el.addEventListener('input',()=>{el.classList.remove('warn');clearTimeout(timer);timer=setTimeout(()=>{try{localStorage.setItem(key,el.value)}catch(e){}onInput&&onInput()},400)});
+}
+setupDraft('targetWhy','reason_target_why');setupDraft('checkWhy','reason_check_why');
+
+function think(callback){
+  pendingAction=callback;document.getElementById('thinking').classList.add('show');
+  thinkTimer=setTimeout(()=>{document.getElementById('thinking').classList.remove('show');callback()},1500);
+}
+function cancelThinking(){clearTimeout(thinkTimer);pendingAction=null;document.getElementById('thinking').classList.remove('show');toast('Dibatalkan — drafmu tetap tersimpan')}
+
+function submitTarget(){
+  const why=document.getElementById('targetWhy');
+  if(!why.value.trim()&&!targetWarned){targetWarned=true;why.classList.add('warn');document.getElementById('targetWarn').classList.add('show');why.focus();return}
+  think(showTargetFeedback);
+}
+function showTargetFeedback(){
+  const why=document.getElementById('targetWhy').value.trim();
+  const correct=targetPick===TARGET.correct;
+  const reasonOK=/tunggu|langsung|dasar|kembali|atas/.test(why.toLowerCase());
+  const best=correct&&reasonOK;
+  const verdict=document.getElementById('targetVerdict');verdict.className='fb2 '+(best?'':correct?'partial':'wrong');
+  document.getElementById('targetVerdictTitle').textContent=best?'Jawabanmu sudah tepat!':correct?'Jawaban tepat, alasannya perlu satu langkah lagi.':'Belum tepat, dan itu petunjuk yang berguna.';
+  document.getElementById('targetVerdictSub').textContent=best?'Penjelasanmu juga menunjukkan penalaran yang baik.':correct?'Kita cek dengan soal yang berbeda.':'Kita luruskan dulu sebelum cek ulang.';
+  document.getElementById('targetReasonFb').textContent=!why?'Alasan belum ada, jadi agen belum bisa menilai proses berpikirmu. Jawaban akhir saja belum cukup untuk menandai konsep ini stabil.':best?'Kamu berhasil menjelaskan alasannya dengan tepat: faktorial(1) langsung menunggu faktorial(0), lalu meneruskan hasilnya saat kembali. Itu inti jejak eksekusi pada rubrik.':correct?'Pilihanmu benar, tetapi alasan belum menyebut hubungan “faktorial(1) langsung menunggu faktorial(0)”. Tambahkan hubungan itu agar bukan sekadar menebak posisi.':'faktorial(1) adalah pemanggilan yang langsung meminta faktorial(0). Begitu nilai 1 tersedia, faktorial(1) dapat menyelesaikan 1 × 1 lebih dulu.';
+  document.getElementById('targetConceptFb').textContent='Konsep yang perlu dipegang: urutan kembali adalah kebalikan urutan masuk — faktorial(0) → faktorial(1) → faktorial(2) → faktorial(3). Yang lain tetap menunggu sampai gilirannya.';
+  const pct=best?90:correct?75:55, delta=best?'+10%':correct?'+5%':'0%';
+  document.getElementById('targetPct').textContent=pct+'%';
+  document.getElementById('targetProgFill').style.width=pct+'%';
+  const deltaEl=document.getElementById('targetDelta');deltaEl.textContent=delta;deltaEl.classList.toggle('flat',!best);
+  showScreen('s-target-fb');
+}
+function goCheck(){showScreen('s-check')}
+
+function submitCheck(){
+  const why=document.getElementById('checkWhy');
+  if(!why.value.trim()&&!checkWarned){checkWarned=true;why.classList.add('warn');document.getElementById('checkWarn').classList.add('show');why.focus();return}
+  think(showCheckResult);
+}
+function showCheckResult(){
+  const why=document.getElementById('checkWhy').value.trim();
+  const correct=checkPick===CHECK.correct;
+  const reasonOK=/(kembali|setelah|menunggu|tunggu)/.test(why.toLowerCase())&&/(print|cetak|kedua|terakhir)/.test(why.toLowerCase());
+  const stable=correct&&reasonOK;
+  const verdict=document.getElementById('checkVerdict');verdict.className='fb-verdict '+(stable?'':correct?'partial':'wrong');
+  document.getElementById('checkVerdictTitle').textContent=stable?'Konsepnya mulai stabil.':correct?'Jawabanmu benar; penelusurannya belum lengkap.':'Masih goyah — kita punya arah perbaikannya.';
+  document.getElementById('checkVerdictSub').textContent=stable?'Kamu bisa menjelaskan, bukan hanya memilih jawaban.':'Kemajuan tetap tercatat; satu konsep ini bisa ditinjau lagi.';
+  document.getElementById('checkReasonFb').textContent=!why?'Alasan belum ada. Keluaran yang benar adalah 2, 1, 1, 2, tetapi peta penguasaan belum menandai konsep ini stabil tanpa penjelasan.':stable?'Alasanmu menunjukkan bahwa print kedua baru berjalan setelah pemanggilan rekursif selesai. Itu membuktikan kamu memahami keadaan “menunggu”, bukan sekadar hafal keluaran.':correct?'Keluaranmu benar. Namun rubrik meminta penjelasan bahwa print kedua dijalankan saat kembali, setelah pemanggilan rekursif selesai. Bagian itu belum terlihat dari alasanmu.':'Keluaran yang benar adalah 2, 1, 1, 2. Kasus dasar sapa(0) tidak mencetak 0; ia hanya menghentikan rekursi. Setelah itu, dua pemanggilan yang menunggu mencetak nilainya sekali lagi.';
+  document.getElementById('checkYourWhy').textContent=why||'Belum diisi.';
+  document.getElementById('masteryIcon').textContent=stable?'🌿':'🌱';
+  document.getElementById('masteryTitle').textContent=stable?'Jejak eksekusi: stabil':'Jejak eksekusi: masih goyah';
+  document.getElementById('masteryText').textContent=stable?'Naik dari “dibangun” setelah jawaban dan alasan cek ulang sesuai rubrik.':'Belum turun atau dihakimi. Saran tinjauan akan disiapkan di ringkasan sesi.';
+  const result={correct,reasonOK,stable,answer:CHECK.answers[checkPick],why,concept:'Jejak eksekusi (call stack)',updatedAt:new Date().toISOString()};
+  try{
+    localStorage.setItem('reason_recheck',JSON.stringify(result));
+    const mastery=JSON.parse(localStorage.getItem('reason_mastery')||'{}');
+    mastery.callStack={status:stable?'stabil':'goyah',score:stable?82:55,updatedAt:result.updatedAt};
+    localStorage.setItem('reason_mastery',JSON.stringify(mastery));
+    localStorage.setItem('reason_session_stage','ringkasan');
+  }catch(e){}
+  showScreen('s-result');
+}
+function openSource(){document.getElementById('sheet').classList.add('show');document.getElementById('overlay').classList.add('show')}
+function closeSource(){document.getElementById('sheet').classList.remove('show');document.getElementById('overlay').classList.remove('show')}
+renderAnswers(TARGET,'targetAnswers','target');renderAnswers(CHECK,'checkAnswers','check');setTheme('light');
+</script>
+</body>
+</html>

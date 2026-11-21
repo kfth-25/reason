@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>REASON — Ringkasan & Peta Penguasaan</title>
+<style>
+  :root{
+    --blue:#4392F0;--blue-deep:#2E7BD6;--blue-soft:#D6E8FF;--purple:#B7A6F6;
+    --purple-soft:#EFEAFD;--orange:#F5A93F;--pink:#F9A9E8;--pink-soft:#FCE3F8;
+    --green:#C5EE93;--bg:#F5F3FE;--card:#FFFFFF;--text:#171A2E;--muted:#8A8B98;
+    --line:#ECECF1;--nav-dark:#15161C;--r-card:22px;--r-pill:999px;
+    --shadow:0 8px 24px rgba(20,22,40,.07);--font:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  [data-theme="dark"]{--bg:#1A2434;--card:#152030;--text:#F2F4F8;--muted:#8B97AB;--line:#253147;--nav-dark:#0F1724;--blue-soft:#1E3A5F;--purple-soft:#2A2750;--pink-soft:#402A45;--shadow:0 8px 24px rgba(0,0,0,.28)}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{font-family:var(--font);background:#DDE1EA;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  .phone{width:390px;height:844px;max-height:100vh;background:var(--bg);border-radius:44px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35}
+  @media(max-width:520px){body{padding:0}.phone{width:100%;height:100vh;border-radius:0;box-shadow:none}}
+  .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;background:#0B0D12;border-radius:20px;z-index:60}.statusbar{position:absolute;top:0;left:0;right:0;height:52px;z-index:55;display:flex;align-items:center;justify-content:space-between;padding:16px 28px 0;font-size:14px;font-weight:600;color:var(--text);pointer-events:none}.statusbar span:last-child{display:flex;gap:6px}.statusbar svg{width:16px;height:16px;fill:var(--text)}
+  .screen{position:absolute;inset:0;padding-top:52px;padding-bottom:116px;overflow-y:auto;opacity:0;visibility:hidden;transform:translateX(16px);transition:opacity .3s,transform .3s,visibility .3s}.screen.active{opacity:1;visibility:visible;transform:translateX(0)}.screen::-webkit-scrollbar{display:none}.pad{padding:0 20px}
+  .nav{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);background:var(--nav-dark);border-radius:var(--r-pill);display:flex;gap:6px;padding:8px;z-index:50;box-shadow:0 12px 32px rgba(0,0,0,.28)}.nav button{width:58px;height:58px;border:none;border-radius:50%;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .25s}.nav button svg{width:23px;height:23px;stroke:#7C8496;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.nav button.on{background:#F6F6F9}.nav button.on svg{stroke:#15161C}
+  .home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:50}.theme-fab{position:absolute;top:60px;right:16px;z-index:70;width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;background:var(--card);box-shadow:var(--shadow);font-size:16px}
+  .pill-btn{border:none;font-family:var(--font);cursor:pointer;border-radius:var(--r-pill);font-weight:600;transition:transform .15s}.pill-btn:active{transform:scale(.96)}.toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%) translateY(20px);background:var(--nav-dark);color:#F6F6F9;font-size:12.5px;font-weight:600;padding:12px 20px;border-radius:var(--r-pill);z-index:80;max-width:86%;text-align:center;opacity:0;pointer-events:none;transition:all .3s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .top-head{display:flex;align-items:center;gap:12px;padding:13px 44px 0 0}.back{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;background:transparent;display:flex;align-items:center;justify-content:center}.back svg{width:22px;height:22px;stroke:#3D3A66;fill:none;stroke-width:2.6;stroke-linecap:round}[data-theme="dark"] .back svg{stroke:#C9C4E8}.top-head .ht{flex:1}.top-head b{display:block;font-size:16px;color:var(--text)}.top-head span{font-size:12px;color:var(--muted)}
+  .center-head{position:relative;display:flex;align-items:center;padding-top:12px;min-height:44px}
+  .center-head .htitle{position:absolute;left:52px;right:52px;text-align:center;pointer-events:none;font-size:17px;font-weight:700;color:var(--text)}
+
+  /* ============ HASIL SESI — ala mockup ============ */
+  .celebrate{display:flex;justify-content:center;margin-top:10px}
+  .celebrate svg{width:168px;height:138px}
+  .bagus{font-size:25px;font-weight:700;color:var(--text);text-align:center;margin-top:4px}
+  .done-text{font-size:14px;font-weight:500;color:#4A4B5C;line-height:1.6;text-align:center;margin:9px auto 0;max-width:290px}
+  [data-theme="dark"] .done-text{color:#B9C0CF}
+  .score-row{display:flex;align-items:center;gap:22px;margin-top:26px;padding:0 4px}
+  .big-ring{
+    width:134px;height:134px;border-radius:50%;flex-shrink:0;position:relative;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:conic-gradient(#4CAF2E 0 var(--p,61%),#BFE3F5 var(--p,61%) 100%);
+  }
+  .big-ring::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--bg)}
+  .big-ring b{z-index:1;font-size:27px;font-weight:700;color:var(--text);line-height:1}
+  .big-ring span{z-index:1;font-size:11px;font-weight:600;color:#4A4B5C;text-align:center;line-height:1.3;margin-top:5px;max-width:74px}
+  [data-theme="dark"] .big-ring span{color:#B9C0CF}
+  .leg{flex:1;display:flex;flex-direction:column;gap:15px}
+  .leg-row{display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:600;color:var(--text)}
+  .leg-row .ldot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
+  .leg-row b{margin-left:auto;font-size:15.5px;font-weight:700;color:var(--text)}
+  .next-card{
+    margin-top:24px;background:#EFEAFD;border-radius:18px;padding:16px;
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  [data-theme="dark"] .next-card{background:#2A2750}
+  .next-card .star{font-size:24px;line-height:1;flex-shrink:0}
+  .next-card b{display:block;font-size:14.5px;font-weight:700;color:var(--text)}
+  .next-card p{font-size:13.5px;color:#4A4B5C;line-height:1.55;margin-top:5px}
+  [data-theme="dark"] .next-card p{color:#C5BDE0}
+  .act-row{display:flex;gap:12px;margin-top:24px}
+  .retry-btn{
+    flex:1;background:var(--card);border:2px solid #B7A6F6;border-radius:15px;
+    padding:15px 8px;cursor:pointer;font-family:var(--font);
+    font-size:14.5px;font-weight:700;color:#6B5BB5;transition:transform .15s;
+  }
+  [data-theme="dark"] .retry-btn{color:#C5B8F0}
+  .home-btn{
+    flex:1;border:none;border-radius:15px;padding:15px 8px;cursor:pointer;
+    background:linear-gradient(135deg,#8574F4,#6555E6);
+    font-family:var(--font);font-size:14.5px;font-weight:700;color:#fff;
+    box-shadow:0 12px 26px rgba(105,87,235,.4);transition:transform .15s;
+  }
+  .retry-btn:active,.home-btn:active{transform:scale(.96)}
+  .hero{margin-top:17px;background:var(--green);border-radius:26px;padding:21px;color:#15161C;position:relative;overflow:hidden}.hero .eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.5px}.hero h1{font-size:22px;line-height:1.25;margin-top:7px;max-width:88%}.hero p{font-size:12px;font-weight:600;line-height:1.55;margin-top:8px;max-width:87%;opacity:.8}.hero .spark{position:absolute;right:-13px;top:23px;font-size:73px;transform:rotate(15deg);opacity:.65}.stats{display:flex;gap:10px;margin-top:14px}.stat{flex:1;background:var(--card);border-radius:18px;padding:13px 15px;box-shadow:var(--shadow)}.stat b{display:block;font-size:20px;color:var(--text)}.stat small{display:block;font-size:10.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+  .sec-title{font-size:17px;font-weight:700;color:var(--text);margin:22px 0 11px;display:flex;align-items:center;gap:8px}.sec-title .dot{width:9px;height:9px;border-radius:50%}.concept{background:var(--card);border-radius:22px;padding:15px 16px;border:1.5px solid transparent;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer;transition:transform .15s}.concept:active{transform:scale(.98)}.concept .ctop{display:flex;align-items:center;gap:11px}.concept .ci{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}.concept .ct{flex:1}.concept b{display:block;font-size:13px;color:var(--text)}.concept small{display:block;font-size:10.5px;color:var(--muted);margin-top:3px}.badge{font-size:10px;font-weight:700;padding:5px 10px;border-radius:var(--r-pill);flex-shrink:0}.badge.stable{background:var(--green);color:#2E4A12}.badge.shaky{background:#FDF3E2;color:#A36608}[data-theme="dark"] .badge.shaky{background:#3A2E18;color:#F0C070}.badge.building{background:var(--pink-soft);color:#B0408F}[data-theme="dark"] .badge.building{color:#F0A8DC}.concept .bar{height:6px;background:var(--line);border-radius:4px;margin-top:11px;overflow:hidden}.concept .bar i{display:block;height:100%;border-radius:4px;background:var(--blue);transition:width .6s}
+  .review{background:var(--purple-soft);border-radius:26px;padding:17px;margin-top:14px}.review h3{font-size:14px;color:var(--text)}.review p{font-size:12px;line-height:1.6;color:var(--text);margin-top:7px}[data-theme="dark"] .review p{color:#D4CDEF}.review .when{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;background:var(--card);border-radius:var(--r-pill);padding:6px 11px;color:var(--text);margin-top:11px}
+  .primary{width:100%;padding:16px;margin-top:18px;background:var(--blue);color:#fff;font-size:14.5px;font-weight:700;box-shadow:0 10px 24px rgba(67,146,240,.25)}.secondary{width:100%;padding:14px;margin-top:10px;background:var(--card);color:var(--text);border:1.5px solid var(--line);font-size:13px;font-weight:600}.save-note{text-align:center;font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
+  .map-card{background:var(--card);border-radius:26px;padding:18px;margin-top:16px;box-shadow:var(--shadow)}.map-head{display:flex;align-items:center;justify-content:space-between}.map-head h3{font-size:14px;color:var(--text)}.map-head span{font-size:10px;color:var(--muted)}.overall{display:flex;align-items:center;gap:17px;margin-top:16px}.ring{width:86px;height:86px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:conic-gradient(var(--blue) var(--score),var(--line) 0);position:relative;flex-shrink:0}.ring::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--card)}.ring b{z-index:1;font-size:22px;color:var(--text)}.overall .ot b{display:block;font-size:16px;color:var(--text)}.overall .ot p{font-size:11.5px;color:var(--muted);line-height:1.55;margin-top:5px}
+  .legend{display:flex;gap:13px;flex-wrap:wrap;margin-top:12px;font-size:10px;color:var(--muted)}.legend span{display:flex;align-items:center;gap:5px}.legend i{width:8px;height:8px;border-radius:50%}.map-note{font-size:11px;color:var(--muted);line-height:1.55;margin-top:13px}
+  .history{margin-top:12px;background:var(--card);border-radius:22px;padding:15px;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow)}.history .hi{width:38px;height:38px;border-radius:13px;background:var(--blue-soft);display:flex;align-items:center;justify-content:center;font-size:18px}.history b{display:block;font-size:12.5px;color:var(--text)}.history p{font-size:10.5px;color:var(--muted);margin-top:3px}
+  .overlay{position:absolute;inset:0;background:rgba(10,12,20,.45);z-index:75;opacity:0;visibility:hidden;transition:all .28s;backdrop-filter:blur(3px)}.overlay.show{opacity:1;visibility:visible}.sheet{position:absolute;left:0;right:0;bottom:0;z-index:76;background:var(--bg);border-radius:30px 30px 0 0;padding:14px 22px 32px;transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.25,1);max-height:72%;overflow-y:auto}.sheet::-webkit-scrollbar{display:none}.sheet.show{transform:translateY(0)}.grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 16px}.sheet h3{font-size:17px;color:var(--text)}.sheet .meta{font-size:11px;color:var(--muted);margin-top:4px}.evidence{margin-top:13px;background:var(--card);border-radius:16px;padding:15px}.evidence h4{font-size:12px;color:var(--text)}.evidence p{font-size:12px;line-height:1.6;color:var(--muted);margin-top:7px}.evidence .label{display:inline-block;font-size:10px;font-weight:700;background:var(--purple-soft);color:#6B5BB5;border-radius:var(--r-pill);padding:4px 10px;margin-top:11px}[data-theme="dark"] .evidence .label{color:#C5B8F0}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="notch"></div><div class="statusbar"><span>9:41</span><span><svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zm5-3h3v7H7zm5-4h3v11h-3zm5-5h3v16h-3z"/></svg><svg viewBox="0 0 24 24"><path d="M12 18.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM7.7 14.4a6.2 6.2 0 018.6 0l1.4-1.5a8.2 8.2 0 00-11.4 0z"/></svg><svg viewBox="0 0 24 24"><path d="M15.7 4H8.3C7 4 6 5 6 6.3v11.4C6 19 7 20 8.3 20h7.4c1.3 0 2.3-1 2.3-2.3V6.3C18 5 17 4 15.7 4z"/></svg></span></div>
+  <button class="theme-fab" id="themeBtn" title="Ganti tema">🌙</button>
+
+  <!-- RINGKASAN SESI — ala mockup -->
+  <section class="screen active" id="s-session">
+    <div class="pad">
+      <div class="center-head">
+        <button class="back" onclick="location.href='beranda-reason.html'" aria-label="Kembali">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="htitle">Ringkasan Sesi</span>
+      </div>
+
+      <!-- Piala + konfeti -->
+      <div class="celebrate" aria-hidden="true">
+        <svg viewBox="0 0 170 140">
+          <!-- konfeti -->
+          <rect x="18" y="34" width="12" height="6" rx="3" fill="#4392F0" transform="rotate(-35 24 37)"/>
+          <rect x="44" y="16" width="12" height="6" rx="3" fill="#9C8CF5" transform="rotate(40 50 19)"/>
+          <rect x="128" y="30" width="12" height="6" rx="3" fill="#6FCF3B" transform="rotate(30 134 33)"/>
+          <rect x="146" y="58" width="12" height="6" rx="3" fill="#FFD84D" transform="rotate(-25 152 61)"/>
+          <rect x="10" y="74" width="12" height="6" rx="3" fill="#9C8CF5" transform="rotate(50 16 77)"/>
+          <rect x="150" y="96" width="12" height="6" rx="3" fill="#4392F0" transform="rotate(-40 156 99)"/>
+          <rect x="34" y="106" width="12" height="6" rx="3" fill="#FFD84D" transform="rotate(25 40 109)"/>
+          <rect x="120" y="116" width="12" height="6" rx="3" fill="#9C8CF5" transform="rotate(-30 126 119)"/>
+          <circle cx="66" cy="26" r="4" fill="#6FCF3B"/>
+          <circle cx="112" cy="18" r="4" fill="#4392F0"/>
+          <circle cx="24" cy="56" r="4" fill="#FFD84D"/>
+          <circle cx="148" cy="44" r="4" fill="#9C8CF5"/>
+
+          <!-- piala -->
+          <path d="M58 34h54v30c0 17-12 29-27 29S58 81 58 64z" fill="#FFD34D"/>
+          <path d="M58 40c-11 0-18 7-18 16s7 16 16 17" stroke="#F0B429" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <path d="M112 40c11 0 18 7 18 16s-7 16-16 17" stroke="#F0B429" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <rect x="79" y="93" width="12" height="12" fill="#F0B429"/>
+          <path d="M66 119c0-7 7-12 19-12s19 5 19 12v3H66z" fill="#FFD34D"/>
+          <rect x="60" y="120" width="50" height="9" rx="4.5" fill="#F0B429"/>
+          <path d="M85 44l5.5 11 12 1.7-8.7 8.5 2 12-10.8-5.7-10.8 5.7 2-12-8.7-8.5 12-1.7z" fill="#FFF6D8"/>
+        </svg>
+      </div>
+
+      <h1 class="bagus">Bagus! 🎉</h1>
+      <p class="done-text">Kamu telah menyelesaikan sesi Rekursi dengan baik.</p>
+
+      <div class="score-row">
+        <div class="big-ring" id="sessionRing"><b id="sessionScore">61%</b><span>Penguasaan Topik</span></div>
+        <div class="leg">
+          <div class="leg-row"><span class="ldot" style="background:#4CAF2E"></span>Stabil<b id="stableCount">2</b></div>
+          <div class="leg-row"><span class="ldot" style="background:#F5B81E"></span>Goyah<b id="shakyCount">2</b></div>
+          <div class="leg-row"><span class="ldot" style="background:#F57A3C"></span>Perlu Latihan<b id="needCount">2</b></div>
+        </div>
+      </div>
+
+      <div class="next-card">
+        <span class="star">⭐</span>
+        <div>
+          <b>Saran Selanjutnya</b>
+          <p id="reviewText">Latih kembali konsep “Jejak eksekusi”.</p>
+        </div>
+      </div>
+
+      <div class="act-row">
+        <button class="retry-btn" onclick="retry()">Latih Ulang</button>
+        <button class="home-btn" onclick="location.href='beranda-reason.html'">Beranda</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PETA PENGUASAAN ANTAR-SESI -->
+  <section class="screen" id="s-map">
+    <div class="pad">
+      <div class="top-head"><button class="back" onclick="showScreen('s-session')" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button><div class="ht"><b>Peta penguasaan</b><span>Rekursi · tersimpan antar-sesi</span></div></div>
+      <div class="map-card"><div class="map-head"><h3>Gambaran saat ini</h3><span id="updatedText">Baru diperbarui</span></div><div class="overall"><div class="ring" id="overallRing"><b id="overallScore">62%</b></div><div class="ot"><b id="overallLabel">Fondasi mulai terbentuk</b><p>Bukan nilai ujian. Ringkasan ini berubah saat bukti penguasaanmu berubah.</p></div></div><div class="legend"><span><i style="background:var(--green)"></i>Stabil</span><span><i style="background:var(--orange)"></i>Goyah</span><span><i style="background:var(--pink)"></i>Dibangun</span></div></div>
+      <h2 class="sec-title">Konsep di topik ini</h2><div id="mapList"></div>
+      <div class="map-note">Status mempertimbangkan jawaban, alasan, dan keyakinan — bukan hanya jumlah benar. Ketuk konsep untuk melihat buktinya.</div>
+      <div class="history"><span class="hi">🔁</span><div><b>Sesi hari ini · Rekursi</b><p id="historyText">Diagnostik → soal + alasan → latihan target → cek ulang</p></div></div>
+      <button class="pill-btn primary" onclick="showScreen('s-session')">Kembali ke ringkasan sesi</button>
+    </div>
+  </section>
+
+  <nav class="nav"><button onclick="location.href='beranda-reason.html'" aria-label="Beranda"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg></button><button onclick="location.href='tugas.html'" aria-label="Tugas"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg></button><button class="on" onclick="openMap()" aria-label="Peta Penguasaan"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg></button><button onclick="location.href='latihan.html'" aria-label="Latihan"><svg viewBox="0 0 24 24"><path d="M9 11l2.5 2.5L16 8"/><rect x="4" y="3" width="16" height="18" rx="3"/></svg></button><button onclick="location.href='dosen.html'" aria-label="Tampilan Dosen"><svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg></button></nav>
+  <div class="overlay" id="overlay" onclick="closeEvidence()"></div>
+  <div class="sheet" id="sheet"><div class="grab"></div><h3 id="evidenceTitle"></h3><div class="meta" id="evidenceMeta"></div><div class="evidence"><h4>Bukti penguasaan</h4><p id="evidenceBody"></p><span class="label" id="evidenceLabel"></span></div><div class="evidence"><h4>Langkah berikutnya</h4><p id="evidenceNext"></p></div><button class="pill-btn primary" onclick="closeEvidence()">Mengerti</button></div>
+  <div class="home-ind"></div><div class="toast" id="toast"></div>
+</div>
+<script>
+function setTheme(mode){document.getElementById('phone').dataset.theme=mode;document.getElementById('themeBtn').textContent=mode==='dark'?'☀️':'🌙'}
+document.getElementById('themeBtn').addEventListener('click',()=>setTheme(document.getElementById('phone').dataset.theme==='dark'?'light':'dark'));
+let toastT;function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2400)}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.getElementById(id).scrollTop=0}
+function openMap(){renderMap();showScreen('s-map')}
+
+const BASE_CONCEPTS=[
+  {id:'function',name:'Fungsi & pemanggilan',icon:'ƒ',status:'stabil',score:92,source:'Diagnostik: jawaban benar, yakin.'},
+  {id:'notation',name:'Membaca notasi',icon:'≠',status:'stabil',score:88,source:'Diagnostik: jawaban benar, yakin.'},
+  {id:'baseCase',name:'Base case',icon:'⏹',status:'goyah',score:58,source:'Diagnostik: jawaban keliru, agak yakin.'},
+  {id:'callStack',name:'Jejak eksekusi (call stack)',icon:'↕',status:'goyah',score:55,source:'Soal utama: jawaban benar, alasan sebagian.'},
+  {id:'trace',name:'Menelusuri nilai kembali',icon:'↩',status:'building',score:36,source:'Belum cukup bukti dari latihan.'},
+  {id:'branch',name:'Rekursi bercabang',icon:'⑂',status:'building',score:12,source:'Belum diuji pada sesi ini.'}
+];
+let concepts=[];
+function loadState(){
+  let recheck=null,mastery={};try{recheck=JSON.parse(localStorage.getItem('reason_recheck')||'null');mastery=JSON.parse(localStorage.getItem('reason_mastery')||'{}')}catch(e){}
+  concepts=BASE_CONCEPTS.map(c=>({...c}));
+  const call=concepts.find(c=>c.id==='callStack');
+  if(mastery.callStack){call.status=mastery.callStack.status==='stabil'?'stabil':'goyah';call.score=mastery.callStack.score}
+  if(recheck)call.source=`Cek ulang: jawaban ${recheck.correct?'benar':'keliru'}, alasan ${recheck.reasonOK?'sesuai rubrik':'belum lengkap'}.`;
+  else if(mastery.callStack)call.source=mastery.callStack.status==='stabil'?'Cek ulang: konsep sesuai rubrik.':'Cek ulang: masih perlu ditinjau.';
+}
+function badge(status){return status==='stabil'?'<span class="badge stable">Stabil</span>':status==='goyah'?'<span class="badge shaky">Goyah</span>':'<span class="badge building">Dibangun</span>'}
+function conceptCard(c){return `<div class="concept" onclick="openEvidence('${c.id}')"><div class="ctop"><span class="ci" style="background:${c.status==='stabil'?'var(--blue-soft)':c.status==='goyah'?'#FDF3E2':'var(--pink-soft)'}">${c.icon}</span><div class="ct"><b>${c.name}</b><small>${c.source}</small></div>${badge(c.status)}</div><div class="bar"><i style="width:${c.score}%;background:${c.status==='stabil'?'var(--blue)':c.status==='goyah'?'var(--orange)':'var(--pink)'}"></i></div></div>`}
+function renderSummary(){
+  const stable=concepts.filter(c=>c.status==='stabil');
+  const shaky=concepts.filter(c=>c.status==='goyah');
+  const need=concepts.filter(c=>c.status==='building');
+  document.getElementById('stableCount').textContent=stable.length;
+  document.getElementById('shakyCount').textContent=shaky.length;
+  document.getElementById('needCount').textContent=need.length;
+  const avg=Math.round(concepts.reduce((sum,c)=>sum+c.score,0)/concepts.length);
+  document.getElementById('sessionScore').textContent=avg+'%';
+  document.getElementById('sessionRing').style.setProperty('--p',avg+'%');
+  const callStable=concepts.find(c=>c.id==='callStack').status==='stabil';
+  document.getElementById('reviewText').textContent=callStable
+    ?'Latih kembali konsep “Rekursi bercabang”.'
+    :'Latih kembali konsep “Jejak eksekusi”.';
+}
+function renderMap(){
+  const avg=Math.round(concepts.reduce((sum,c)=>sum+c.score,0)/concepts.length);
+  document.getElementById('overallScore').textContent=avg+'%';document.getElementById('overallRing').style.setProperty('--score',avg+'%');
+  document.getElementById('overallLabel').textContent=avg>=70?'Makin kokoh':'Fondasi mulai terbentuk';
+  document.getElementById('mapList').innerHTML=concepts.map(conceptCard).join('');
+  let recheck=null;try{recheck=JSON.parse(localStorage.getItem('reason_recheck')||'null')}catch(e){}
+  if(recheck){const date=new Date(recheck.updatedAt);document.getElementById('updatedText').textContent='Diperbarui '+date.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});document.getElementById('historyText').textContent='Cek ulang tersimpan · jejak eksekusi '+(recheck.stable?'stabil':'masih goyah')}
+}
+function openEvidence(id){
+  const c=concepts.find(x=>x.id===id);document.getElementById('evidenceTitle').textContent=c.name;document.getElementById('evidenceMeta').textContent='Rekursi · Matematika Diskrit';
+  document.getElementById('evidenceBody').textContent=c.source;document.getElementById('evidenceLabel').textContent=c.status==='stabil'?'Cukup bukti untuk saat ini':c.status==='goyah'?'Perlu satu cek ulang lagi':'Belum cukup bukti';
+  document.getElementById('evidenceNext').textContent=c.status==='stabil'?'Jaga dengan latihan singkat beberapa hari lagi. Tidak perlu mengulang seluruh materi.':c.id==='callStack'?'Buka latihan target dan jelaskan apa yang terjadi saat fungsi menunggu serta saat kembali.':'Mulai dari contoh kecil, tulis langkahnya, lalu jelaskan alasanmu sendiri.';
+  document.getElementById('sheet').classList.add('show');document.getElementById('overlay').classList.add('show');
+}
+function closeEvidence(){document.getElementById('sheet').classList.remove('show');document.getElementById('overlay').classList.remove('show')}
+function retry(){location.href='latihan.html'}
+loadState();renderSummary();renderMap();setTheme('light');
+</script>
+</body>
+</html>

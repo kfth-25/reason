@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>REASON — Soal & Alasan</title>
+<style>
+  :root{
+    --blue:#4392F0; --blue-deep:#2E7BD6; --blue-soft:#D6E8FF;
+    --purple:#B7A6F6; --purple-soft:#EFEAFD;
+    --orange:#F5A93F; --pink:#F9A9E8; --pink-soft:#FCE3F8;
+    --green:#C5EE93; --cyan:#3DD3F6; --lavender:#D8D2F3;
+    --bg:#F5F3FE; --card:#FFFFFF; --text:#171A2E; --muted:#8A8B98;
+    --line:#ECECF1; --nav-dark:#15161C;
+    --r-card:22px; --r-pill:999px;
+    --shadow:0 8px 24px rgba(20,22,40,.07);
+    --font:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  [data-theme="dark"]{
+    --bg:#1A2434; --card:#152030; --text:#F2F4F8; --muted:#8B97AB;
+    --line:#253147; --nav-dark:#0F1724; --blue-soft:#1E3A5F;
+    --purple-soft:#2A2750; --pink-soft:#402A45;
+    --shadow:0 8px 24px rgba(0,0,0,.28);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:var(--font);background:#DDE1EA;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  @media (max-width:520px){ body{padding:0} }
+  .phone{
+    width:390px;height:844px;max-height:100vh;background:var(--bg);border-radius:44px;overflow:hidden;
+    position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35;transition:background .3s;
+  }
+  @media (max-width:520px){ .phone{width:100%;height:100vh;border-radius:0;box-shadow:none} }
+  .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;background:#0B0D12;border-radius:20px;z-index:60}
+  .statusbar{position:absolute;top:0;left:0;right:0;height:52px;z-index:55;display:flex;align-items:center;justify-content:space-between;padding:16px 28px 0;font-size:14px;font-weight:600;color:var(--text);pointer-events:none}
+  .statusbar .sb-icons{display:flex;gap:6px;align-items:center}
+  .sb-icons svg{width:16px;height:16px;fill:var(--text)}
+  .screen{
+    position:absolute;inset:0;padding-top:52px;overflow-y:auto;overflow-x:hidden;
+    padding-bottom:34px;-webkit-overflow-scrolling:touch;
+    opacity:0;visibility:hidden;transform:translateX(18px);
+    transition:opacity .3s ease,transform .3s ease,visibility .3s;
+  }
+  .screen.active{opacity:1;visibility:visible;transform:translateX(0)}
+  .screen::-webkit-scrollbar{display:none}
+  .pad{padding:0 20px}
+  .home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:50}
+  .pill-btn{border:none;font-family:var(--font);cursor:pointer;border-radius:var(--r-pill);font-weight:600;transition:transform .15s}
+  .pill-btn:active{transform:scale(.96)}
+  .theme-fab{position:absolute;top:60px;right:16px;z-index:70;width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;background:var(--card);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:16px}
+  .toast{
+    position:absolute;left:50%;bottom:40px;transform:translateX(-50%) translateY(20px);
+    background:var(--nav-dark);color:#F6F6F9;font-size:13px;font-weight:600;
+    padding:12px 22px;border-radius:var(--r-pill);z-index:80;max-width:86%;text-align:center;
+    opacity:0;pointer-events:none;transition:all .3s;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .sess-head{display:flex;align-items:center;gap:12px;padding-top:12px}
+  .back{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;background:transparent;display:flex;align-items:center;justify-content:center}
+  .back svg{width:22px;height:22px;stroke:#3D3A66;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  [data-theme="dark"] .back svg{stroke:#C9C4E8}
+  .sess-head .st{flex:1}
+  .sess-head .st b{display:block;font-size:15px;font-weight:700;color:var(--text)}
+  .sess-head .st span{font-size:12px;color:var(--muted)}
+
+  /* Header soal — judul tengah + sparkle kanan (ala mockup) */
+  .qhead{position:relative;display:flex;align-items:center;padding-top:10px;min-height:44px}
+  .qhead .htitle{
+    position:absolute;left:52px;right:52px;text-align:center;pointer-events:none;
+    font-size:17px;font-weight:700;color:var(--text);
+  }
+  .qhead .spark{position:absolute;right:52px;top:4px;width:36px;height:32px;pointer-events:none}
+
+  /* Kartu pertanyaan — ungu muda ala mockup */
+  .qprompt{
+    margin-top:16px;background:#EDE8FB;border-radius:16px;padding:18px 18px 20px;
+  }
+  [data-theme="dark"] .qprompt{background:#2A2750}
+  .qprompt .qp-top{font-size:15px;font-weight:700;color:var(--text);line-height:1.4}
+  .qprompt .qp-main{display:block;font-size:21px;font-weight:700;color:#37306B;margin-top:7px;line-height:1.3}
+  [data-theme="dark"] .qprompt .qp-main{color:#D9D2FA}
+
+  /* Jawaban ringkas + alasan besar */
+  .why-title{font-size:17px;font-weight:700;color:var(--text);margin-top:24px}
+  .tarea{
+    width:100%;margin-top:13px;border:none;border-radius:16px;
+    background:var(--card);padding:15px 16px;font-family:var(--font);font-size:14.5px;
+    color:var(--text);resize:none;outline:none;line-height:1.55;
+    box-shadow:0 4px 14px rgba(60,50,120,.07);transition:box-shadow .2s;
+  }
+  .tarea:focus{box-shadow:0 0 0 2.5px rgba(133,116,244,.45),0 4px 14px rgba(60,50,120,.07)}
+  .tarea::placeholder{color:#A9A3C7}
+  .tarea.ans-line{min-height:52px}
+  .tarea.why{min-height:212px;padding-top:16px}
+  .tarea.warn{box-shadow:0 0 0 2.5px var(--orange)}
+  .warn-note{display:none;font-size:12px;color:#B57708;margin-top:9px;line-height:1.5}
+  [data-theme="dark"] .warn-note{color:#F0C070}
+  .warn-note.show{display:block}
+
+  /* Baris tombol: Simpan Draf + Kirim */
+  .btn-row{display:flex;gap:12px;margin-top:22px;align-items:stretch}
+  .draft-btn{
+    flex:1.15;display:flex;align-items:center;justify-content:center;gap:9px;
+    background:var(--card);border:none;border-radius:15px;padding:15px 12px;cursor:pointer;
+    font-family:var(--font);font-size:14.5px;font-weight:600;color:var(--text);
+    box-shadow:0 4px 14px rgba(60,50,120,.08);transition:transform .15s;
+  }
+  .draft-btn:active{transform:scale(.96)}
+  .draft-btn .dico{
+    width:24px;height:24px;border-radius:8px;background:#ECE7FC;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .draft-btn .dico svg{width:15px;height:15px;stroke:#7C6BF0;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .send-btn{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+    background:linear-gradient(135deg,#8574F4,#6555E6);border:none;border-radius:15px;
+    padding:15px 12px;cursor:pointer;font-family:var(--font);
+    font-size:15px;font-weight:700;color:#fff;
+    box-shadow:0 12px 26px rgba(105,87,235,.4);transition:transform .15s;
+  }
+  .send-btn:active{transform:scale(.96)}
+  .send-btn:disabled{background:#CFC8EC;box-shadow:none;cursor:default}
+  .send-btn svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+
+  /* ============ PAD AGEN: membaca & menganalisis (PRD §21) ============ */
+  .thinking{
+    position:absolute;inset:0;background:rgba(246,246,249,.92);z-index:65;
+    display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);
+  }
+  [data-theme="dark"] .thinking{background:rgba(26,36,52,.92)}
+  .thinking.show{display:flex}
+  .t-pad{
+    width:308px;max-width:calc(100% - 36px);background:var(--card);border-radius:26px;
+    padding:20px 20px 16px;box-shadow:0 24px 60px rgba(30,25,80,.18);
+    display:flex;flex-direction:column;align-items:center;text-align:center;
+  }
+  /* hero: Bimo membaca (bila WebGL2 ada); orbe berputar sebagai fallback */
+  .t-hero{width:160px;height:120px;position:relative;margin-bottom:2px}
+  .t-hero .orb{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:56px;height:56px;border-radius:50%;
+    background:conic-gradient(var(--blue),var(--purple),var(--pink),var(--blue));
+    animation:spin 1.6s linear infinite;
+  }
+  .t-hero .orb::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--card)}
+  @keyframes spin{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+  .t-hero .slot{position:absolute;inset:0}
+  .t-hero .slot canvas{width:100%;height:100%;display:block}
+  .t-pad .t-title{font-size:15.5px;font-weight:700;color:var(--text);line-height:1.35}
+  .t-pad .t-sub{font-size:12px;color:var(--muted);margin-top:4px}
+  /* staged checklist */
+  .t-stages{width:100%;margin-top:14px;display:flex;flex-direction:column;gap:9px;text-align:left}
+  .t-step{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--muted);transition:color .25s}
+  .t-step .dot{
+    width:18px;height:18px;border-radius:50%;border:2px solid var(--line);
+    flex-shrink:0;position:relative;transition:all .25s;background:var(--card);
+  }
+  .t-step.on{color:var(--text)}
+  .t-step.on .dot{border-color:var(--purple);animation:pulse 1s ease-in-out infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 5px rgba(124,107,240,.18)}}
+  .t-step.done{color:var(--text)}
+  .t-step.done .dot{border-color:#4CAF2E;background:#4CAF2E;animation:none}
+  .t-step.done .dot::after{
+    content:"";position:absolute;left:4.5px;top:1.5px;width:4px;height:8px;
+    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);
+  }
+  /* progress bar */
+  .t-bar{width:100%;height:6px;border-radius:3px;background:var(--line);margin-top:14px;overflow:hidden}
+  .t-bar i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#8574F4,#6555E6);transition:width .6s ease}
+  /* chip: apa yang sedang dibaca agen */
+  .t-chips{width:100%;margin-top:12px;display:flex;flex-direction:column;gap:6px;text-align:left}
+  .t-chip{
+    background:var(--bg);border-radius:12px;padding:8px 11px;
+    font-size:11.5px;color:var(--muted);line-height:1.45;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  [data-theme="dark"] .t-chip{background:#1E2637}
+  .t-chip b{color:var(--text);font-weight:700}
+  .t-chip.wrap{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .cancel-btn{
+    margin-top:14px;background:transparent;color:var(--muted);
+    border:1.5px solid var(--line);border-radius:var(--r-pill);
+    padding:10px 24px;font-size:13px;font-family:var(--font);font-weight:600;cursor:pointer;
+    transition:transform .15s;
+  }
+  .cancel-btn:active{transform:scale(.96)}
+
+  /* ============ UMPAN BALIK (PRD §6.1 langkah 6 + §21) — ala mockup ============ */
+  .fb-hero{
+    margin-top:34px;background:#E7F7D4;border-radius:22px;
+    padding:46px 22px 26px;text-align:center;position:relative;
+  }
+  [data-theme="dark"] .fb-hero{background:#243B1B}
+  .fb-hero .fb-check{
+    position:absolute;top:-30px;left:50%;transform:translateX(-50%);
+    width:66px;height:66px;border-radius:50%;
+    background:linear-gradient(160deg,#63CB3F,#3EA824);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 12px 26px rgba(62,168,36,.35),0 0 0 6px var(--bg);
+  }
+  .fb-hero .fb-check svg{width:30px;height:30px;stroke:#fff;stroke-width:3.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .fb-hero h2{font-size:23px;font-weight:700;color:#171A2E;line-height:1.25}
+  [data-theme="dark"] .fb-hero h2{color:#EAF7E0}
+  .fb-hero p{font-size:13.5px;font-weight:600;color:#3E5530;line-height:1.6;margin-top:9px;opacity:.85}
+  [data-theme="dark"] .fb-hero p{color:#C8E0B8}
+
+  /* Varian "belum tepat" (mockup): kartu pink + Bimo di kanan, teks rata kiri */
+  .fb-hero.wrong{
+    background:var(--pink-soft);text-align:left;
+    padding:24px 16px 22px;display:flex;align-items:center;gap:4px;
+  }
+  [data-theme="dark"] .fb-hero.wrong{background:#402A45}
+  .fb-hero.wrong .fb-check{display:none}
+  .fb-hero.wrong h2{font-size:21px;max-width:175px}
+  [data-theme="dark"] .fb-hero.wrong h2{color:#F6E9F5}
+  .fb-hero.wrong p{color:#6B5BD6;max-width:180px;margin-top:8px}
+  [data-theme="dark"] .fb-hero.wrong p{color:#C9BCF5}
+  .fb-copy{flex:1;min-width:0}
+  .fb-mascot{display:none;width:116px;height:104px;flex-shrink:0;position:relative}
+  .fb-hero.wrong .fb-mascot{display:block}
+  .fb-slot{position:absolute;inset:0}
+  .fb-slot>svg,.fb-slot>canvas{width:100%;height:100%;display:block}
+  .fb-spark{position:absolute;font-size:15px;line-height:1;pointer-events:none;user-select:none;z-index:2}
+  .fb-spark.s1{top:0;right:8px;color:#F5A93F}
+  .fb-spark.s2{bottom:16px;left:-4px;color:#9C8CF5;font-size:12px}
+  .fb-spark.s3{top:36px;right:-6px;color:#5AB2F5;font-size:11px}
+
+  .rub-card{
+    margin-top:20px;background:#F1F1F7;border-radius:18px;padding:18px 16px 14px;
+  }
+  [data-theme="dark"] .rub-card{background:#1E2637}
+  .rub-card h4{font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .rub-row{display:flex;align-items:center;gap:12px;padding:10px 0}
+  .rub-ico{
+    width:28px;height:28px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .rub-ico.ok{background:#4CAF2E}
+  .rub-ico.warn{background:#F5B81E}
+  .rub-ico.none{background:#B9BAC9}
+  .rub-ico svg{width:14px;height:14px;stroke:#fff;stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .rub-ico .dash{width:11px;height:3px;border-radius:2px;background:#fff}
+  .rub-row b{flex:1;font-size:14.5px;font-weight:600;color:var(--text)}
+  .rub-score{font-size:13.5px;font-weight:700;color:#171A2E}
+  [data-theme="dark"] .rub-score{color:#E7ECF5}
+  .rub-score.miss{color:#9A9BAD}
+
+  /* Kartu Analisis Penalaran — jejak yang barusan dibaca agen */
+  .ana-card{
+    margin-top:16px;background:#F4F3F9;border-radius:18px;padding:16px;text-align:left;
+  }
+  [data-theme="dark"] .ana-card{background:#1E2637}
+  .ana-head{display:flex;gap:10px;align-items:center}
+  .ana-ico{
+    width:30px;height:30px;border-radius:9px;background:#E4E9F6;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  [data-theme="dark"] .ana-ico{background:#253147}
+  .ana-ico svg{width:16px;height:16px;stroke:#4A7BD8;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .ana-head b{font-size:15.5px;font-weight:700;color:var(--text)}
+  .ana-card p{font-size:13.5px;color:var(--text);line-height:1.65;margin-top:10px}
+  .ana-card p.note{font-size:12.5px;color:var(--muted);margin-top:9px}
+
+  /* Kartu Kutipan Materi Kuliah — ketuk untuk buka sheet sumber */
+  .quote-card{
+    display:block;width:100%;margin-top:14px;background:var(--purple-soft);
+    border:none;border-radius:18px;padding:16px;cursor:pointer;text-align:left;
+    font-family:var(--font);transition:transform .15s;
+  }
+  .quote-card:active{transform:scale(.98)}
+  [data-theme="dark"] .quote-card{background:#2A2750}
+  .quote-card .q-top{display:flex;gap:10px;align-items:center}
+  .q-ico{
+    width:30px;height:30px;border-radius:9px;background:#fff;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(60,50,120,.08);
+  }
+  [data-theme="dark"] .q-ico{background:#221D48}
+  .q-ico svg{width:16px;height:16px;stroke:#7C6BF0;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+  .quote-card .q-top b{flex:1;font-size:15px;font-weight:700;color:var(--text)}
+  .q-open{width:17px;height:17px;stroke:var(--muted);fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+  .quote-card .q-text{font-size:13.5px;line-height:1.65;color:var(--text);margin-top:12px}
+  .quote-card .q-src{font-size:11.5px;color:var(--muted);margin-top:9px;font-style:italic}
+
+  /* Progress Konsep — % penguasaan topik ini (dibawa ke ringkasan) */
+  .prog-row{
+    display:flex;align-items:center;gap:11px;margin-top:14px;
+    background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:12px 14px;text-align:left;
+  }
+  .prog-row .p-ico{
+    width:32px;height:32px;border-radius:50%;background:var(--purple-soft);flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:15px;
+  }
+  .prog-row b{flex:1;font-size:14.5px;font-weight:700;color:var(--text)}
+  .prog-row .p-badge{
+    background:var(--bg);border:1.5px solid var(--line);border-radius:var(--r-pill);
+    padding:5px 13px;font-size:12.5px;font-weight:700;color:var(--text);
+  }
+
+  .fb-next{
+    width:100%;margin-top:14px;padding:16.5px;border-radius:16px;border:none;cursor:pointer;
+    background:linear-gradient(135deg,#8574F4,#6555E6);color:#fff;
+    font-family:var(--font);font-size:15.5px;font-weight:700;
+    box-shadow:0 12px 26px rgba(105,87,235,.4);
+    display:flex;align-items:center;justify-content:center;gap:9px;transition:transform .15s;
+  }
+  .fb-next:active{transform:scale(.97)}
+  .fb-next svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+
+  /* Sheet sumber (kutipan bisa dibuka) */
+  .overlay{position:absolute;inset:0;background:rgba(10,12,20,.45);z-index:75;opacity:0;visibility:hidden;transition:all .28s;backdrop-filter:blur(3px)}
+  .overlay.show{opacity:1;visibility:visible}
+  .sheet{
+    position:absolute;left:0;right:0;bottom:0;z-index:76;background:var(--bg);
+    border-radius:30px 30px 0 0;padding:14px 22px 30px;transform:translateY(105%);
+    transition:transform .32s cubic-bezier(.2,.8,.25,1);max-height:78%;overflow-y:auto;
+  }
+  .sheet::-webkit-scrollbar{display:none}
+  .sheet.show{transform:translateY(0)}
+  .sheet .grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 16px}
+  .sheet h3{font-size:16px;font-weight:700;color:var(--text);line-height:1.4}
+  .sheet .meta{font-size:11.5px;color:var(--muted);margin-top:5px}
+  .sheet .content{
+    margin-top:14px;background:var(--card);border-radius:16px;padding:16px;
+    font-size:13px;line-height:1.7;color:var(--text);white-space:pre-line;
+  }
+  .sheet .verified{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:11px;font-weight:700;color:#3F7A1E;background:var(--green);border-radius:var(--r-pill);padding:6px 13px}
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+  <div class="notch"></div>
+  <div class="statusbar">
+    <span>9:41</span>
+    <span class="sb-icons">
+      <svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zm5-3h3v7H7zm5-4h3v11h-3zm5-5h3v16h-3z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 18.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM7.7 14.4a6.2 6.2 0 018.6 0l1.4-1.5a8.2 8.2 0 00-11.4 0zM4.3 11a10.2 10.2 0 0115.4 0l1.4-1.5a12.2 12.2 0 00-18.2 0z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.7 4H8.3C7 4 6 5 6 6.3v11.4C6 19 7 20 8.3 20h7.4c1.3 0 2.3-1 2.3-2.3V6.3C18 5 17 4 15.7 4zM16 17.5c0 .8-.7 1.5-1.5 1.5h-5c-.8 0-1.5-.7-1.5-1.5v-11c0-.8.7-1.5 1.5-1.5h5c.8 0 1.5.7 1.5 1.5v11z"/></svg>
+    </span>
+  </div>
+  <button class="theme-fab" id="themeBtn" title="Ganti tema">🌙</button>
+
+  <!-- ═══════ SOAL + ALASAN (langkah 4–5) ═══════ -->
+  <section class="screen active" id="s-question">
+    <div class="pad">
+      <div class="qhead">
+        <button class="back" onclick="location.href='beranda-reason.html'" aria-label="Kembali">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="htitle">Soal 1 dari 1</span>
+        <svg class="spark" viewBox="0 0 36 32" aria-hidden="true">
+          <path d="M6 28C4.5 20 6 13 9.5 7" stroke="#F5A93F" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+          <path d="M17 29C17 19 19 11 23 5" stroke="#FFD84D" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+          <path d="M27 28C29.5 21 32 15.5 34.5 11" stroke="#6FCF3B" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+
+      <div class="qprompt">
+        <span class="qp-top">Hitung nilai dari</span>
+        <b class="qp-main">faktorial(4) !</b>
+      </div>
+
+      <!-- Jawaban singkat (wajib untuk mengirim) -->
+      <textarea class="tarea ans-line" id="ansInput" placeholder="Tulis hasilnya, misal: 24"></textarea>
+
+      <!-- PRD §6.1 langkah 5: "Mengapa?" wajib setelah setiap jawaban -->
+      <h3 class="why-title">Kenapa jawabanmu begitu?</h3>
+      <textarea class="tarea why" id="whyInput" placeholder="Tuliskan alasan Anda di sini..."></textarea>
+      <div class="warn-note" id="warnNote">Alasanmu masih kosong. Kalau memang belum bisa menjelaskan, kirim saja — tapi agen akan menandainya sebagai “alasan belum ada”.</div>
+
+      <div class="btn-row">
+        <button class="draft-btn" id="draftBtn" onclick="saveNow()">
+          <span class="dico"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 13l2 2 4-4"/></svg></span>
+          Simpan Draf
+        </button>
+        <button class="send-btn" id="sendBtn" disabled onclick="sendAnswer()">
+          Kirim
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ UMPAN BALIK (langkah 6) — hero verdict + Analisis Penalaran + Kutipan ═══════ -->
+  <section class="screen" id="s-feedback">
+    <div class="pad">
+      <div class="qhead">
+        <button class="back" onclick="showQuestion()" aria-label="Kembali">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="htitle">Umpan Balik</span>
+      </div>
+
+      <div class="fb-hero" id="fbHero">
+        <div class="fb-check">
+          <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        </div>
+        <div class="fb-copy">
+          <h2 id="fbTitle">Jawaban Kamu Benar!</h2>
+          <p id="fbSub">Alasanmu sudah tepat, meski masih bisa lebih lengkap.</p>
+        </div>
+        <!-- Bimo menyemangati (varian "belum tepat"); SVG statis = fallback WebGL2 -->
+        <div class="fb-mascot" aria-hidden="true">
+          <div class="fb-slot" id="fbMascot">
+            <svg viewBox="0 0 260 190">
+              <path d="M36 118c14-30 6-52-12-64 24 4 42 24 40 52-1 12-12 18-28 12z" fill="#E7E3FB"/>
+              <path d="M222 66c-12-24-4-44 12-54-20 6-34 24-32 48 1 10 10 14 20 6z" fill="#E7E3FB"/>
+              <path d="M212 96l4.5 11 11 4.5-11 4.5-4.5 11-4.5-11-11-4.5 11-4.5z" fill="#FFC94D"/>
+              <path d="M62 92l3.5 8.5 8.5 3.5-8.5 3.5-3.5 8.5-3.5-8.5-8.5-3.5 8.5-3.5z" fill="#9C8CF5"/>
+              <line x1="130" y1="34" x2="122" y2="20" stroke="#7C6BF0" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="120" cy="16" r="7" fill="#FFC94D"/>
+              <circle cx="88" cy="76" r="14" fill="#7C6BF0"/>
+              <circle cx="172" cy="76" r="14" fill="#7C6BF0"/>
+              <circle cx="88" cy="76" r="6" fill="#5D4BD6"/>
+              <circle cx="172" cy="76" r="6" fill="#5D4BD6"/>
+              <rect x="82" y="36" width="96" height="82" rx="36" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+              <rect x="97" y="52" width="66" height="52" rx="22" fill="#171A2E"/>
+              <path d="M112 74q6-9 12 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M136 74q6-9 12 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M124 86q6 7 12 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+              <path d="M100 122c18-8 42-8 60 0l7 40c-26 10-48 10-74 0z" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+              <path d="M98 132c-8 6-12 14-10 22" stroke="#E4E1F7" stroke-width="10" fill="none" stroke-linecap="round"/>
+              <path d="M162 132c8 6 12 14 10 22" stroke="#E4E1F7" stroke-width="10" fill="none" stroke-linecap="round"/>
+              <path d="M104 148l26-7v30l-26 7z" fill="#4392F0"/>
+              <path d="M156 148l-26-7v30l26 7z" fill="#6FB2F5"/>
+              <path d="M130 141v30" stroke="#2E7BD6" stroke-width="2.5"/>
+            </svg>
+          </div>
+          <span class="fb-spark s1">✦</span>
+          <span class="fb-spark s2">✦</span>
+          <span class="fb-spark s3">✦</span>
+        </div>
+      </div>
+
+      <!-- jejak penalaran yang barusan dibaca agen -->
+      <div class="ana-card">
+        <div class="ana-head">
+          <span class="ana-ico"><svg viewBox="0 0 24 24"><path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg></span>
+          <b>Analisis Penalaran</b>
+        </div>
+        <p id="anaBody">faktorial(4) menunggu faktorial(3) sampai dasar tercapai: faktorial(0) = 1, lalu hasil dikalikan balik 1 × 2 × 3 × 4 = 24. Jejak pemanggilanmu konsisten dari awal sampai kembali.</p>
+        <p class="note" id="anaNote">Konsep yang terbukti: urutan kembali adalah kebalikan urutan masuk — faktorial(0) → faktorial(1) → … → faktorial(4). Tinggal dipakai lagi di soal berikutnya.</p>
+      </div>
+
+      <!-- PRD FR-6: kutipan sumber dari materi kuliah, ketuk untuk buka sheet -->
+      <button class="quote-card" onclick="openSource()">
+        <div class="q-top">
+          <span class="q-ico"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5z"/><path d="M20 18v3H6.5A2.5 2.5 0 014 18.5"/></svg></span>
+          <b>Kutipan Materi Kuliah</b>
+          <svg class="q-open" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </div>
+        <p class="q-text">“Setiap pemanggilan menunggu hasil pemanggilan berikutnya hingga kasus dasar tercapai, lalu hasil dikalikan berurutan saat kembali.”</p>
+        <div class="q-src">— Modul Matematika Diskrit, Bab 4.2, hlm. 57</div>
+      </button>
+
+      <div class="prog-row">
+        <span class="p-ico">🎯</span>
+        <b>Progress Konsep</b>
+        <span class="p-badge" id="progBadge">0%</span>
+      </div>
+
+      <div class="rub-card">
+        <h4>Penilaian Rubrik</h4>
+        <div class="rub-row" id="rub1">
+          <span class="rub-ico ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <b>Jawaban Akurat</b>
+          <span class="rub-score">✓ 1/1</span>
+        </div>
+        <div class="rub-row" id="rub2">
+          <span class="rub-ico warn"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <b>Alasan Logis</b>
+          <span class="rub-score">✓ 1/1</span>
+        </div>
+        <div class="rub-row" id="rub3">
+          <span class="rub-ico none"><span class="dash"></span></span>
+          <b>Referensi Konsep</b>
+          <span class="rub-score miss">0/1</span>
+        </div>
+      </div>
+
+      <!-- PRD aturan wajib: tombol lanjut baru aktif setelah umpan balik tampil -->
+      <button class="fb-next" onclick="location.href='latihan.html'">
+        Lanjut ke Latihan
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Pad agen: membaca & menganalisis jawabanmu (PRD §21) — Bimo membaca, tahap + batal -->
+  <div class="thinking" id="thinking" role="status" aria-live="polite">
+    <div class="t-pad">
+      <div class="t-hero">
+        <div class="orb" id="thinkOrb"></div>
+        <div class="slot" id="agentSlot"></div>
+      </div>
+      <div class="t-title" id="thinkTitle">Agen membaca jawabanmu…</div>
+      <div class="t-sub">Lalu menganalisis dengan rubrik dosen</div>
+      <div class="t-stages" id="thinkSteps">
+        <div class="t-step"><span class="dot"></span>Membaca jawaban &amp; alasan</div>
+        <div class="t-step"><span class="dot"></span>Membaca jejak penalaran</div>
+        <div class="t-step"><span class="dot"></span>Menganalisis dengan rubrik</div>
+        <div class="t-step"><span class="dot"></span>Menyusun umpan balik + kutipan</div>
+      </div>
+      <div class="t-bar"><i id="thinkBar"></i></div>
+      <div class="t-chips" id="thinkChips"></div>
+      <button class="cancel-btn" onclick="cancelThinking()">Batal</button>
+    </div>
+  </div>
+
+  <!-- Sheet sumber -->
+  <div class="overlay" id="overlay" onclick="closeSource()"></div>
+  <div class="sheet" id="sheet">
+    <div class="grab"></div>
+    <h3>Modul Matematika Diskrit — Bab 4.2 “Rekursi”</h3>
+    <div class="meta">Catatan kuliah dari dosen pengampu · hlm. 56–58 · diunggah 12 Nov 2026</div>
+    <div class="content">4.2 Rekursi
+
+Sebuah fungsi disebut rekursif apabila di dalam definisinya fungsi tersebut memanggil dirinya sendiri. Rekursi selalu membutuhkan kasus dasar (base case) yang menghentikan pemanggilan diri. Tanpa kasus dasar, pemanggilan tidak pernah berhenti.
+
+Pada faktorial, kasus dasar n = 0 didefinisikan bernilai 1. Untuk n &gt; 0, berlaku faktorial(n) = n × faktorial(n − 1). Setiap pemanggilan menunggu hasil pemanggilan berikutnya hingga kasus dasar tercapai, lalu hasil dikalikan berurutan saat kembali.</div>
+    <span class="verified">✓ Sumber diverifikasi dosen</span>
+  </div>
+
+  <div class="home-ind"></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+function setTheme(mode){
+  document.getElementById('phone').dataset.theme = mode;
+  document.getElementById('themeBtn').textContent = mode === 'dark' ? '☀️' : '🌙';
+}
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const cur = document.getElementById('phone').dataset.theme;
+  setTheme(cur === 'dark' ? 'light' : 'dark');
+});
+let toastT;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* ============ DRAF OTOMATIS + ALASAN KOSONG (PRD §6.1 langkah 4–5) ============ */
+const ansInput = document.getElementById('ansInput');
+const whyInput = document.getElementById('whyInput');
+const sendBtn = document.getElementById('sendBtn');
+let warnedEmpty = false;
+let saveT;
+
+// Draf tersimpan otomatis (dipulihkan saat layar dibuka lagi)
+try{
+  ansInput.value = localStorage.getItem('reason_draft_ans') || '';
+  whyInput.value = localStorage.getItem('reason_draft_why') || '';
+}catch(e){}
+
+function saveDraft(){
+  clearTimeout(saveT);
+  saveT = setTimeout(() => {
+    try{
+      localStorage.setItem('reason_draft_ans', ansInput.value);
+      localStorage.setItem('reason_draft_why', whyInput.value);
+    }catch(e){}
+  }, 500);
+}
+function saveNow(){
+  clearTimeout(saveT);
+  try{
+    localStorage.setItem('reason_draft_ans', ansInput.value);
+    localStorage.setItem('reason_draft_why', whyInput.value);
+  }catch(e){}
+  toast('Draf tersimpan di perangkat ini');
+}
+function updateSend(){
+  sendBtn.disabled = ansInput.value.trim().length === 0;
+}
+ansInput.addEventListener('input', () => { saveDraft(); updateSend(); });
+whyInput.addEventListener('input', () => {
+  saveDraft();
+  whyInput.classList.remove('warn');
+  document.getElementById('warnNote').classList.remove('show');
+});
+updateSend();
+
+/* ============ PAD AGEN: membaca → analisis → umpan balik (PRD §21) ============ */
+const thinkEl = document.getElementById('thinking');
+const thinkSteps = Array.from(document.querySelectorAll('#thinkSteps .t-step'));
+const thinkBar = document.getElementById('thinkBar');
+const thinkTitle = document.getElementById('thinkTitle');
+const THINK_STAGES = [
+  { at: 0,    title: 'Agen membaca jawabanmu…',       bar: 25 },
+  { at: 600,  title: 'Membaca jejak penalaranmu…',    bar: 50 },
+  { at: 1200, title: 'Menganalisis dengan rubrik…',   bar: 75 },
+  { at: 1800, title: 'Menyusun umpan balik…',         bar: 100 },
+];
+const THINK_DONE = 2400;
+let thinkTimers = [];
+function clearThink(){ thinkTimers.forEach(clearTimeout); thinkTimers = []; }
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ============ ISI UMPAN BALIK per verdict (mockup pink "belum tepat" vs hijau "benar") ============ */
+const ICON_CHECK = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const ICON_DASH = '<span class="dash"></span>';
+function setRubrik(ok){
+  const rows = [['rub1', ok ? 'ok' : 'none'], ['rub2', ok ? 'warn' : 'none'], ['rub3', 'none']];
+  rows.forEach(([id, cls], i) => {
+    const row = document.getElementById(id);
+    const ico = row.querySelector('.rub-ico');
+    ico.className = 'rub-ico ' + cls;
+    ico.innerHTML = cls === 'none' ? ICON_DASH : ICON_CHECK;
+    const sc = row.querySelector('.rub-score');
+    const score = (ok && i < 2) ? '✓ 1/1' : '0/1';
+    sc.textContent = score;
+    sc.classList.toggle('miss', score === '0/1');
+  });
+}
+function fillFeedback(){
+  const ok = ansInput.value.trim() === '24';
+  const why = whyInput.value.trim();
+  const hero = document.getElementById('fbHero');
+  hero.classList.toggle('wrong', !ok);
+  document.getElementById('fbTitle').textContent =
+    ok ? 'Jawaban Kamu Benar!' : 'Belum tepat, dan itu petunjuk yang berguna.';
+  document.getElementById('fbSub').textContent = ok
+    ? (why ? 'Alasanmu sudah tepat, meski masih bisa lebih lengkap.'
+           : 'Alasanmu belum ada — coba lengkapi saat cek ulang.')
+    : 'Kita luruskan dulu sebelum cek ulang.';
+  document.getElementById('anaBody').textContent = ok
+    ? 'faktorial(4) menunggu faktorial(3) sampai dasar tercapai: faktorial(0) = 1, lalu hasil dikalikan balik 1 × 2 × 3 × 4 = 24. Jejak pemanggilanmu konsisten dari awal sampai kembali.'
+    : 'faktorial(1) adalah pemanggilan yang langsung meminta faktorial(0). Begitu nilai 1 tersedia, faktorial(1) dapat menyelesaikan 1 × 1 lebih dulu.';
+  document.getElementById('anaNote').textContent = ok
+    ? 'Konsep yang terbukti: urutan kembali adalah kebalikan urutan masuk — faktorial(0) → faktorial(1) → … → faktorial(4). Tinggal dipakai lagi di soal berikutnya.'
+    : 'Konsep yang perlu dipegang: urutan kembali adalah kebalikan urutan masuk — faktorial(0) → faktorial(1) → faktorial(2) → faktorial(3). Yang lain tetap menunggu sampai gilirannya.';
+  document.getElementById('progBadge').textContent = ok ? '40%' : '0%';
+  setRubrik(ok);
+  // Bimo di hero hanya mount pada varian pink (hero satunya pakai lencana centang)
+  if (window.__bimoFb) {
+    if (!ok) window.__bimoFb.show('happy');
+    else window.__bimoFb.hide();
+  }
+}
+
+function sendAnswer(){
+  // Alasan kosong: ingatkan SEKALI, lalu boleh lanjut dengan catatan (PRD §6.1 langkah 5)
+  if(whyInput.value.trim() === '' && !warnedEmpty){
+    warnedEmpty = true;
+    whyInput.classList.add('warn');
+    document.getElementById('warnNote').classList.add('show');
+    whyInput.focus();
+    return;
+  }
+  // chip: apa yang sedang dibaca agen (jawaban, alasan, jejak penalaran)
+  const why = whyInput.value.trim() || 'alasan belum ada — agen akan menandainya';
+  document.getElementById('thinkChips').innerHTML =
+    `<div class="t-chip"><b>Jawaban:</b> ${esc(ansInput.value.trim())}</div>` +
+    `<div class="t-chip"><b>Alasan:</b> ${esc(why)}</div>` +
+    `<div class="t-chip wrap"><b>Jejak penalaran:</b> faktorial(4) → faktorial(3) → faktorial(2) → faktorial(1) → faktorial(0) → 1</div>`;
+
+  // siapkan layar umpan balik sesuai verdict
+  fillFeedback();
+
+  // reset tahap
+  clearThink();
+  thinkSteps.forEach(s => s.classList.remove('on', 'done'));
+  thinkBar.style.width = '0%';
+  void thinkBar.offsetWidth;            // reflow supaya transisi 0% → 33% jalan
+  thinkEl.classList.add('show');
+  if (window.__bimoPad) window.__bimoPad.show();   // Bimo membaca (bila WebGL2 ada)
+
+  THINK_STAGES.forEach((st, i) => {
+    thinkTimers.push(setTimeout(() => {
+      if (i > 0) thinkSteps[i - 1].classList.replace('on', 'done');
+      thinkSteps[i].classList.add('on');
+      thinkTitle.textContent = st.title;
+      thinkBar.style.width = st.bar + '%';
+    }, st.at));
+  });
+  thinkTimers.push(setTimeout(() => {
+    thinkSteps[thinkSteps.length - 1].classList.replace('on', 'done');
+    thinkEl.classList.remove('show');
+    if (window.__bimoPad) window.__bimoPad.hide();
+    document.getElementById('s-question').classList.remove('active');
+    document.getElementById('s-feedback').classList.add('active');
+    document.getElementById('s-feedback').scrollTop = 0;
+  }, THINK_DONE));
+}
+function cancelThinking(){
+  clearThink();
+  thinkEl.classList.remove('show');
+  if (window.__bimoPad) window.__bimoPad.hide();
+  toast('Dibatalkan — draf jawaban & alasanmu tetap tersimpan');
+}
+function showQuestion(){
+  document.getElementById('s-feedback').classList.remove('active');
+  document.getElementById('s-question').classList.add('active');
+  document.getElementById('s-question').scrollTop = 0;
+}
+
+/* ============ SUMBER ============ */
+function openSource(){
+  document.getElementById('sheet').classList.add('show');
+  document.getElementById('overlay').classList.add('show');
+}
+function closeSource(){
+  document.getElementById('sheet').classList.remove('show');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+setTheme('light');
+</script>
+
+<script type="module">
+/* Bimo 3D (wobnimo) di pad agen — mount saat pad PERTAMA kali tampil supaya
+   canvas berukuran benar (slot di dalam overlay display:none = ukuran 0).
+   Fallback: orbe berputar yang sudah ada (bila WebGL2 absen). */
+import { mount } from '../vendor/wobnimo.js';
+import { bimo } from '../mascots/bimo.js';
+
+const slot = document.getElementById('agentSlot');
+const orb = document.getElementById('thinkOrb');
+let mascot = null;
+let currentState = 'idle';
+
+function setState(s){
+  currentState = s;
+  if (mascot) { try { mascot.setState(s); } catch (e) { console.warn('[bimo] setState', e); } }
+}
+
+window.__bimoPad = {
+  get mounted(){ return !!mascot; },
+  get state(){ return currentState; },
+  show(){
+    if (!mascot) {
+      try {
+        if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
+        mascot = mount(slot, bimo, { state: 'working' });   // chin menunduk ke buku = membaca
+        if (orb) orb.style.display = 'none';
+      } catch (err) {
+        console.warn('[bimo] WebGL2 absen — pakai orbe:', err && err.message);
+      }
+    } else {
+      setState('working');
+    }
+  },
+  hide(){ setState('idle'); },
+  setState
+};
+
+/* Bimo di hero umpan balik (varian "belum tepat") — dipanggil fillFeedback()
+   SETELAH class .wrong dipasang, supaya slot sudah display:block saat mount */
+const fbSlot = document.getElementById('fbMascot');
+const fbFallback = fbSlot ? fbSlot.innerHTML : '';
+let fbMascot = null;
+let fbState = 'idle';
+function fbSetState(s){
+  fbState = s;
+  if (fbMascot) { try { fbMascot.setState(s); } catch (e) { console.warn('[bimo] fb setState', e); } }
+}
+window.__bimoFb = {
+  get mounted(){ return !!fbMascot; },
+  get state(){ return fbState; },
+  show(state){
+    if (!fbMascot) {
+      try {
+        if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
+        void fbSlot.offsetWidth;                       // reflow: pastikan slot berukuran sebelum mount
+        fbSlot.innerHTML = '';
+        fbMascot = mount(fbSlot, bimo, { state: state || 'happy' });
+      } catch (err) {
+        console.warn('[bimo] WebGL2 absen — pakai SVG hero:', err && err.message);
+        fbSlot.innerHTML = fbFallback;                 // SVG statis robot tetap tampil
+      }
+    } else {
+      fbSetState(state || 'happy');
+    }
+  },
+  hide(){ fbSetState('idle'); },
+  setState: fbSetState
+};
+</script>
+</body>
+</html>

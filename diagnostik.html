@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>REASON — Diagnostik</title>
+<style>
+  :root{
+    --blue:#4392F0; --blue-deep:#2E7BD6; --blue-soft:#D6E8FF;
+    --purple:#B7A6F6; --purple-soft:#EFEAFD;
+    --orange:#F5A93F; --pink:#F9A9E8; --pink-soft:#FCE3F8;
+    --green:#C5EE93; --cyan:#3DD3F6; --lavender:#D8D2F3;
+    --bg:#F5F3FE; --card:#FFFFFF; --text:#171A2E; --muted:#8A8B98;
+    --line:#ECECF1; --nav-dark:#15161C;
+    --r-card:22px; --r-pill:999px;
+    --shadow:0 8px 24px rgba(20,22,40,.07);
+    --font:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  [data-theme="dark"]{
+    --bg:#1A2434; --card:#152030; --text:#F2F4F8; --muted:#8B97AB;
+    --line:#253147; --nav-dark:#0F1724; --blue-soft:#1E3A5F;
+    --purple-soft:#2A2750; --pink-soft:#402A45;
+    --shadow:0 8px 24px rgba(0,0,0,.28);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:var(--font);background:#DDE1EA;
+    display:flex;align-items:center;justify-content:center;
+    min-height:100vh;padding:20px;
+  }
+  @media (max-width:520px){ body{padding:0} }
+  .phone{
+    width:390px;height:844px;max-height:100vh;
+    background:var(--bg);border-radius:44px;overflow:hidden;
+    position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35;
+    transition:background .3s;
+  }
+  @media (max-width:520px){ .phone{width:100%;height:100vh;border-radius:0;box-shadow:none} }
+  .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;background:#0B0D12;border-radius:20px;z-index:60}
+  .statusbar{
+    position:absolute;top:0;left:0;right:0;height:52px;z-index:55;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 28px 0;font-size:14px;font-weight:600;color:var(--text);pointer-events:none;
+  }
+  .statusbar .sb-icons{display:flex;gap:6px;align-items:center}
+  .sb-icons svg{width:16px;height:16px;fill:var(--text)}
+  .screen{
+    position:absolute;inset:0;padding-top:52px;overflow-y:auto;overflow-x:hidden;
+    padding-bottom:34px;-webkit-overflow-scrolling:touch;
+    opacity:0;visibility:hidden;transform:translateX(18px);
+    transition:opacity .3s ease,transform .3s ease,visibility .3s;
+  }
+  .screen.active{opacity:1;visibility:visible;transform:translateX(0)}
+  .screen::-webkit-scrollbar{display:none}
+  .pad{padding:0 20px}
+  .home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:50}
+  .pill-btn{border:none;font-family:var(--font);cursor:pointer;border-radius:var(--r-pill);font-weight:600;transition:transform .15s}
+  .pill-btn:active{transform:scale(.96)}
+  .theme-fab{
+    position:absolute;top:60px;right:16px;z-index:70;width:38px;height:38px;border-radius:50%;
+    border:none;cursor:pointer;background:var(--card);box-shadow:var(--shadow);
+    display:flex;align-items:center;justify-content:center;font-size:16px;transition:transform .2s;
+  }
+  .toast{
+    position:absolute;left:50%;bottom:40px;transform:translateX(-50%) translateY(20px);
+    background:var(--nav-dark);color:#F6F6F9;font-size:13px;font-weight:600;
+    padding:12px 22px;border-radius:var(--r-pill);z-index:80;max-width:86%;text-align:center;
+    opacity:0;pointer-events:none;transition:all .3s;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ============ HEADER — judul tengah ala mockup ============ */
+  .sess-head{display:flex;align-items:center;gap:12px;padding-top:12px}
+  .back{
+    width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;
+    background:transparent;display:flex;align-items:center;justify-content:center;
+  }
+  .back svg{width:22px;height:22px;stroke:#3D3A66;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  [data-theme="dark"] .back svg{stroke:#C9C4E8}
+  .sess-head .st{flex:1}
+  .sess-head .st b{display:block;font-size:15px;font-weight:700;color:var(--text)}
+  .sess-head .st span{font-size:12px;color:var(--muted)}
+  .qhead{position:relative;display:flex;align-items:center;padding-top:10px;min-height:42px}
+  .qhead .htitle{
+    position:absolute;left:52px;right:52px;text-align:center;pointer-events:none;
+    font-size:17px;font-weight:700;color:var(--text);
+  }
+
+  /* Progress bar — "1 dari 4" + track gradien ungu */
+  .qprog{margin-top:10px}
+  .qcount{display:block;text-align:right;font-size:12.5px;font-weight:700;color:#6B5BB5;margin-bottom:8px}
+  [data-theme="dark"] .qcount{color:#B7A6F6}
+  .track{height:10px;border-radius:6px;background:#E7E2F7;overflow:hidden}
+  [data-theme="dark"] .track{background:#2A2750}
+  .track i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#8574F4,#6555E6);transition:width .35s}
+
+  /* ============ SOAL — teks besar langsung di latar ============ */
+  .qtext{
+    font-size:25px;font-weight:700;color:var(--text);line-height:1.3;
+    margin-top:26px;letter-spacing:-.2px;
+  }
+
+  /* Pilihan jawaban — kartu putih, terpilih = gradien ungu */
+  .ans{
+    width:100%;text-align:left;background:var(--card);border:none;
+    border-radius:16px;padding:14px 15px;margin-top:13px;cursor:pointer;
+    font-family:var(--font);font-size:15px;color:var(--text);line-height:1.45;
+    display:flex;gap:13px;align-items:center;transition:all .18s;
+    box-shadow:0 4px 14px rgba(60,50,120,.07);
+  }
+  .ans:active{transform:scale(.98)}
+  .ans .key{
+    width:32px;height:32px;border-radius:50%;background:#EFEDF8;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700;
+    color:#5B5A70;transition:all .18s;
+  }
+  .ans .tick{
+    margin-left:auto;width:24px;height:24px;border-radius:50%;flex-shrink:0;
+    background:#fff;display:none;align-items:center;justify-content:center;
+    box-shadow:0 3px 8px rgba(0,0,0,.15);
+  }
+  .ans .tick svg{width:13px;height:13px;stroke:#6555E6;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  .ans.on{
+    background:linear-gradient(135deg,#8574F4,#6555E6);color:#fff;
+    box-shadow:0 12px 26px rgba(105,87,235,.38);
+  }
+  .ans.on .key{background:#fff;color:#6555E6}
+  .ans.on .tick{display:flex}
+
+  /* Keyakinan — PRD §6.1 langkah 2, pill teks ala mockup */
+  .conf-block{margin-top:24px}
+  .conf-block .clabel{font-size:14.5px;font-weight:700;color:var(--text)}
+  .conf-row{display:flex;gap:10px;margin-top:13px}
+  .conf{
+    flex:1;border:none;background:var(--card);border-radius:14px;
+    padding:14px 4px;cursor:pointer;text-align:center;font-family:var(--font);
+    font-size:13px;font-weight:600;color:#3D3A66;
+    box-shadow:0 4px 14px rgba(60,50,120,.07);transition:all .18s;
+  }
+  .conf:active{transform:scale(.96)}
+  .conf small{display:none}
+  .conf.on{
+    background:linear-gradient(135deg,#8574F4,#6555E6);color:#fff;
+    box-shadow:0 12px 26px rgba(105,87,235,.38);
+  }
+
+  .next-btn{
+    width:100%;padding:16.5px;border-radius:16px;margin-top:26px;
+    background:linear-gradient(135deg,#8574F4,#6555E6);color:#fff;
+    font-size:15.5px;font-weight:700;box-shadow:0 12px 26px rgba(105,87,235,.4);
+    display:flex;align-items:center;justify-content:center;gap:9px;
+  }
+  .next-btn:disabled{
+    background:#CFC8EC;box-shadow:none;color:#fff;cursor:default;
+  }
+  .next-btn svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+
+  /* Overlay agen berpikir + batal (PRD §21) */
+  .thinking{
+    position:absolute;inset:0;background:rgba(246,246,249,.92);z-index:65;
+    display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;
+    backdrop-filter:blur(4px);
+  }
+  [data-theme="dark"] .thinking{background:rgba(26,36,52,.92)}
+  .thinking.show{display:flex}
+  .thinking .orb{
+    width:64px;height:64px;border-radius:50%;
+    background:conic-gradient(var(--blue),var(--purple),var(--pink),var(--blue));
+    animation:spin 1.6s linear infinite;position:relative;
+  }
+  .thinking .orb::after{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--bg)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .thinking p{font-size:14px;font-weight:600;color:var(--text)}
+  .thinking small{font-size:12px;color:var(--muted)}
+  .cancel-btn{
+    margin-top:6px;background:var(--card);color:var(--text);border:1.5px solid var(--line);
+    padding:10px 24px;font-size:13px;
+  }
+
+  /* ============ RINGKASAN AWAL (langkah 3) — friendly ============ */
+  .sum-hero{
+    margin-top:16px;background:var(--purple);border-radius:26px;
+    padding:24px 20px;color:#15161C;position:relative;overflow:hidden;min-height:118px;
+  }
+  .sum-hero h2{font-size:21px;font-weight:700;line-height:1.25;max-width:78%}
+  .sum-hero p{font-size:12.5px;font-weight:600;margin-top:7px;opacity:.8;max-width:78%}
+  .sum-hero .sstick{position:absolute;pointer-events:none;font-size:30px}
+  .sum-hero .sstick.a{right:16px;top:16px;transform:rotate(14deg)}
+  .sum-hero .sstick.b{right:58px;bottom:14px;font-size:22px;transform:rotate(-10deg)}
+  .sum-hero .ring{
+    position:absolute;right:18px;bottom:44px;width:52px;height:52px;border-radius:50%;
+    background:#15161C;display:flex;align-items:center;justify-content:center;
+    font-size:22px;box-shadow:0 8px 18px rgba(0,0,0,.25);
+  }
+  .concept-list{margin-top:16px}
+  .concept-list h4{font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .concept-list h4 .dot{width:10px;height:10px;border-radius:50%}
+  .citem{
+    background:var(--card);border-radius:16px;padding:13px 16px;margin-bottom:9px;
+    display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);
+  }
+  .citem .ci{flex:1}
+  .citem b{font-size:13.5px;color:var(--text);display:block}
+  .citem small{font-size:11.5px;color:var(--muted);display:block;margin-top:2px}
+  .citem .cbadge{font-size:10.5px;font-weight:700;padding:4px 11px;border-radius:var(--r-pill);flex-shrink:0}
+  .cbadge.ok{background:var(--green);color:#2E4A12}
+  .cbadge.need{background:var(--pink-soft);color:#B0408F}
+  [data-theme="dark"] .cbadge.need{color:#F0A8DC}
+  .reject{
+    border:none;background:transparent;color:var(--muted);font-size:11px;font-weight:600;
+    cursor:pointer;font-family:var(--font);text-decoration:underline;padding:4px 0 0;
+  }
+  .sum-actions{margin-top:20px}
+  .secondary-btn{
+    width:100%;padding:14px;border-radius:var(--r-pill);margin-top:10px;
+    background:var(--card);color:var(--text);border:1.5px solid var(--line);font-size:13.5px;font-weight:600;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+  <div class="notch"></div>
+  <div class="statusbar">
+    <span>9:41</span>
+    <span class="sb-icons">
+      <svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zm5-3h3v7H7zm5-4h3v11h-3zm5-5h3v16h-3z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 18.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM7.7 14.4a6.2 6.2 0 018.6 0l1.4-1.5a8.2 8.2 0 00-11.4 0zM4.3 11a10.2 10.2 0 0115.4 0l1.4-1.5a12.2 12.2 0 00-18.2 0z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.7 4H8.3C7 4 6 5 6 6.3v11.4C6 19 7 20 8.3 20h7.4c1.3 0 2.3-1 2.3-2.3V6.3C18 5 17 4 15.7 4zM16 17.5c0 .8-.7 1.5-1.5 1.5h-5c-.8 0-1.5-.7-1.5-1.5v-11c0-.8.7-1.5 1.5-1.5h5c.8 0 1.5.7 1.5 1.5v11z"/></svg>
+    </span>
+  </div>
+  <button class="theme-fab" id="themeBtn" title="Ganti tema">🌙</button>
+
+  <!-- ═══════ LAYAR SOAL DIAGNOSTIK ═══════ -->
+  <section class="screen active" id="s-quiz">
+    <div class="pad">
+      <div class="qhead">
+        <button class="back" onclick="location.href='beranda-reason.html'" aria-label="Kembali">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="htitle">Diagnostik</span>
+      </div>
+
+      <div class="qprog">
+        <span class="qcount" id="qCounter">1 dari 4</span>
+        <div class="track"><i id="progFill" style="width:25%"></i></div>
+      </div>
+
+      <h2 class="qtext" id="qText"></h2>
+      <div id="ansList"></div>
+
+      <div class="conf-block">
+        <div class="clabel">Tingkat Keyakinan Kamu:</div>
+        <div class="conf-row" id="confRow">
+          <button class="conf" data-conf="bingung" onclick="pickConf(this)">Ragu</button>
+          <button class="conf" data-conf="agak" onclick="pickConf(this)">Cukup Yakin</button>
+          <button class="conf" data-conf="yakin" onclick="pickConf(this)">Sangat Yakin</button>
+        </div>
+      </div>
+
+      <button class="pill-btn next-btn" id="nextBtn" disabled onclick="submitAnswer()">
+        Selanjutnya
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ═══════ RINGKASAN AWAL (PRD §6.1 langkah 3) ═══════ -->
+  <section class="screen" id="s-summary">
+    <div class="pad">
+      <div class="sess-head">
+        <div class="st">
+          <b>Hasil diagnostik</b>
+          <span>Rekursi · Matematika Diskrit</span>
+        </div>
+      </div>
+
+      <div class="sum-hero">
+        <h2>Kamu sudah punya fondasinya. 🌱</h2>
+        <p>Dari 4 konsep prasyarat, 2 sudah kuat. Kita bangun sisanya pelan-pelan.</p>
+        <span class="sstick a">🌸</span>
+        <span class="sstick b">✨</span>
+        <div class="ring">💪</div>
+      </div>
+
+      <div class="concept-list">
+        <h4><span class="dot" style="background:var(--green)"></span>Yang sudah kamu kuasai</h4>
+        <div class="citem">
+          <div class="ci"><b>Fungsi & pemanggilan fungsi</b><small>Jawaban benar, keyakinan: yakin</small></div>
+          <span class="cbadge ok">Kuat</span>
+        </div>
+        <div class="citem">
+          <div class="ci"><b>Membaca notasi matematika</b><small>Jawaban benar, keyakinan: yakin</small></div>
+          <span class="cbadge ok">Kuat</span>
+        </div>
+      </div>
+
+      <div class="concept-list">
+        <h4><span class="dot" style="background:var(--pink)"></span>Yang perlu kita bangun</h4>
+        <div class="citem" id="cBase">
+          <div class="ci"><b>Base case (kasus dasar)</b><small>Jawaban keliru, keyakinan: agak yakin</small></div>
+          <span class="cbadge need">Dibangun</span>
+        </div>
+        <button class="reject" onclick="quickCheck('Base case')">Ini sebenarnya sudah aku paham → uji cepat</button>
+        <div class="citem" style="margin-top:12px">
+          <div class="ci"><b>Jejak eksekusi (call stack)</b><small>Keyakinan: bingung</small></div>
+          <span class="cbadge need">Dibangun</span>
+        </div>
+        <button class="reject" onclick="quickCheck('Call stack')">Ini sebenarnya sudah aku paham → uji cepat</button>
+      </div>
+
+      <div class="sum-actions">
+        <button class="pill-btn next-btn" onclick="location.href='soal.html'">Lanjut ke soal utama</button>
+        <button class="pill-btn secondary-btn" onclick="location.href='beranda-reason.html'">Nanti dulu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agen berpikir: indikator manusiawi + batal (PRD §21) -->
+  <div class="thinking" id="thinking">
+    <div class="orb"></div>
+    <p>Agen sedang membaca jawabanmu…</p>
+    <small>Biasanya 2–5 detik</small>
+    <button class="pill-btn cancel-btn" onclick="cancelThinking()">Batal</button>
+  </div>
+
+  <div class="home-ind"></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ============ THEME & TOAST ============ */
+function setTheme(mode){
+  document.getElementById('phone').dataset.theme = mode;
+  document.getElementById('themeBtn').textContent = mode === 'dark' ? '☀️' : '🌙';
+}
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const cur = document.getElementById('phone').dataset.theme;
+  setTheme(cur === 'dark' ? 'light' : 'dark');
+});
+let toastT;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* ============ DATA DIAGNOSTIK (3–5 soal, PRD §6.1 langkah 2) ============ */
+const QUESTIONS = [
+  {
+    concept:'Prasyarat · Fungsi',
+    text:'Apa hasil dari 2! ?',
+    answers:['1','2','4','6'], correct:2,
+  },
+  {
+    concept:'Prasyarat · Notasi',
+    text:'Notasi f(f(2)) artinya…',
+    answers:[
+      'f dikali f dikali 2',
+      'Hasil f(2) dipakai lagi sebagai input f',
+      'f pangkat dua dari 2',
+      'Dua fungsi berbeda dijumlahkan'
+    ], correct:1,
+  },
+  {
+    concept:'Konsep · Base case',
+    text:'Dalam fungsi rekursif, “base case” berfungsi untuk…',
+    answers:[
+      'Mempercepat perhitungan',
+      'Menyimpan hasil sementara',
+      'Menghentikan pemanggilan diri',
+      'Memanggil fungsi pertama kali'
+    ], correct:2,
+  },
+  {
+    concept:'Konsep · Call stack',
+    text:'Saat faktorial(3) memanggil faktorial(2), apa yang terjadi pada faktorial(3)?',
+    answers:[
+      'Langsung selesai dan hilang dari memori',
+      'Menunggu hasil faktorial(2), lalu melanjutkan perhitungannya',
+      'Dijalankan ulang dari awal',
+      'Berubah menjadi faktorial(2)'
+    ], correct:1,
+  },
+];
+
+let qi = 0, picked = -1, conf = null;
+let results = [];
+let thinkTimer = null;
+
+function renderQ(){
+  const q = QUESTIONS[qi];
+  picked = -1; conf = null;
+  document.getElementById('qCounter').textContent = `${qi+1} dari ${QUESTIONS.length}`;
+  document.getElementById('progFill').style.width =
+    Math.round((qi+1)/QUESTIONS.length*100) + '%';
+  document.getElementById('qText').textContent = q.text;
+  const keys = ['A','B','C','D'];
+  document.getElementById('ansList').innerHTML = q.answers.map((a,i)=>
+    `<button class="ans" data-i="${i}" onclick="pickAns(this)">
+       <span class="key">${keys[i]}</span><span>${a}</span>
+       <span class="tick"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span>
+     </button>`).join('');
+  document.querySelectorAll('.conf').forEach(c=>c.classList.remove('on'));
+  updateNext();
+}
+function pickAns(el){
+  document.querySelectorAll('.ans').forEach(a=>a.classList.remove('on'));
+  el.classList.add('on');
+  picked = +el.dataset.i;
+  updateNext();
+}
+function pickConf(el){
+  document.querySelectorAll('.conf').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  conf = el.dataset.conf;
+  updateNext();
+}
+function updateNext(){
+  document.getElementById('nextBtn').disabled = !(picked >= 0 && conf);
+}
+function submitAnswer(){
+  results.push({q:qi, picked, conf});
+  // Indikator berpikir + opsi batal (PRD §21)
+  document.getElementById('thinking').classList.add('show');
+  thinkTimer = setTimeout(() => {
+    document.getElementById('thinking').classList.remove('show');
+    qi++;
+    if(qi < QUESTIONS.length){
+      renderQ();
+    }else{
+      document.getElementById('s-quiz').classList.remove('active');
+      document.getElementById('s-summary').classList.add('active');
+    }
+  }, 1500);
+}
+function cancelThinking(){
+  clearTimeout(thinkTimer);
+  document.getElementById('thinking').classList.remove('show');
+  toast('Dibatalkan — jawabanmu tetap tersimpan sebagai draf');
+}
+
+/* Tolak konsep → uji cepat singkat (PRD §6.1 langkah 3) */
+function quickCheck(name){
+  toast(`Uji cepat "${name}": 1 soal singkat akan disiapkan agen`);
+}
+
+renderQ();
+setTheme('light');
+</script>
+</body>
+</html>

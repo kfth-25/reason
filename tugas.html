@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>REASON — Tugas</title>
+<style>
+  /* ============ TOKEN REASON (konsisten dgn halaman lain) ============ */
+  :root{
+    --blue:#4392F0;--blue-deep:#2E7BD6;--blue-soft:#D6E8FF;--purple:#B7A6F6;
+    --purple-soft:#EFEAFD;--orange:#F5A93F;--pink:#F9A9E8;--pink-soft:#FCE3F8;
+    --green:#C5EE93;--cyan:#3DD3F6;--lavender:#D8D2F3;
+    --bg:#F6F6F9;--card:#FFFFFF;--text:#15161C;--muted:#8A8B98;
+    --line:#ECECF1;--nav-dark:#15161C;--r-card:22px;--r-pill:999px;
+    --shadow:0 8px 24px rgba(20,22,40,.07);--font:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  [data-theme="dark"]{--bg:#1A2434;--card:#152030;--text:#F2F4F8;--muted:#8B97AB;--line:#253147;--nav-dark:#0F1724;--blue-soft:#1E3A5F;--purple-soft:#2A2750;--pink-soft:#402A45;--shadow:0 8px 24px rgba(0,0,0,.28)}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:var(--font);background:#DDE1EA;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  .phone{width:390px;height:844px;max-height:100vh;background:var(--bg);border-radius:44px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35;transition:background .3s}
+  @media(max-width:520px){body{padding:0}.phone{width:100%;height:100vh;border-radius:0;box-shadow:none}}
+  .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;background:#0B0D12;border-radius:20px;z-index:60}
+  .statusbar{position:absolute;top:0;left:0;right:0;height:52px;z-index:55;display:flex;align-items:center;justify-content:space-between;padding:16px 28px 0;font-size:14px;font-weight:600;color:var(--text);pointer-events:none}
+  .statusbar span:last-child{display:flex;gap:6px}.statusbar svg{width:16px;height:16px;fill:var(--text)}
+  .screen{position:absolute;inset:0;padding-top:52px;padding-bottom:116px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .screen::-webkit-scrollbar{display:none}.pad{padding:0 20px}
+  .nav{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);background:var(--nav-dark);border-radius:var(--r-pill);display:flex;gap:6px;padding:8px;z-index:50;box-shadow:0 12px 32px rgba(0,0,0,.28)}
+  .nav button{width:58px;height:58px;border:none;border-radius:50%;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .25s}
+  .nav button svg{width:23px;height:23px;stroke:#7C8496;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;transition:stroke .25s}
+  .nav button.on{background:#F6F6F9}.nav button.on svg{stroke:#15161C}
+  .home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:50}
+  .theme-fab{position:absolute;top:60px;right:16px;z-index:70;width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;background:var(--card);box-shadow:var(--shadow);font-size:16px;transition:transform .2s}
+  .theme-fab:active{transform:scale(.9)}
+  .pill-btn{border:none;font-family:var(--font);cursor:pointer;border-radius:var(--r-pill);font-weight:600;transition:transform .15s}
+  .pill-btn:active{transform:scale(.96)}
+  .toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%) translateY(20px);background:var(--nav-dark);color:#F6F6F9;font-size:13px;font-weight:600;padding:12px 22px;border-radius:var(--r-pill);z-index:80;max-width:86%;text-align:center;opacity:0;pointer-events:none;transition:all .3s}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ============ HEADER ============ */
+  .top-head{display:flex;align-items:center;gap:12px;padding:13px 44px 0 0}
+  .brand{width:46px;height:46px;border-radius:16px;background:var(--nav-dark);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .brand svg{width:24px;height:24px;stroke:var(--blue);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .top-head .ht{flex:1}.top-head b{display:block;font-size:17px;font-weight:700;color:var(--text)}.top-head span{font-size:12px;color:var(--muted)}
+
+  /* ============ STRIP HARI (dipinjam dari prototipe Harian) ============ */
+  .dstrip{display:flex;gap:9px;margin-top:16px;justify-content:space-between}
+  .dcard{
+    width:60px;height:84px;border-radius:28px;flex-shrink:0;cursor:pointer;
+    background:var(--card);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;transition:all .22s;opacity:.55;
+    border:1.5px solid var(--line);
+  }
+  .dcard b{font-size:19px;font-weight:700;color:var(--text)}
+  .dcard small{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .dcard.on{background:var(--green);opacity:1;transform:scale(1.08);border-color:transparent;box-shadow:0 10px 22px rgba(197,238,147,.4)}
+  .dcard.on b,.dcard.on small{color:#15161C}
+  .dcard.on small{opacity:.75}
+  .dcard .due-dot{position:absolute}
+
+  /* ============ STATS ============ */
+  .stats{display:flex;gap:9px;margin-top:14px}
+  .stat{flex:1;background:var(--card);border-radius:16px;padding:12px 13px;box-shadow:var(--shadow);border:1.5px solid var(--line)}
+  .stat b{display:block;font-size:20px;color:var(--text)}
+  .stat small{display:block;font-size:10px;color:var(--muted);margin-top:2px}
+  .stat.s-done b{color:#4E9B1E}[data-theme="dark"] .stat.s-done b{color:var(--green)}
+  .stat.s-run b{color:var(--blue-deep)}[data-theme="dark"] .stat.s-run b{color:#9CC4F5}
+  .stat.s-wait b{color:#B0408F}[data-theme="dark"] .stat.s-wait b{color:var(--pink)}
+
+  /* ============ FOLDER (folder tugas) ============ */
+  .sec-title{font-size:16px;font-weight:700;color:var(--text);margin:20px 0 11px;display:flex;align-items:center;justify-content:space-between}
+  .sec-title .hint{font-size:10.5px;font-weight:600;color:var(--muted)}
+  .folder{background:var(--card);border-radius:20px;margin-bottom:12px;box-shadow:var(--shadow);overflow:hidden;border:1.5px solid var(--line);transition:border-color .2s}
+  .folder.open{border-color:var(--blue)}
+  .folder.locked{opacity:.7}
+  .folder-head{
+    width:100%;display:flex;align-items:center;gap:13px;padding:15px 16px;
+    background:transparent;border:none;cursor:pointer;font-family:var(--font);text-align:left;
+  }
+  .folder-head .fico{
+    width:46px;height:46px;border-radius:15px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    background:var(--blue-soft);transition:transform .25s;
+  }
+  .folder.open .folder-head .fico{transform:rotate(-8deg) scale(1.05)}
+  .folder-head .finfo{flex:1;min-width:0}
+  .folder-head .finfo b{display:block;font-size:14.5px;font-weight:700;color:var(--text)}
+  .folder-head .finfo small{display:block;font-size:10.5px;color:var(--muted);margin-top:3px}
+  .folder-head .fmeta{text-align:right;flex-shrink:0}
+  .folder-head .fmeta .fpct{font-size:14px;font-weight:700;color:var(--text);display:block}
+  .folder-head .fmeta .fcount{font-size:9.5px;color:var(--muted)}
+  .folder-head .chev{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .28s;flex-shrink:0}
+  .folder.open .chev{transform:rotate(180deg)}
+  .folder-body{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.2,.8,.25,1)}
+  .folder.open .folder-body{max-height:1400px}
+  .folder-inner{padding:2px 14px 16px}
+
+  /* ============ KARTU TUGAS (potongan kode prototipe Harian) ============ */
+  .tgroup{margin-top:22px;position:relative}
+  .tgroup:first-child{margin-top:8px}
+  .tcard{
+    background:var(--tc,#C5EE93);border-radius:20px;padding:16px 15px;
+    cursor:pointer;transition:transform .15s;position:relative;
+  }
+  .tcard:active{transform:scale(.98)}
+  .tcard .tab{
+    position:absolute;top:-14px;left:15px;background:var(--tc,#C5EE93);
+    border-radius:12px 12px 0 0;padding:4px 13px 6px;
+    font-size:11.5px;font-weight:700;color:#15161C;
+  }
+  .tcard .meta-row{display:flex;align-items:center;justify-content:space-between;margin-top:-4px}
+  .tcard .who{font-size:10.5px;font-weight:700;color:#15161C;opacity:.65}
+  .prog-wrap{display:flex;align-items:center;gap:8px}
+  .prog-wrap .track{width:54px;height:5px;border-radius:3px;background:rgba(0,0,0,.16);overflow:hidden}
+  .prog-wrap .track i{display:block;height:100%;background:#152030;border-radius:3px;transition:width .5s}
+  .prog-wrap span{font-size:12px;font-weight:700;color:#152030}
+  .tcard .body{display:flex;align-items:center;gap:13px;margin-top:12px}
+  .ticon{
+    width:50px;height:50px;flex-shrink:0;background:#152030;
+    display:flex;align-items:center;justify-content:center;
+    transform:rotate(45deg);border-radius:15px;
+  }
+  .ticon svg{width:23px;height:23px;stroke:var(--tc,#C5EE93);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transform:rotate(-45deg)}
+  .tinfo{flex:1;min-width:0}
+  .tinfo h3{font-size:15.5px;font-weight:700;color:#15161C;line-height:1.3}
+  .tinfo p{font-size:12px;color:#15161C;opacity:.62;margin-top:3px}
+  .dots{font-size:22px;color:#15161C;letter-spacing:1px;line-height:1;cursor:pointer;padding:4px;flex-shrink:0}
+  .tcard.locked-card{filter:grayscale(.35);opacity:.8;cursor:default}
+  .tcard.locked-card:active{transform:none}
+
+  /* potongan kode di dalam tugas */
+  .code-toggle{
+    display:flex;align-items:center;gap:7px;margin-top:12px;
+    background:rgba(21,32,48,.12);border:none;border-radius:var(--r-pill);
+    padding:8px 14px;font-family:var(--font);font-size:11px;font-weight:700;
+    color:#152030;cursor:pointer;
+  }
+  .code-toggle svg{width:13px;height:13px;stroke:#152030;fill:none;stroke-width:2.2;stroke-linecap:round}
+  .code-wrap{max-height:0;overflow:hidden;transition:max-height .35s ease}
+  .code-wrap.open{max-height:340px}
+  .code{
+    margin-top:11px;background:#152030;border-radius:14px;padding:14px 15px;
+    font-family:'Cascadia Code','Consolas',monospace;font-size:12px;line-height:1.65;
+    color:#E8ECF4;overflow-x:auto;white-space:pre;
+  }
+  .code .kw{color:#8FB8FF}.code .num{color:#F5C97B}.code .cm{color:#7C8496}.code .fn{color:#C5EE93}
+
+  /* ============ HERO TENGGAT ============ */
+  .hero{margin-top:16px;background:var(--orange);border-radius:var(--r-card);padding:18px 19px;color:#15161C;position:relative;overflow:hidden}
+  .hero .lbl{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.4px;background:rgba(255,255,255,.6);border-radius:var(--r-pill);padding:4px 11px}
+  .hero h2{font-size:18.5px;font-weight:700;line-height:1.3;margin-top:9px;max-width:84%}
+  .hero p{font-size:11.5px;font-weight:600;margin-top:5px;opacity:.85;max-width:84%}
+  .hero .due{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;font-weight:700}
+  .hero .blob{position:absolute;right:-8px;top:22px;font-size:60px;transform:rotate(14deg);opacity:.55;pointer-events:none}
+  .hero .go{
+    position:absolute;right:16px;bottom:16px;width:44px;height:44px;border-radius:50%;
+    background:#15161C;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  }
+  .hero .go svg{width:20px;height:20px;stroke:var(--orange);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+  .note{font-size:10.5px;color:var(--muted);line-height:1.6;margin-top:12px}
+
+  /* ============ SHEET ============ */
+  .overlay{position:absolute;inset:0;background:rgba(10,12,20,.45);z-index:75;opacity:0;visibility:hidden;transition:all .28s;backdrop-filter:blur(3px)}
+  .overlay.show{opacity:1;visibility:visible}
+  .sheet{position:absolute;left:0;right:0;bottom:0;z-index:76;background:var(--bg);border-radius:30px 30px 0 0;padding:14px 22px 32px;transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.25,1);max-height:78%;overflow-y:auto}
+  .sheet::-webkit-scrollbar{display:none}.sheet.show{transform:translateY(0)}
+  .grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 16px}
+  .sheet h3{font-size:16px;color:var(--text);line-height:1.4}.sheet .meta{font-size:11px;color:var(--muted);margin-top:5px}
+  .sheet .content{margin-top:13px;background:var(--card);border-radius:16px;padding:16px;font-size:12.5px;line-height:1.7;color:var(--text);white-space:pre-line}
+  .verified{display:inline-block;margin-top:12px;font-size:11px;font-weight:700;color:#3F7A1E;background:var(--green);border-radius:var(--r-pill);padding:6px 13px}
+  .sheet-actions{display:flex;gap:9px;margin-top:14px}
+  .sheet-actions button{flex:1;padding:13px;border-radius:var(--r-pill);font-size:12.5px;font-weight:700;cursor:pointer;border:none;font-family:var(--font)}
+  .sheet-actions .primary{background:var(--nav-dark);color:#F6F6F9}
+  .sheet-actions .ghost{background:var(--card);color:var(--text);border:1.5px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="notch"></div>
+  <div class="statusbar"><span>9:41</span><span><svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zm5-3h3v7H7zm5-4h3v11h-3zm5-5h3v16h-3z"/></svg><svg viewBox="0 0 24 24"><path d="M12 18.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM7.7 14.4a6.2 6.2 0 018.6 0l1.4-1.5a8.2 8.2 0 00-11.4 0z"/></svg><svg viewBox="0 0 24 24"><path d="M15.7 4H8.3C7 4 6 5 6 6.3v11.4C6 19 7 20 8.3 20h7.4c1.3 0 2.3-1 2.3-2.3V6.3C18 5 17 4 15.7 4z"/></svg></span></div>
+  <button class="theme-fab" id="themeBtn" title="Ganti tema">🌙</button>
+
+  <section class="screen">
+    <div class="pad">
+      <div class="top-head">
+        <div class="brand"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg></div>
+        <div class="ht"><b>Hai, Rizky 👋</b><span>Yuk cek tugasmu hari ini</span></div>
+      </div>
+
+      <!-- Strip hari (interaktif) -->
+      <div class="dstrip" id="dstrip">
+        <div class="dcard" data-day="Sen" onclick="pickDay(this)"><b>10</b><small>Sen</small></div>
+        <div class="dcard" data-day="Sel" onclick="pickDay(this)"><b>11</b><small>Sel</small></div>
+        <div class="dcard on" data-day="Rab" onclick="pickDay(this)"><b>12</b><small>Rab</small></div>
+        <div class="dcard" data-day="Kam" onclick="pickDay(this)"><b>13</b><small>Kam</small></div>
+        <div class="dcard" data-day="Jum" onclick="pickDay(this)"><b>14</b><small>Jum</small></div>
+      </div>
+
+      <!-- Tenggat terdekat -->
+      <div class="hero">
+        <span class="lbl">JATUH TEMPO BESOK</span>
+        <h2>Cek ulang: Jejak eksekusi</h2>
+        <p>Satu soal, sekitar 5 menit — hasilnya memperbarui peta penguasaanmu.</p>
+        <div class="due">⏱️ Besok, 20.00 WIB</div>
+        <span class="blob">📌</span>
+        <button class="go" onclick="location.href='latihan.html'" aria-label="Kerjakan">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+
+      <div class="stats">
+        <div class="stat s-done"><b id="stDone">1</b><small>selesai</small></div>
+        <div class="stat s-run"><b id="stRun">1</b><small>berjalan</small></div>
+        <div class="stat s-wait"><b id="stWait">4</b><small>menunggu</small></div>
+      </div>
+
+      <div class="sec-title">Folder tugas <span class="hint">ketuk untuk buka</span></div>
+
+      <!-- ===== FOLDER 1: REKURSI ===== -->
+      <div class="folder open" id="f-rekursi">
+        <button class="folder-head" onclick="toggleFolder('f-rekursi')">
+          <span class="fico" style="background:var(--blue-soft)">🔁</span>
+          <div class="finfo"><b>Rekursi</b><small>Matematika Diskrit · rubrik disetujui</small></div>
+          <div class="fmeta"><span class="fpct" id="pct-rekursi">38%</span><span class="fcount">4 tugas</span></div>
+          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="folder-body">
+          <div class="folder-inner" data-folder-tasks="rekursi">
+
+            <!-- Selesai -->
+            <div class="tgroup">
+              <div class="tcard" style="--tc:#C5EE93" data-prog="100" data-status="done" onclick="cardTap(this,'ringkasan.html')">
+                <div class="tab">Selesai</div>
+                <div class="meta-row">
+                  <span class="who">12 Nov · 4 konsep</span>
+                  <div class="prog-wrap"><div class="track"><i style="width:100%"></i></div><span>100%</span></div>
+                </div>
+                <div class="body">
+                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M9 11l2.5 2.5L16 8"/><rect x="4" y="3" width="16" height="18" rx="3"/></svg></div>
+                  <div class="tinfo"><h3>Diagnostik awal</h3><p>Fondasi kamu terpetakan</p></div>
+                  <div class="dots" onclick="event.stopPropagation();openMenu(this)">⋮</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Berjalan + potongan kode -->
+            <div class="tgroup">
+              <div class="tcard" style="--tc:#D8D2F3" data-prog="50" data-status="running" onclick="cardTap(this,'latihan.html')">
+                <div class="tab">Berjalan</div>
+                <div class="meta-row">
+                  <span class="who">2 dari 4 langkah</span>
+                  <div class="prog-wrap"><div class="track"><i style="width:50%"></i></div><span>50%</span></div>
+                </div>
+                <div class="body">
+                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M12 3a7 7 0 017 7c0 2.4-1.2 4.2-2.6 5.6-.9.9-1.4 2-1.4 3.4H9c0-1.4-.5-2.5-1.4-3.4C6.2 14.2 5 12.4 5 10a7 7 0 017-7z"/><path d="M9.5 21h5"/></svg></div>
+                  <div class="tinfo"><h3>Latihan target · Jejak eksekusi</h3><p>Penjelasan dari sudut berbeda</p></div>
+                  <div class="dots" onclick="event.stopPropagation();openMenu(this)">⋮</div>
+                </div>
+                <button class="code-toggle" onclick="event.stopPropagation();toggleCode('code1')">
+                  <svg viewBox="0 0 24 24"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3"/></svg>
+                  Lihat potongan kode
+                </button>
+                <div class="code-wrap" id="code1">
+                  <div class="code"><span class="kw">def</span> <span class="fn">faktorial</span>(n):
+    <span class="cm"># kasus dasar</span>
+    <span class="kw">if</span> n == <span class="num">0</span>:
+        <span class="kw">return</span> <span class="num">1</span>
+    <span class="kw">return</span> n * faktorial(n - <span class="num">1</span>)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Menunggu -->
+            <div class="tgroup">
+              <div class="tcard" style="--tc:#3DD3F6" data-prog="0" data-status="wait" onclick="openMateri()">
+                <div class="tab">Menunggu</div>
+                <div class="meta-row">
+                  <span class="who">sekitar 15 menit</span>
+                  <div class="prog-wrap"><div class="track"><i style="width:2%"></i></div><span>0%</span></div>
+                </div>
+                <div class="body">
+                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
+                  <div class="tinfo"><h3>Baca Bab 4.2 · Rekursi</h3><p>Sumber kutipan umpan balik</p></div>
+                  <div class="dots" onclick="event.stopPropagation();openMenu(this)">⋮</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Terkunci -->
+            <div class="tgroup">
+              <div class="tcard locked-card" style="--tc:#ECECF1" data-prog="0" data-status="locked">
+                <div class="tab" style="color:#8A8B98">Terkunci</div>
+                <div class="meta-row">
+                  <span class="who" style="opacity:.8">setelah latihan target</span>
+                  <div class="prog-wrap"><div class="track"><i style="width:2%"></i></div><span style="opacity:.6">0%</span></div>
+                </div>
+                <div class="body">
+                  <div class="ticon" style="background:#8A8B98"><svg viewBox="0 0 24 24" style="stroke:#ECECF1"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div>
+                  <div class="tinfo"><h3 style="opacity:.7">Cek ulang · Base case</h3><p style="opacity:.6">Terbuka otomatis nanti</p></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== FOLDER 2: INDUKSI ===== -->
+      <div class="folder" id="f-induksi">
+        <button class="folder-head" onclick="toggleFolder('f-induksi')">
+          <span class="fico" style="background:var(--purple-soft)">🧩</span>
+          <div class="finfo"><b>Induksi Matematika</b><small>Matematika Diskrit · rubrik disetujui</small></div>
+          <div class="fmeta"><span class="fpct" id="pct-induksi">0%</span><span class="fcount">2 tugas</span></div>
+          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="folder-body">
+          <div class="folder-inner" data-folder-tasks="induksi">
+            <div class="tgroup">
+              <div class="tcard" style="--tc:#3DD3F6" data-prog="0" data-status="wait" onclick="toast('Mulai dari diagnostik singkat dulu ya')">
+                <div class="tab">Menunggu</div>
+                <div class="meta-row">
+                  <span class="who">belum dimulai</span>
+                  <div class="prog-wrap"><div class="track"><i style="width:2%"></i></div><span>0%</span></div>
+                </div>
+                <div class="body">
+                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg></div>
+                  <div class="tinfo"><h3>Diagnostik · Induksi</h3><p>3 soal singkat untuk petakan awal</p></div>
+                  <div class="dots" onclick="event.stopPropagation();openMenu(this)">⋮</div>
+                </div>
+              </div>
+            </div>
+            <div class="tgroup">
+              <div class="tcard locked-card" style="--tc:#ECECF1" data-prog="0" data-status="locked">
+                <div class="tab" style="color:#8A8B98">Terkunci</div>
+                <div class="meta-row">
+                  <span class="who" style="opacity:.8">setelah diagnostik</span>
+                  <div class="prog-wrap"><div class="track"><i style="width:2%"></i></div><span style="opacity:.6">0%</span></div>
+                </div>
+                <div class="body">
+                  <div class="ticon" style="background:#8A8B98"><svg viewBox="0 0 24 24" style="stroke:#ECECF1"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div>
+                  <div class="tinfo"><h3 style="opacity:.7">Latihan dasar induksi</h3><p style="opacity:.6">Menunggu langkah pertama</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== FOLDER 3: TEORI GRAF (terkunci) ===== -->
+      <div class="folder locked" id="f-graf">
+        <button class="folder-head" onclick="toast('Rubrik topik ini masih draf — menunggu persetujuan dosen')">
+          <span class="fico" style="background:var(--pink-soft)">🕸️</span>
+          <div class="finfo"><b>Teori Graf Dasar</b><small>Rubrik masih draf · menunggu dosen</small></div>
+          <div class="fmeta"><span class="fpct" style="color:var(--muted)">—</span><span class="fcount">0 tugas</span></div>
+          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+
+      <!-- ===== FOLDER 4: MATERI ===== -->
+      <div class="folder" id="f-materi">
+        <button class="folder-head" onclick="toggleFolder('f-materi')">
+          <span class="fico" style="background:var(--green)">📚</span>
+          <div class="finfo"><b>Materi Kuliah</b><small>2 dokumen · sumber kutipan agen</small></div>
+          <div class="fmeta"><span class="fpct">✓</span><span class="fcount">terindeks</span></div>
+          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="folder-body">
+          <div class="folder-inner">
+            <div class="tgroup">
+              <div class="tcard" style="--tc:#C5EE93" data-prog="100" data-status="indexed" onclick="openMateri()">
+                <div class="tab">Terindeks</div>
+                <div class="meta-row">
+                  <span class="who">2,4 MB · 12 Nov</span>
+                  <div class="prog-wrap"><div class="track"><i style="width:100%"></i></div><span>100%</span></div>
+                </div>
+                <div class="body">
+                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
+                  <div class="tinfo"><h3>Modul Diskrit — Bab 4.pdf</h3><p>Diverifikasi dosen</p></div>
+                  <div class="dots" onclick="event.stopPropagation();openMenu(this)">⋮</div>
+                </div>
+              </div>
+            </div>
+            <div class="tgroup">
+              <div class="tcard" style="--tc:#C5EE93" data-prog="100" data-status="indexed" onclick="openMateri()">
+                <div class="tab">Terindeks</div>
+                <div class="meta-row">
+                  <span class="who">184 KB · 12 Nov</span>
+                  <div class="prog-wrap"><div class="track"><i style="width:100%"></i></div><span>100%</span></div>
+                </div>
+                <div class="body">
+                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
+                  <div class="tinfo"><h3>Catatan kuliah — Rekursi.docx</h3><p>Sumber utama sitasi</p></div>
+                  <div class="dots" onclick="event.stopPropagation();openMenu(this)">⋮</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="note">Tugas datang dari topik yang kamu pilih bersama dosen. Yang dosen lihat hanya progres agregat kelas — bukan tugasmu satu per satu.</p>
+    </div>
+  </section>
+
+  <nav class="nav">
+    <button onclick="location.href='beranda-reason.html'" aria-label="Beranda">
+      <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg>
+    </button>
+    <button class="on" aria-label="Tugas">
+      <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg>
+    </button>
+    <button onclick="location.href='ringkasan.html'" aria-label="Peta Penguasaan">
+      <svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg>
+    </button>
+    <button onclick="location.href='latihan.html'" aria-label="Latihan">
+      <svg viewBox="0 0 24 24"><path d="M9 11l2.5 2.5L16 8"/><rect x="4" y="3" width="16" height="18" rx="3"/></svg>
+    </button>
+    <button onclick="location.href='dosen.html'" aria-label="Tampilan Dosen">
+      <svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg>
+    </button>
+  </nav>
+  <div class="home-ind"></div>
+
+  <div class="overlay" id="overlay" onclick="closeSheets()"></div>
+
+  <!-- Sheet materi -->
+  <div class="sheet" id="sheetMateri">
+    <div class="grab"></div>
+    <h3>Modul Matematika Diskrit — Bab 4.2 “Rekursi”</h3>
+    <div class="meta">Catatan kuliah dosen pengampu · hlm. 56–58</div>
+    <div class="content">4.2 Rekursi
+
+Sebuah fungsi disebut rekursif apabila di dalam definisinya fungsi tersebut memanggil dirinya sendiri. Rekursi selalu membutuhkan kasus dasar (base case) yang menghentikan pemanggilan diri.
+
+Pada faktorial, kasus dasar n = 0 didefinisikan bernilai 1. Untuk n &gt; 0, berlaku faktorial(n) = n × faktorial(n − 1).</div>
+    <span class="verified">✓ Sumber diverifikasi dosen</span>
+    <div class="sheet-actions"><button class="ghost" onclick="closeSheets()">Tutup</button><button class="primary" onclick="closeSheets();toast('Ditandai selesai — progres folder diperbarui')">Tandai sudah baca</button></div>
+  </div>
+
+  <!-- Sheet menu kartu -->
+  <div class="sheet" id="sheetMenu">
+    <div class="grab"></div>
+    <h3 id="menuTitle">Opsi tugas</h3>
+    <div class="meta" id="menuSub"></div>
+    <div class="sheet-actions">
+      <button class="ghost" onclick="closeSheets()">Batal</button>
+      <button class="primary" id="menuDone" onclick="markDone()">Tandai selesai ✓</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+function setTheme(mode){
+  document.getElementById('phone').dataset.theme = mode;
+  document.getElementById('themeBtn').textContent = mode === 'dark' ? '☀️' : '🌙';
+}
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const cur = document.getElementById('phone').dataset.theme;
+  setTheme(cur === 'dark' ? 'light' : 'dark');
+});
+let toastT;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* ============ FOLDER ============ */
+function toggleFolder(id){
+  const f = document.getElementById(id);
+  f.classList.toggle('open');
+}
+
+/* ============ STRIP HARI ============ */
+function pickDay(el){
+  document.querySelectorAll('.dcard').forEach(d => d.classList.remove('on'));
+  el.classList.add('on');
+  toast('Menampilkan tugas hari ' + el.dataset.day);
+}
+
+/* ============ POTONGAN KODE ============ */
+function toggleCode(id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+/* ============ KARTU ============ */
+function cardTap(card, url){
+  if(card.dataset.status === 'locked') return;
+  if(card.dataset.status === 'done'){ location.href = url; return; }
+  location.href = url;
+}
+
+/* ============ MENU KARTU + TANDAI SELESAI ============ */
+let menuCard = null;
+function openMenu(dots){
+  menuCard = dots.closest('.tcard');
+  const title = menuCard.querySelector('.tinfo h3').textContent;
+  document.getElementById('menuTitle').textContent = title;
+  document.getElementById('menuSub').textContent = 'Status: ' + menuCard.querySelector('.tab').textContent;
+  const doneBtn = document.getElementById('menuDone');
+  doneBtn.style.display = menuCard.dataset.status === 'done' ? 'none' : '';
+  document.getElementById('sheetMenu').classList.add('show');
+  document.getElementById('overlay').classList.add('show');
+}
+function markDone(){
+  if(!menuCard) return;
+  menuCard.dataset.prog = '100';
+  menuCard.dataset.status = 'done';
+  menuCard.style.setProperty('--tc', '#C5EE93');
+  const tab = menuCard.querySelector('.tab');
+  tab.textContent = 'Selesai';
+  tab.style.color = '';
+  menuCard.querySelector('.track i').style.width = '100%';
+  menuCard.querySelector('.prog-wrap span').textContent = '100%';
+  menuCard.classList.remove('locked-card');
+  closeSheets();
+  recompute();
+  toast('Selesai! Progres folder diperbarui ✓');
+}
+
+/* ============ REKOMPILASI STATS + FOLDER % ============ */
+function recompute(){
+  let done = 0, run = 0, wait = 0;
+  document.querySelectorAll('.tcard[data-status]').forEach(c => {
+    const s = c.dataset.status;
+    if(s === 'done') done++;
+    else if(s === 'running') run++;
+    else if(s === 'wait' || s === 'locked') wait++;
+  });
+  document.getElementById('stDone').textContent = done;
+  document.getElementById('stRun').textContent = run;
+  document.getElementById('stWait').textContent = wait;
+  ['rekursi','induksi'].forEach(name => {
+    const inner = document.querySelector(`[data-folder-tasks="${name}"]`);
+    if(!inner) return;
+    const cards = [...inner.querySelectorAll('.tcard[data-prog]')];
+    if(!cards.length) return;
+    const avg = Math.round(cards.reduce((a,c) => a + (+c.dataset.prog || 0), 0) / cards.length);
+    document.getElementById('pct-' + name).textContent = avg + '%';
+  });
+}
+
+/* ============ SHEET ============ */
+function openMateri(){
+  document.getElementById('sheetMateri').classList.add('show');
+  document.getElementById('overlay').classList.add('show');
+}
+function closeSheets(){
+  document.querySelectorAll('.sheet').forEach(s => s.classList.remove('show'));
+  document.getElementById('overlay').classList.remove('show');
+  menuCard = null;
+}
+
+recompute();
+setTheme('light');
+</script>
+</body>
+</html>
