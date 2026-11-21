@@ -399,29 +399,50 @@
         <p style="margin-top:14px">Karena itu keluarannya bukan <span class="rm" style="font-family:Consolas,monospace">2, 1, 0, 1, 2</span> — kasus dasar tidak pernah mencetak 0 — dan bukan pula <span class="rm" style="font-family:Consolas,monospace">2, 1</span> berhenti, karena dua pemanggilan yang menunggu masih punya satu print tertunda.</p>
       </div>
 
-      <div class="lat-h"><span class="bico">✏️</span>Beberapa latihan</div>
+      <button class="pill-btn next-btn" onclick="startCheckQuiz()">Lanjut ke Quiz <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <div class="save-note">3 latihan · satu per layar · alasan tetap diperlukan</div>
+    </div>
+  </section>
 
-      <div class="qcard">
-        <span class="concept">Latihan 1 · Keluaran</span>
-        <h2>Apa keluaran <b>sapa(2)</b> dari kode di atas?</h2>
-        <div id="cAns0"></div>
+  <!-- KUIS CEK ULANG — satu soal per layar (ala latihan target) -->
+  <section class="screen" id="s-cquiz">
+    <div class="pad">
+      <div class="qhead">
+        <button class="back" onclick="showScreen('s-check')" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>
+        <span class="htitle">Cek ulang</span>
+        <span class="qbadge" id="cQuizCount">1 / 3</span>
       </div>
-      <div class="qcard">
-        <span class="concept">Latihan 2 · Kasus dasar</span>
-        <h2>Apa yang dilakukan <b>sapa(0)</b>?</h2>
-        <div id="cAns1"></div>
-      </div>
-      <div class="qcard">
-        <span class="concept">Latihan 3 · Saat kembali</span>
-        <h2>Setelah sapa(0) selesai, apa yang terjadi <b>pertama</b>?</h2>
-        <div id="cAns2"></div>
-      </div>
+      <div class="qprog"><div class="track"><i id="cQuizFill" style="width:33%"></i></div></div>
 
-      <div class="field-label"><span class="why-ico">?</span>Kenapa urutannya begitu?</div>
-      <textarea class="tarea" id="checkWhy" placeholder="Ceritakan kapan print pertama dan print kedua dijalankan…"></textarea>
-      <div class="hint">Yang dinilai: kamu menelusuri saat masuk dan saat kembali, bukan hanya menebak pola.</div>
+      <div class="qtop">
+        <svg class="qart" viewBox="0 0 120 104" aria-hidden="true">
+          <ellipse cx="64" cy="60" rx="52" ry="44" fill="#EDE8FB"/>
+          <ellipse cx="26" cy="88" rx="17" ry="13" fill="#DDD6FB"/>
+          <g transform="rotate(8 74 52)">
+            <rect x="52" y="12" width="46" height="82" rx="9" fill="#6555E6"/>
+            <rect x="56" y="18" width="38" height="70" rx="5" fill="#FFFFFF"/>
+            <rect x="61" y="25" width="28" height="15" rx="4" fill="#C9C0F8"/>
+            <rect x="61" y="45" width="28" height="5" rx="2.5" fill="#E4E1F7"/>
+            <rect x="61" y="54" width="20" height="5" rx="2.5" fill="#E4E1F7"/>
+            <rect x="61" y="63" width="24" height="5" rx="2.5" fill="#E4E1F7"/>
+            <rect x="61" y="72" width="16" height="5" rx="2.5" fill="#E4E1F7"/>
+          </g>
+          <path d="M30 28l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z" fill="#9C8CF5"/>
+          <path d="M18 58l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#B7E36B"/>
+          <path d="M42 12l1.6 4 4 1.6-4 1.6L42 23l-1.6-4-4-1.6 4-1.6z" fill="#B7E36B"/>
+        </svg>
+        <span class="qchip"><i>💡</i>Pertanyaan</span>
+      </div>
+      <h2 class="qtext" id="cQuizText"></h2>
+      <div id="cQuizAns"></div>
+
+      <!-- Alasan tetap wajib (PRD) — dipakai juga oleh submitCheck -->
+      <div class="why-bar">
+        <span class="pen" aria-hidden="true">✏️</span>
+        <textarea id="checkWhy" rows="1" placeholder="Ceritakan kapan print pertama dan print kedua dijalankan…"></textarea>
+        <button class="why-go" id="cQuizNext" disabled onclick="cQuizNext()" aria-label="Lanjut"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </div>
       <div class="warn-note" id="checkWarn">Alasanmu masih kosong. Kirim sekali lagi untuk lanjut dengan catatan “alasan belum ada”.</div>
-      <button class="pill-btn next-btn" id="checkSend" disabled onclick="submitCheck()">Kirim cek ulang</button>
       <div class="save-note" id="checkSave">Draf tersimpan otomatis</div>
     </div>
   </section>
@@ -506,25 +527,13 @@ const TARGET=[
   {concept:'Latihan 3 · Kasus dasar',text:'Apa yang dikembalikan faktorial(0), dan mengapa rekursi berhenti di sana?',answers:['0','1','n','Tidak mengembalikan apa-apa'],correct:1},
 ];
 const CHECK=[
-  {answers:['2, 1, 0, 1, 2','2, 1, 1, 2','1, 2, 2, 1','2, 1 lalu berhenti'],correct:1},
-  {answers:['Mencetak 0 lalu berhenti','Menghentikan rekursi tanpa mencetak','Memanggil sapa(−1)','Mencetak 0 dua kali'],correct:1},
-  {answers:['sapa(2) langsung mencetak 2','sapa(1) yang tertunda mencetak 1','Rekursi berjalan ulang dari awal','Program langsung selesai'],correct:1},
+  {concept:'Latihan 1 · Keluaran',text:'Apa keluaran sapa(2)?',answers:['2, 1, 0, 1, 2','2, 1, 1, 2','1, 2, 2, 1','2, 1 lalu berhenti'],correct:1},
+  {concept:'Latihan 2 · Kasus dasar',text:'Apa yang dilakukan sapa(0)?',answers:['Mencetak 0 lalu berhenti','Menghentikan rekursi tanpa mencetak','Memanggil sapa(−1)','Mencetak 0 dua kali'],correct:1},
+  {concept:'Latihan 3 · Saat kembali',text:'Setelah sapa(0) selesai, apa yang terjadi pertama?',answers:['sapa(2) langsung mencetak 2','sapa(1) yang tertunda mencetak 1','Rekursi berjalan ulang dari awal','Program langsung selesai'],correct:1},
 ];
 let targetPicks=[-1,-1,-1],checkPicks=[-1,-1,-1],targetWarned=false,checkWarned=false;
 const scoreOf=(data,picks)=>data.reduce((s,q,i)=>s+(picks[i]===q.correct?1:0),0);
 
-function renderAnswers(data,type){
-  data.forEach((q,idx)=>{
-    const el=document.getElementById((type==='target'?'tAns':'cAns')+idx);
-    if(!el)return;
-    el.innerHTML=q.answers.map((a,i)=>`<button class="ans" data-i="${i}" onclick="pickAnswer('${type}',${idx},${i},this)"><span class="key">${'ABCD'[i]}</span><span>${a}</span></button>`).join('');
-  });
-}
-function pickAnswer(type,idx,i,el){
-  const parent=el.parentElement;parent.querySelectorAll('.ans').forEach(a=>a.classList.remove('on'));el.classList.add('on');
-  checkPicks[idx]=i;
-  document.getElementById('checkSend').disabled=checkPicks.some(p=>p<0);
-}
 function setupDraft(id,key,onInput){
   const el=document.getElementById(id);try{el.value=localStorage.getItem(key)||''}catch(e){}
   let timer;el.addEventListener('input',()=>{el.classList.remove('warn');const bar=el.closest('.why-bar');if(bar)bar.classList.remove('warn');clearTimeout(timer);timer=setTimeout(()=>{try{localStorage.setItem(key,el.value)}catch(e){}onInput&&onInput()},400)});
@@ -564,10 +573,47 @@ function quizNext(){
   }
   submitTarget();                    // soal terakhir = kirim & periksa alasan
 }
+
+/* ============ KUIS CEK ULANG — satu soal per layar (ala latihan target) ============ */
+let cQuizIdx=0;
+function startCheckQuiz(){
+  const first=checkPicks.findIndex(p=>p<0);
+  cQuizIdx=first<0?0:first;          // lanjut ke soal yang belum terjawab
+  renderCheckQuiz();
+  showScreen('s-cquiz');
+}
+function renderCheckQuiz(){
+  const q=CHECK[cQuizIdx];
+  document.getElementById('cQuizCount').textContent=(cQuizIdx+1)+' / '+CHECK.length;
+  document.getElementById('cQuizFill').style.width=Math.round((cQuizIdx+1)/CHECK.length*100)+'%';
+  document.getElementById('cQuizText').textContent=q.text;
+  document.getElementById('cQuizAns').innerHTML=q.answers.map((a,i)=>
+    `<button class="qopt${checkPicks[cQuizIdx]===i?' on':''}" onclick="pickCheckQuiz(${i},this)"><span class="radio"></span><span><b>${'ABCD'[i]}.</b> ${escapeHTML(a)}</span></button>`).join('');
+  document.getElementById('cQuizNext').disabled=checkPicks[cQuizIdx]<0;
+}
+function pickCheckQuiz(i,el){
+  el.parentElement.querySelectorAll('.qopt').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  checkPicks[cQuizIdx]=i;
+  document.getElementById('cQuizNext').disabled=false;
+}
+function cQuizNext(){
+  if(checkPicks[cQuizIdx]<0)return;
+  if(cQuizIdx<CHECK.length-1){       // panah = soal berikutnya
+    cQuizIdx++;
+    renderCheckQuiz();
+    document.getElementById('s-cquiz').scrollTop=0;
+    return;
+  }
+  submitCheck();                     // soal terakhir = kirim & periksa alasan
+}
 /* textarea bar alasan tumbuh mengikuti isi (maks 88px) */
 const tw=document.getElementById('targetWhy');
 function growWhy(){tw.style.height='auto';tw.style.height=Math.max(24,Math.min(tw.scrollHeight,88))+'px'}
 tw.addEventListener('input',growWhy);growWhy();
+const cw=document.getElementById('checkWhy');
+function growCheckWhy(){cw.style.height='auto';cw.style.height=Math.max(24,Math.min(cw.scrollHeight,88))+'px'}
+cw.addEventListener('input',growCheckWhy);growCheckWhy();
 
 /* ============ PAD AGEN: membaca → analisis → umpan balik (PRD §21) ============ */
 const thinkEl = document.getElementById('thinking');
@@ -654,7 +700,7 @@ function goCheck(){showScreen('s-check')}
 
 function submitCheck(){
   const why=document.getElementById('checkWhy');
-  if(!why.value.trim()&&!checkWarned){checkWarned=true;why.classList.add('warn');document.getElementById('checkWarn').classList.add('show');why.focus();return}
+  if(!why.value.trim()&&!checkWarned){checkWarned=true;why.classList.add('warn');const bar=why.closest('.why-bar');if(bar)bar.classList.add('warn');document.getElementById('checkWarn').classList.add('show');why.focus();return}
   // chip: apa yang sedang dibaca agen
   const ansChips = CHECK.map((q,i)=>`<div class="t-chip"><b>Latihan ${i+1}:</b> ${escapeHTML(q.answers[checkPicks[i]]||'belum memilih')}</div>`).join('');
   const whyChip = why.value.trim() || 'alasan belum ada — agen akan menandainya';
@@ -691,7 +737,7 @@ function showCheckResult(){
 }
 function openSource(){document.getElementById('sheet').classList.add('show');document.getElementById('overlay').classList.add('show')}
 function closeSource(){document.getElementById('sheet').classList.remove('show');document.getElementById('overlay').classList.remove('show')}
-renderAnswers(CHECK,'check');setTheme('light');
+setTheme('light');
 </script>
 
 <script type="module">
