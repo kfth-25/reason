@@ -4,7 +4,7 @@
   "description": "Prototipe mobile-learning: belajar lewat penalaran, bukan cuma jawaban. Setiap soal disertai alasan, penilaian rubrik dosen.",
   "lang": "id",
   "dir": "ltr",
-  "start_url": "beranda-reason.html",
+  "start_url": "login.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",

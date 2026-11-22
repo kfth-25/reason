@@ -1,5 +1,5 @@
 /* Service Worker REASON — cache-first + network refresh (stale-while-revalidate) */
-const CACHE = 'reason-v5';
+const CACHE = 'reason-v6';
 const CORE = [
   'beranda-reason.html',
   'tugas.html',
