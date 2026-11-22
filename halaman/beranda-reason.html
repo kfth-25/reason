@@ -206,30 +206,94 @@
   .goal-head .htitle{position:absolute;left:52px;right:52px;text-align:center;pointer-events:none;font-size:17px;font-weight:700;color:var(--text)}
   .goal-head .back{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
   .goal-head .back svg{width:19px;height:19px;stroke:#3D3A66;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-  .goal-q{font-size:24px;font-weight:700;color:var(--text);line-height:1.3;margin-top:30px;letter-spacing:-.3px}
-  .goal-sub{font-size:13.5px;color:var(--muted);margin-top:9px;line-height:1.6}
-  .goal-input{
-    width:100%;margin-top:22px;border:2px solid var(--line);border-radius:16px;background:var(--card);
-    padding:16px 17px;font-family:var(--font);font-size:15px;color:var(--text);outline:none;transition:border-color .2s;
+  .goal-sub{font-size:13.5px;color:var(--muted);margin-top:11px;line-height:1.6}
+  .goal-help{
+    position:absolute;right:0;width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;
+    background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);
+    font-family:var(--font);font-size:17px;font-weight:700;color:var(--text);
   }
-  .goal-input:focus{border-color:#8574F4}
-  .goal-input::placeholder{color:#A9A3C7}
-  .goal-chips-label{font-size:13px;font-weight:700;color:var(--text);margin-top:22px}
-  .goal-chips{display:flex;gap:9px;margin-top:11px;flex-wrap:wrap}
-  .gchip{
-    border:2px solid var(--line);background:var(--card);border-radius:999px;padding:10px 17px;
-    font-family:var(--font);font-size:13.5px;font-weight:600;color:#3D3A66;cursor:pointer;transition:all .18s;
+  .goal-help:active{transform:scale(.94)}
+  /* hero: bubble sapaan + maskot Bimo */
+  .goal-hero{display:flex;align-items:flex-start;gap:2px;margin-top:18px}
+  .goal-bubble{
+    flex:1;position:relative;background:var(--card);border-radius:18px;
+    padding:15px 16px;font-size:15px;font-weight:600;color:var(--text);
+    line-height:1.5;box-shadow:var(--shadow);
   }
-  .gchip:active{transform:scale(.96)}
-  .gchip.on{background:linear-gradient(135deg,#8574F4,#6555E6);border-color:transparent;color:#fff;box-shadow:0 10px 22px rgba(105,87,235,.35)}
+  .goal-bubble::after{
+    content:'';position:absolute;right:-7px;top:26px;
+    border:8px solid transparent;border-left-color:var(--card);
+  }
+  .goal-mascot{width:138px;height:105px;flex-shrink:0;position:relative}
+  .goal-mascot>svg,.goal-mascot>canvas{width:100%;height:100%;display:block}
+  /* daftar materi */
+  .materi-label{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--text);margin-top:24px}
+  .materi-label svg{width:19px;height:19px;stroke:#6555E6;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .mcard{
+    width:100%;display:flex;align-items:center;gap:12px;text-align:left;
+    background:var(--card);border:2px solid transparent;border-radius:18px;
+    padding:14px;margin-top:12px;cursor:pointer;font-family:var(--font);
+    box-shadow:var(--shadow);transition:border-color .18s,transform .15s;
+  }
+  .mcard:active{transform:scale(.98)}
+  .mcard.on{border-color:#8574F4}
+  .mico{width:50px;height:50px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+  .mico svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .mico .sigma{font-size:23px;font-weight:800;color:#fff;line-height:1}
+  .mico.k-rec{background:linear-gradient(135deg,#8574F4,#6555E6)}
+  .mico.k-ind{background:linear-gradient(135deg,#5AB2F5,#3D8BE8)}
+  .mico.k-graf{background:linear-gradient(135deg,#5FC98A,#3DAE6A)}
+  .m-main{flex:1;min-width:0}
+  .m-main b{display:block;font-size:16px;font-weight:700;color:var(--text)}
+  .mbadge{
+    display:inline-block;font-size:11px;font-weight:600;color:#6555E6;
+    background:#EFEDFE;border-radius:8px;padding:2px 8px;margin:4px 0 3px;
+  }
+  [data-theme="dark"] .mbadge{background:#2A2750;color:#C5B8F0}
+  .m-main small{display:block;font-size:13px;color:var(--muted);line-height:1.45}
+  .mradio{
+    width:22px;height:22px;border-radius:50%;border:2px solid #C9C5E8;
+    flex-shrink:0;margin-left:auto;transition:all .15s;
+  }
+  .mcard.on .mradio{border-color:#6555E6;background:radial-gradient(#6555E6 48%,#fff 54%)}
+  /* penjelasan suara */
+  .voice-card{
+    display:flex;align-items:center;gap:12px;background:var(--card);
+    border-radius:18px;padding:14px;margin-top:16px;box-shadow:var(--shadow);
+  }
+  .vico{
+    width:46px;height:46px;border-radius:14px;flex-shrink:0;
+    background:var(--purple-soft);display:flex;align-items:center;justify-content:center;
+  }
+  .vico svg{width:24px;height:24px;stroke:#6555E6;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+  .v-main{flex:1;min-width:0}
+  .v-main b{display:block;font-size:15px;font-weight:700;color:var(--text)}
+  .v-main small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+  .vswitch{
+    width:52px;height:30px;border-radius:15px;border:none;flex-shrink:0;
+    background:#D9D5EE;position:relative;cursor:pointer;transition:background .25s;padding:0;
+  }
+  .vswitch i{
+    position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;
+    background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:left .25s;
+  }
+  .vswitch.on{background:linear-gradient(135deg,#8574F4,#6555E6)}
+  .vswitch.on i{left:25px}
   .goal-go{
-    margin-top:30px;width:100%;padding:17px;border-radius:16px;
+    margin-top:24px;width:100%;padding:17px;border-radius:16px;
     background:linear-gradient(135deg,#8574F4 0%,#6555E6 100%);
     color:#fff;font-size:15.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;
     box-shadow:0 14px 30px rgba(105,87,235,.4);
   }
   .goal-go:active{transform:scale(.97)}
   .goal-go svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  .goal-note{
+    display:flex;align-items:center;gap:9px;background:var(--purple-soft);
+    border-radius:16px;padding:12px 14px;margin-top:14px;
+    font-size:12.5px;line-height:1.5;color:var(--purple-deep);
+  }
+  [data-theme="dark"] .goal-note{color:#C5B8F0}
+  .goal-note svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2.2;flex-shrink:0}
   /* Mobile: buang chrome mockup (notch/statusbar/home-ind) -> full layar + dvh */
   @media (max-width:520px){
     html,body{height:auto;min-height:100dvh}
@@ -368,32 +432,124 @@
     </div>
   </section>
 
-  <!-- MULAI SESI: user memasukkan dulu mau belajar apa, baru diagnostik -->
+  <!-- PILIH MATERI: sebelum diagnostik — maskot Bimo menyapa + daftar materi -->
   <section class="screen" id="s-goal">
     <div class="pad">
       <div class="goal-head">
         <button class="back" onclick="showScreen('s-home')" aria-label="Kembali">
           <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
-        <span class="htitle">Mulai Sesi</span>
+        <span class="htitle">Pilih Materi</span>
+        <button class="goal-help" onclick="toast('Pilih satu materi, lalu tekan Mulai Diagnostik — 4 soal untuk cek pemahaman awalmu.')" aria-label="Bantuan">?</button>
       </div>
 
-      <h2 class="goal-q">Mau belajar apa hari ini?</h2>
-      <p class="goal-sub">Tulis topik spesifik yang ingin kamu dalami — REASON akan menyiapkan diagnostiknya.</p>
+      <p class="goal-sub">Mulai dengan memilih materi yang ingin kamu pelajari.</p>
 
-      <input class="goal-input" id="goalInput" type="text" placeholder="misal: Rekursi — jejak eksekusi" autocomplete="off">
+      <!-- Sapaan + maskot Bimo (mount wobnimo saat layar dibuka; SVG = fallback) -->
+      <div class="goal-hero">
+        <div class="goal-bubble">Halo, mahasiswa! Materi apa yang ingin kamu pelajari hari ini?</div>
+        <div class="goal-mascot" id="bimoGoalSlot" aria-hidden="true">
+          <svg viewBox="0 0 260 190" aria-hidden="true">
+          <!-- daun dekor -->
+          <path d="M36 118c14-30 6-52-12-64 24 4 42 24 40 52-1 12-12 18-28 12z" fill="#E7E3FB"/>
+          <path d="M222 66c-12-24-4-44 12-54-20 6-34 24-32 48 1 10 10 14 20 6z" fill="#E7E3FB"/>
+          <path d="M46 60c8-8 20-8 26 0-8 8-20 8-26 0z" fill="#D9D3FA"/>
+          <!-- sparkle kuning -->
+          <path d="M212 96l4.5 11 11 4.5-11 4.5-4.5 11-4.5-11-11-4.5 11-4.5z" fill="#FFC94D"/>
+          <!-- sparkle biru -->
+          <path d="M232 40l3.5 8.5 8.5 3.5-8.5 3.5-3.5 8.5-3.5-8.5-8.5-3.5 8.5-3.5z" fill="#5AB2F5"/>
+          <!-- sparkle ungu kiri -->
+          <path d="M62 92l3.5 8.5 8.5 3.5-8.5 3.5-3.5 8.5-3.5-8.5-8.5-3.5 8.5-3.5z" fill="#9C8CF5"/>
+          <path d="M196 26l3 7.5 7.5 3-7.5 3-3 7.5-3-7.5-7.5-3 7.5-3z" fill="#9C8CF5"/>
 
-      <div class="goal-chips-label">Atau pilih cepat:</div>
-      <div class="goal-chips" id="goalChips">
-        <button class="gchip" onclick="pickGoal(this,'Rekursi — jejak eksekusi')">Rekursi</button>
-        <button class="gchip" onclick="pickGoal(this,'Induksi — bukti matematika')">Induksi</button>
-        <button class="gchip" onclick="goalLocked(this)">Teori Graf</button>
+          <!-- antena -->
+          <line x1="130" y1="34" x2="122" y2="20" stroke="#7C6BF0" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="120" cy="16" r="7" fill="#FFC94D"/>
+
+          <!-- telinga -->
+          <circle cx="88" cy="76" r="14" fill="#7C6BF0"/>
+          <circle cx="172" cy="76" r="14" fill="#7C6BF0"/>
+          <circle cx="88" cy="76" r="6" fill="#5D4BD6"/>
+          <circle cx="172" cy="76" r="6" fill="#5D4BD6"/>
+
+          <!-- kepala -->
+          <rect x="82" y="36" width="96" height="82" rx="36" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+          <!-- panel wajah -->
+          <rect x="97" y="52" width="66" height="52" rx="22" fill="#171A2E"/>
+          <!-- mata senang -->
+          <path d="M112 74q6-9 12 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M136 74q6-9 12 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <!-- senyum -->
+          <path d="M124 86q6 7 12 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+
+          <!-- badan -->
+          <path d="M100 122c18-8 42-8 60 0l7 40c-26 10-48 10-74 0z" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+          <!-- lengan memegang buku -->
+          <path d="M98 132c-8 6-12 14-10 22" stroke="#E4E1F7" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <path d="M162 132c8 6 12 14 10 22" stroke="#E4E1F7" stroke-width="10" fill="none" stroke-linecap="round"/>
+
+          <!-- buku terbuka -->
+          <path d="M104 148l26-7v30l-26 7z" fill="#4392F0"/>
+          <path d="M156 148l-26-7v30l26 7z" fill="#6FB2F5"/>
+          <path d="M130 141v30" stroke="#2E7BD6" stroke-width="2.5"/>
+          <path d="M110 154l14-3M110 161l14-3M146 154l-14-3M146 161l-14-3" stroke="#DCEEFF" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        </div>
+      </div>
+
+      <div class="materi-label">
+        <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 016.5 3H12v18H6.5A2.5 2.5 0 014 18.5z"/><path d="M20 5.5A2.5 2.5 0 0017.5 3H12v18h5.5a2.5 2.5 0 002.5-2.5z"/></svg>
+        Daftar Materi
+      </div>
+
+      <button class="mcard on" data-topic="rekursi" onclick="pilihMateri(this)">
+        <span class="mico k-rec"><svg viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="5" rx="1.5"/><rect x="2.5" y="16.5" width="6" height="5" rx="1.5"/><rect x="15.5" y="16.5" width="6" height="5" rx="1.5"/><path d="M12 7.5v3M5.5 16.5v-3a1 1 0 011-1h11a1 1 0 011 1v3"/></svg></span>
+        <span class="m-main">
+          <b>Rekursi</b>
+          <span class="mbadge">Matematika Diskrit</span>
+          <small>Fungsi yang memanggil dirinya sendiri</small>
+        </span>
+        <span class="mradio"></span>
+      </button>
+
+      <button class="mcard" data-topic="induksi" onclick="pilihMateri(this)">
+        <span class="mico k-ind"><span class="sigma">∞</span></span>
+        <span class="m-main">
+          <b>Induksi</b>
+          <span class="mbadge">Matematika Diskrit</span>
+          <small>Bukti matematika: dasar &amp; langkah induktif</small>
+        </span>
+        <span class="mradio"></span>
+      </button>
+
+      <button class="mcard" data-topic="graf" onclick="pilihMateri(this)">
+        <span class="mico k-graf"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg></span>
+        <span class="m-main">
+          <b>Teori Graf</b>
+          <span class="mbadge">Matematika Diskrit</span>
+          <small>Simpul, sisi, dan jalur — masih draf</small>
+        </span>
+        <span class="mradio"></span>
+      </button>
+
+      <div class="voice-card">
+        <span class="vico"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg></span>
+        <span class="v-main">
+          <b>Penjelasan dengan Suara</b>
+          <small>Penjelasan materi dibacakan langsung</small>
+        </span>
+        <button class="vswitch on" id="voiceSw" onclick="toggleVoice(this)" aria-pressed="true" aria-label="Penjelasan dengan Suara"><i></i></button>
       </div>
 
       <button class="pill-btn goal-go" onclick="startGoal()">
         Mulai Diagnostik
         <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
+
+      <div class="goal-note">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+        Kamu akan menjawab 4 soal diagnostik untuk mengetahui pemahaman awalmu.
+      </div>
     </div>
   </section>
 
@@ -460,27 +616,42 @@ function startSession(){
     return;
   }
   showScreen('s-goal');
-  document.getElementById('goalInput').value = '';
-  document.querySelectorAll('.gchip').forEach(c => c.classList.remove('on'));
+  syncMateri();
+  try{ window.__bimo?.mountGoal?.(); }catch(e){}   // mount maskot ke-2 (sekali saja)
 }
-function pickGoal(el, text){
-  document.querySelectorAll('.gchip').forEach(c => c.classList.remove('on'));
+/* ---- Layar Pilih Materi (sebelum diagnostik) ---- */
+function syncMateri(){
+  const el = document.querySelector('#s-goal .mcard[data-topic="'+topic+'"]');
+  if(el) pilihMateri(el);
+}
+function pilihMateri(el){
+  const t = el.dataset.topic;
+  if(t === 'graf'){ toast('Rubrik Teori Graf masih draf — menunggu persetujuan dosen'); return; }
+  document.querySelectorAll('#s-goal .mcard').forEach(c => c.classList.remove('on'));
   el.classList.add('on');
-  document.getElementById('goalInput').value = text;
+  topic = t;
 }
-function goalLocked(el){
-  toast('Rubrik Teori Graf masih draf — menunggu persetujuan dosen');
+function toggleVoice(el){
+  const on = el.classList.toggle('on');
+  el.setAttribute('aria-pressed', on ? 'true' : 'false');
+  try{ localStorage.setItem('reason_voice', on ? '1' : '0'); }catch(e){}
+  toast(on ? 'Penjelasan dengan suara aktif' : 'Penjelasan dengan suara nonaktif');
 }
 function startGoal(){
-  const val = document.getElementById('goalInput').value.trim();
-  if(!val){
-    toast('Tulis dulu mau belajar apa hari ini');
-    document.getElementById('goalInput').focus();
+  if(topic === 'graf'){
+    toast('Rubrik Teori Graf masih draf — menunggu persetujuan dosen');
     return;
   }
-  try{ localStorage.setItem('reason_goal', val); }catch(e){}
+  try{ localStorage.setItem('reason_goal', topic); }catch(e){}
   location.href = 'diagnostik.html';
 }
+/* pulihkan preferensi penjelasan suara */
+try{
+  if(localStorage.getItem('reason_voice') === '0'){
+    const v = document.getElementById('voiceSw');
+    if(v){ v.classList.remove('on'); v.setAttribute('aria-pressed','false'); }
+  }
+}catch(e){}
 
 /* ============ MASKOT -> TUTOR AI ============
    Di HP, tap pada elemen di dalam container scroll sering TIDAK menghasilkan
@@ -523,6 +694,7 @@ window.__bimoLight = LIGHT;
 const slot = document.getElementById('bimoSlot');
 let mascot = null;
 let currentState = 'idle';
+const heroes = [];   // semua mount (bimo home + bimo layar Pilih Materi)
 
 function setState(s){
   currentState = s;
@@ -573,6 +745,7 @@ function boot(){
     if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
     mascot = mount(slot, bimo, { state: currentState, ...M_OPTS });
     gateSlot(slot, mascot, 'bimo');
+    heroes.push({ mascot, slot });
     try { window.__bimo?.sync?.(); } catch (e) {}   // hormati gerbang bila user sudah scroll sebelum mount
   } catch (err) {
     console.warn('[bimo] WebGL2 absen — pakai SVG statis:', err && err.message);
@@ -605,11 +778,13 @@ hook('pickTopic', () => {
    berhenti → jalan lagi). Kualitas TIDAK disentuh — maxPixelRatio tetap 1. */
 let scrollFree = true, scrollT = 0;
 function applyPause(){
-  if (!mascot) return;
-  const scr = slot.closest('.screen');
-  const on = !scr || scr.classList.contains('active');
-  const should = on && scrollFree && !document.hidden;
-  try { if (should) mascot.play(); else mascot.pause(); } catch (e) {}
+  for (const h of heroes) {
+    if (!h.mascot) continue;
+    const scr = h.slot.closest('.screen');
+    const on = !scr || scr.classList.contains('active');
+    const should = on && scrollFree && !document.hidden;
+    try { if (should) h.mascot.play(); else h.mascot.pause(); } catch (e) {}
+  }
 }
 function onScrollGate(){
   if (scrollFree){ scrollFree = false; applyPause(); }
@@ -619,12 +794,34 @@ function onScrollGate(){
 window.addEventListener('scroll', onScrollGate, { capture: true, passive: true });
 document.addEventListener('visibilitychange', applyPause);
 
+/* Maskot ke-2 di layar Pilih Materi — mount saat pertama kali dibuka
+   (hemat satu konteks WebGL bila user tak pernah masuk layar ini). */
+let mascotGoal = null, goalMounted = false;
+function mountGoal(){
+  if (goalMounted) return;
+  goalMounted = true;
+  const g = document.getElementById('bimoGoalSlot');
+  if (!g) return;
+  try {
+    if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
+    mascotGoal = mount(g, bimo, { state: 'idle', ...M_OPTS });
+    gateSlot(g, mascotGoal, 'bimo-goal');
+    heroes.push({ mascot: mascotGoal, slot: g });
+    applyPause();
+  } catch (err) {
+    console.warn('[bimo-goal] WebGL2 absen — pakai SVG statis:', err && err.message);
+    const c = g.querySelector('canvas');
+    if (c && c.parentNode) c.parentNode.removeChild(c);
+  }
+}
+
 window.__bimo = {
   get mounted(){ return !!mascot; },
   get state(){ return currentState; },
   /* dipanggil MutationObserver saat .screen ganti aktif, dan dari boot() */
   sync: applyPause,
-  setState
+  setState,
+  mountGoal
 };
 
 /* Sinkronkan pause/play tiap kali class .screen berubah (s-home ↔ s-goal) */
