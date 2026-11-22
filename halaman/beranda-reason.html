@@ -270,8 +270,8 @@
 
       <!-- Maskot REASON — Bimo (wobnimo); klik maskot → halaman Tutor AI (suara) -->
       <div class="mascot" id="bimoSlot" role="link" tabindex="0" aria-label="Buka Tutor AI"
-           onclick="location.href='tutor-ai.html'"
-           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();location.href='tutor-ai.html'}">
+           onclick="bukaTutor()"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();bukaTutor()}">
         <svg viewBox="0 0 260 190" aria-hidden="true">
           <!-- daun dekor -->
           <path d="M36 118c14-30 6-52-12-64 24 4 42 24 40 52-1 12-12 18-28 12z" fill="#E7E3FB"/>
@@ -482,6 +482,30 @@ function startGoal(){
   location.href = 'diagnostik.html';
 }
 
+/* ============ MASKOT -> TUTOR AI ============
+   Di HP, tap pada elemen di dalam container scroll sering TIDAK menghasilkan
+   click (scroll-vs-click disambiguation / momentum scroll). Fallback touchend
+   dengan ambil gerakan kecil; flag mencegah navigasi ganda bila click ikut datang. */
+let _tutorOpened = false;
+function bukaTutor(){
+  if(_tutorOpened) return;
+  _tutorOpened = true;
+  location.href = 'tutor-ai.html';
+}
+(function(){
+  const el = document.getElementById('bimoSlot');
+  if(!el) return;
+  let x0 = 0, y0 = 0;
+  el.addEventListener('touchstart', e => {
+    const t = e.touches[0]; if(!t) return;
+    x0 = t.clientX; y0 = t.clientY;
+  }, { passive: true });
+  el.addEventListener('touchend', e => {
+    const t = e.changedTouches[0]; if(!t) return;
+    if(Math.hypot(t.clientX - x0, t.clientY - y0) <= 15) bukaTutor();
+  }, { passive: true });
+})();
+
 setTheme('light');
 </script>
 
@@ -523,6 +547,7 @@ function gateSlot(host,m,tag){
   if(canvas){
     if(getComputedStyle(host).position==='static')host.style.position='relative';
     canvas.style.position='absolute';canvas.style.inset='0';canvas.style.zIndex='1';
+    if(LIGHT)canvas.style.pointerEvents='none';   // LIGHT: kanvas murni gambar — tap langsung kena div
   }
   if(!svg||!canvas)return;
   let done=false,blank=0;

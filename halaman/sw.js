@@ -1,5 +1,5 @@
 /* Service Worker REASON — cache-first + network refresh (stale-while-revalidate) */
-const CACHE = 'reason-v7';
+const CACHE = 'reason-v8';
 const CORE = [
   'beranda-reason.html',
   'tugas.html',
@@ -45,7 +45,7 @@ self.addEventListener('fetch', (e) => {
   // Navigasi: coba jaringan dulu, fallback ke beranda saat offline
   if (e.request.mode === 'navigate') {
     e.respondWith(
-      fetch(e.request)
+      fetch(e.request, { cache: 'no-store' })  // lawan HTTP-cache: navigasi selalu HTML terbaru
         .then((res) => {
           if (res && res.ok) {
             const clone = res.clone();
