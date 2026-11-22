@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#7C6BF0">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -31,7 +31,7 @@
   .statusbar span:last-child{display:flex;gap:6px}.statusbar svg{width:16px;height:16px;fill:var(--text)}
   .screen{position:absolute;inset:0;padding-top:52px;padding-bottom:116px;overflow-y:auto;-webkit-overflow-scrolling:touch}
   .screen::-webkit-scrollbar{display:none}.pad{padding:0 20px}
-  .nav{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);background:var(--nav-dark);border-radius:var(--r-pill);display:flex;gap:6px;padding:8px;z-index:50;box-shadow:0 12px 32px rgba(0,0,0,.28)}
+  .nav{position:absolute;left:50%;bottom:26px;bottom:calc(26px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--nav-dark);border-radius:var(--r-pill);display:flex;gap:6px;padding:8px;z-index:50;box-shadow:0 12px 32px rgba(0,0,0,.28)}
   .nav button{width:58px;height:58px;border:none;border-radius:50%;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .25s}
   .nav button svg{width:23px;height:23px;stroke:#7C8496;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;transition:stroke .25s}
   .nav button.on{background:#F6F6F9}.nav button.on svg{stroke:#15161C}
@@ -424,7 +424,7 @@
     <button class="on" aria-label="Tugas">
       <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg>
     </button>
-    <button onclick="location.href='ringkasan.html'" aria-label="Peta Penguasaan">
+    <button onclick="location.href='peta.html'" aria-label="Peta Penguasaan">
       <svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg>
     </button>
     <button onclick="location.href='scraping.html'" aria-label="Scraping">

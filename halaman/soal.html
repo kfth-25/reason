@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#7C6BF0">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -44,7 +44,7 @@
   .sb-icons svg{width:16px;height:16px;fill:var(--text)}
   .screen{
     position:absolute;inset:0;padding-top:52px;overflow-y:auto;overflow-x:hidden;
-    padding-bottom:34px;-webkit-overflow-scrolling:touch;
+    padding-bottom:116px;-webkit-overflow-scrolling:touch;
     opacity:0;visibility:hidden;transform:translateX(18px);
     transition:opacity .3s ease,transform .3s ease,visibility .3s;
   }
@@ -56,7 +56,7 @@
   .pill-btn:active{transform:scale(.96)}
   .theme-fab{position:absolute;top:60px;right:16px;z-index:70;width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;background:var(--card);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:16px}
   .toast{
-    position:absolute;left:50%;bottom:40px;transform:translateX(-50%) translateY(20px);
+    position:absolute;left:50%;bottom:130px;transform:translateX(-50%) translateY(20px);
     background:var(--nav-dark);color:#F6F6F9;font-size:13px;font-weight:600;
     padding:12px 22px;border-radius:var(--r-pill);z-index:80;max-width:86%;text-align:center;
     opacity:0;pointer-events:none;transition:all .3s;
@@ -342,6 +342,22 @@
     .screen,.log-screen{padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
     .theme-fab{top:calc(env(safe-area-inset-top,0px) + 10px)}
   }
+  /* ============ NAV PILL GELAP (seragam) ============ */
+  .nav{
+    position:absolute;left:50%;transform:translateX(-50%);
+    bottom:26px;bottom:calc(26px + env(safe-area-inset-bottom,0px));
+    background:var(--nav-dark);border-radius:var(--r-pill);
+    display:flex;gap:6px;padding:8px;z-index:50;
+    box-shadow:0 12px 32px rgba(0,0,0,.28);
+  }
+  .nav button{
+    width:58px;height:58px;border:none;border-radius:50%;
+    background:transparent;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .nav button svg{width:23px;height:23px;stroke:#7C8496;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .nav button.on{background:#F6F6F9}
+  .nav button.on svg{stroke:#15161C}
 </style>
 </head>
 <body>
@@ -539,6 +555,13 @@ Pada faktorial, kasus dasar n = 0 didefinisikan bernilai 1. Untuk n &gt; 0, berl
     <span class="verified">✓ Sumber diverifikasi dosen</span>
   </div>
 
+    <nav class="nav">
+    <button onclick="location.href='beranda-reason.html'" aria-label="Beranda"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg></button>
+    <button onclick="location.href='tugas.html'" aria-label="Tugas"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg></button>
+    <button onclick="location.href='peta.html'" aria-label="Peta"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg></button>
+    <button onclick="location.href='scraping.html'" aria-label="Scraping"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M12 11v5m0 0l-2.5-2.5M12 16l2.5-2.5"/></svg></button>
+    <button onclick="location.href='dosen.html'" aria-label="Dosen"><svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg></button>
+  </nav>
   <div class="home-ind"></div>
   <div class="toast" id="toast"></div>
 </div>

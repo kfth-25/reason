@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script src="pwa.js" defer></script>
+<title>REASON — Peta Penguasaan</title>
+<style>
+  :root{
+    --blue:#4392F0; --blue-deep:#2E7BD6; --blue-soft:#D6E8FF;
+    --purple:#7C6BF0; --purple-deep:#5D4BD6; --purple-soft:#EFEAFD;
+    --orange:#F5A93F; --pink:#F9A9E8; --pink-soft:#FCE3F8;
+    --green:#C5EE93; --cyan:#3DD3F6; --lavender:#D8D2F3;
+    --bg:#F7F6FC; --card:#FFFFFF; --text:#15161C; --muted:#8A8B98;
+    --line:#ECECF1; --nav-dark:#15161C;
+    --navy:#26235A; --navy-soft:#7E7A9E;
+    --r-card:22px; --r-pill:999px;
+    --shadow:0 8px 24px rgba(20,22,40,.07);
+    --font:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:var(--font);background:#DDE1EA;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  @media (max-width:520px){ body{padding:0} }
+  .phone{
+    width:390px;height:844px;max-height:100vh;
+    background:linear-gradient(180deg,#EFEBFC 0%,#F5F2FE 46%,#F1EDFC 100%);
+    border-radius:44px;overflow:hidden;
+    position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35;
+  }
+  @media (max-width:520px){ .phone{width:100%;height:100vh;border-radius:0;box-shadow:none} }
+  .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;background:#0B0D12;border-radius:20px;z-index:60}
+  .statusbar{
+    position:absolute;top:0;left:0;right:0;height:52px;z-index:55;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 28px 0;font-size:14px;font-weight:600;color:var(--text);pointer-events:none;
+  }
+  .statusbar .sb-icons{display:flex;gap:6px;align-items:center}
+  .sb-icons svg{width:16px;height:16px;fill:var(--text)}
+
+  /* ============ HEADER GRAPH KNOWLEDGE ============ */
+  .topbar{
+    position:absolute;top:52px;left:0;right:0;z-index:40;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:8px 18px;
+  }
+  .tb-btn{
+    width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;
+    background:var(--card);box-shadow:var(--shadow);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .15s;font-family:var(--font);font-size:16px;font-weight:700;color:var(--navy);
+  }
+  .tb-btn:active{transform:scale(.92)}
+  .tb-btn svg{width:18px;height:18px;stroke:var(--navy);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .tb-title{font-size:16.5px;font-weight:800;color:var(--navy);letter-spacing:-.2px}
+
+  /* ============ KONTEN ============ */
+  .peta-screen{
+    position:absolute;inset:0;padding-top:98px;overflow-y:auto;overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;z-index:2;
+  }
+  .peta-screen::-webkit-scrollbar{display:none}
+  .pad{padding:6px 20px 140px}
+
+  /* Hero + maskot */
+  .lead-h{font-size:23.5px;font-weight:800;line-height:1.32;color:var(--navy);letter-spacing:-.2px}
+  .hero{display:flex;align-items:center;gap:2px;margin-top:8px}
+  .hero .lead{flex:1;font-size:13.5px;line-height:1.68;color:var(--navy-soft)}
+  .hero-m{position:relative;width:170px;height:142px;flex-shrink:0;margin-top:-6px}
+  .mascot{position:absolute;inset:0}
+  .mascot>svg,.mascot>canvas{width:100%;height:100%;display:block}
+  .dashes{position:absolute;left:-14px;top:8px;width:26px;height:46px;z-index:3;pointer-events:none}
+  .dashes svg{width:100%;height:100%;display:block}
+
+  /* Kartu total penguasaan */
+  .stat-card{
+    margin-top:16px;background:var(--card);border-radius:var(--r-card);
+    box-shadow:var(--shadow);padding:18px 16px;position:relative;overflow:hidden;
+    display:flex;align-items:center;gap:14px;
+  }
+  .stat-card .corner-dashes{position:absolute;top:12px;right:14px;width:24px;height:40px;pointer-events:none}
+  .donut{
+    width:96px;height:96px;border-radius:50%;flex-shrink:0;
+    background:conic-gradient(#8B7BF0 0deg 280.8deg,#E4DFF8 280.8deg 360deg);
+    display:flex;align-items:center;justify-content:center;position:relative;
+  }
+  .donut::before{content:"";position:absolute;inset:13px;background:var(--card);border-radius:50%}
+  .donut .donut-txt{position:relative;text-align:center;line-height:1.15}
+  .donut .donut-txt b{display:block;font-size:22px;font-weight:800;color:var(--navy)}
+  .donut .donut-txt span{display:block;font-size:9.5px;font-weight:600;color:var(--navy);margin-top:2px;max-width:58px}
+  .stat-div{width:1px;align-self:stretch;background:var(--line);flex-shrink:0}
+  .stat-right{flex:1;min-width:0}
+  .badge-bagus{
+    display:inline-flex;align-items:center;gap:5px;
+    background:#E4DDFB;border-radius:var(--r-pill);padding:5px 12px;
+    font-size:12.5px;font-weight:800;color:var(--navy);
+  }
+  .badge-bagus .sp{color:var(--purple);font-size:13px}
+  .stat-right p{margin-top:8px;font-size:12.5px;line-height:1.55;color:#5C587F}
+
+  /* Bagian per konsep */
+  .sec-head{display:flex;align-items:center;gap:8px;margin-top:26px}
+  .sec-head .ico{
+    width:30px;height:30px;border-radius:9px;background:var(--purple-soft);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .sec-head .ico svg{width:17px;height:17px;stroke:var(--purple-deep);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .sec-head h2{flex:1;font-size:16.5px;font-weight:800;color:var(--navy)}
+  .sec-head a{
+    font-size:12.5px;font-weight:700;color:var(--purple);text-decoration:none;cursor:pointer;
+    display:inline-flex;align-items:center;gap:3px;
+  }
+
+  .rows{margin-top:12px;background:#EFEAFD;border-radius:20px;padding:10px;display:flex;flex-direction:column;gap:9px}
+  .row{
+    background:var(--card);border-radius:16px;padding:12px 12px;
+    display:flex;align-items:center;gap:10px;box-shadow:0 3px 10px rgba(40,35,90,.05);
+  }
+  .row .ric{
+    width:36px;height:36px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .row .ric svg{width:18px;height:18px;stroke:var(--navy);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .ric.green{background:#D9F5C0}
+  .ric.blue{background:var(--blue-soft)}
+  .ric.orange{background:#FBE3C0}
+  .row .rmain{flex:1;min-width:0}
+  .row .rname{font-size:13.5px;font-weight:800;color:var(--navy);margin-bottom:7px}
+  .bar{height:9px;border-radius:var(--r-pill);background:var(--line);overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:var(--r-pill)}
+  .bar i.g{background:linear-gradient(90deg,#8FDF5A,#5BC42E);width:90%}
+  .bar i.b{background:linear-gradient(90deg,#6FB2F5,#4392F0);width:75%}
+  .bar i.o{background:linear-gradient(90deg,#F7C06B,#F5A93F);width:52%}
+  .row .rpill{
+    flex-shrink:0;font-size:11px;font-weight:800;color:var(--navy);
+    background:#F1F1F5;border-radius:var(--r-pill);padding:5px 9px;
+  }
+  .row .rbadge{
+    flex-shrink:0;display:inline-flex;align-items:center;gap:5px;
+    font-size:11px;font-weight:800;white-space:nowrap;
+  }
+  .rbadge::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+  .rbadge.green{color:#4BB32A}
+  .rbadge.blue{color:var(--blue)}
+  .rbadge.orange{color:#F57A1F}
+
+  /* Rekomendasi */
+  .reco{
+    margin-top:18px;background:var(--purple-soft);border-radius:var(--r-card);
+    padding:16px 14px;display:flex;align-items:center;gap:12px;
+  }
+  .reco .bulb{width:44px;height:44px;flex-shrink:0}
+  .reco .bulb svg{width:100%;height:100%;display:block}
+  .reco .rtxt{flex:1;min-width:0}
+  .reco .rtxt b{display:block;font-size:14.5px;font-weight:800;color:var(--navy)}
+  .reco .rtxt p{margin-top:4px;font-size:12px;line-height:1.5;color:#5C587F}
+  .reco .go{
+    flex-shrink:0;border:none;cursor:pointer;font-family:var(--font);
+    background:linear-gradient(135deg,#7C6BF0 0%,#5D4BD6 100%);
+    color:#fff;font-size:12.5px;font-weight:700;border-radius:var(--r-pill);
+    padding:11px 14px;box-shadow:0 8px 18px rgba(108,92,231,.3);
+    transition:transform .15s;white-space:nowrap;
+  }
+  .reco .go:active{transform:scale(.96)}
+
+  /* Tren */
+  .tren{
+    margin-top:18px;background:var(--card);border-radius:var(--r-card);
+    box-shadow:var(--shadow);padding:16px 14px 12px;
+  }
+  .tren-head{display:flex;align-items:center;gap:8px}
+  .tren-head .ico{
+    width:30px;height:30px;border-radius:9px;background:var(--purple-soft);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .tren-head .ico svg{width:17px;height:17px;stroke:var(--purple-deep);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .tren-head h3{flex:1;font-size:15.5px;font-weight:800;color:var(--navy)}
+  .tabs{display:flex;gap:4px;background:#F4F2FB;border-radius:var(--r-pill);padding:3px}
+  .tabs button{
+    border:none;cursor:pointer;font-family:var(--font);
+    font-size:11.5px;font-weight:700;color:#9A96B8;
+    background:transparent;border-radius:var(--r-pill);padding:5px 10px;
+    transition:all .2s;
+  }
+  .tabs button.on{background:#DCD4FB;color:var(--purple-deep)}
+  .chart{margin-top:12px;position:relative}
+  .chart svg{width:100%;height:150px;display:block;overflow:visible}
+
+    /* ============ NAV PILL GELAP (seragam) ============ */
+  .nav{
+    position:absolute;left:50%;transform:translateX(-50%);
+    bottom:26px;bottom:calc(26px + env(safe-area-inset-bottom,0px));
+    background:var(--nav-dark);border-radius:var(--r-pill);
+    display:flex;gap:6px;padding:8px;z-index:50;
+    box-shadow:0 12px 32px rgba(0,0,0,.28);
+  }
+  .nav button{
+    width:58px;height:58px;border:none;border-radius:50%;
+    background:transparent;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .nav button svg{width:23px;height:23px;stroke:#7C8496;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .nav button.on{background:#F6F6F9}
+  .nav button.on svg{stroke:#15161C}
+  .home-ind{
+    position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+    width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:51;
+    pointer-events:none;
+  }
+  .toast{
+    position:absolute;left:50%;bottom:130px;transform:translateX(-50%) translateY(20px);
+    background:var(--nav-dark);color:#F6F6F9;font-size:13px;font-weight:600;
+    padding:12px 22px;border-radius:var(--r-pill);z-index:80;max-width:86%;text-align:center;
+    opacity:0;pointer-events:none;transition:all .3s;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* Mobile: buang chrome mockup */
+  @media (max-width:520px){
+    html,body{height:auto;min-height:100dvh}
+    .phone{height:100vh;height:100dvh}
+    .notch,.statusbar,.home-ind{display:none}
+    .peta-screen{padding-top:calc(env(safe-area-inset-top,0px) + 60px)}
+    .topbar{top:calc(env(safe-area-inset-top,0px) + 8px)}
+  }
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+  <div class="notch"></div>
+  <div class="statusbar">
+    <span>9:41</span>
+    <span class="sb-icons">
+      <svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zm5-3h3v7H7zm5-4h3v11h-3zm5-5h3v16h-3z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 18.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM7.7 14.4a6.2 6.2 0 018.6 0l1.4-1.5a8.2 8.2 0 00-11.4 0zM4.3 11a10.2 10.2 0 0115.4 0l1.4-1.5a12.2 12.2 0 00-18.2 0z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.7 4H8.3C7 4 6 5 6 6.3v11.4C6 19 7 20 8.3 20h7.4c1.3 0 2.3-1 2.3-2.3V6.3C18 5 17 4 15.7 4zM16 17.5c0 .8-.7 1.5-1.5 1.5h-5c-.8 0-1.5-.7-1.5-1.5v-11c0-.8.7-1.5 1.5-1.5h5c.8 0 1.5.7 1.5 1.5v11z"/></svg>
+    </span>
+  </div>
+
+  <header class="topbar">
+    <button class="tb-btn" onclick="location.href='beranda-reason.html'" aria-label="Kembali">
+      <svg viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></svg>
+    </button>
+    <span class="tb-title">Graph Knowledge</span>
+    <button class="tb-btn" onclick="toast('Peta ini menampilkan progres penguasaan konsep dari sesi belajarmu.')" aria-label="Bantuan">?</button>
+  </header>
+
+  <section class="peta-screen">
+    <div class="pad">
+
+      <!-- Hero + maskot Bimo -->
+      <h1 class="lead-h">Peta Penguasaan<br>Konsep Anda</h1>
+      <div class="hero">
+        <p class="lead">Lihat perkembangan pemahaman Anda di setiap konsep utama.</p>
+        <div class="hero-m">
+          <span class="dashes" aria-hidden="true">
+            <svg viewBox="0 0 26 46" fill="none" stroke="#F5A93F" stroke-width="2.6" stroke-linecap="round">
+              <line x1="7" y1="6" x2="16" y2="11"/>
+              <line x1="4" y1="20" x2="15" y2="22"/>
+              <line x1="7" y1="35" x2="17" y2="33"/>
+            </svg>
+          </span>
+          <!-- Maskot REASON — Bimo (wobnimo); SVG ini tetap dipakai sbg fallback bila WebGL2 absen -->
+          <div class="mascot" id="bimoSlot" aria-hidden="true">
+            <svg viewBox="0 0 260 190">
+              <!-- daun dekor -->
+              <path d="M36 118c14-30 6-52-12-64 24 4 42 24 40 52-1 12-12 18-28 12z" fill="#E7E3FB"/>
+              <path d="M222 66c-12-24-4-44 12-54-20 6-34 24-32 48 1 10 10 14 20 6z" fill="#E7E3FB"/>
+              <path d="M46 60c8-8 20-8 26 0-8 8-20 8-26 0z" fill="#D9D3FA"/>
+              <!-- sparkle kuning -->
+              <path d="M212 96l4.5 11 11 4.5-11 4.5-4.5 11-4.5-11-11-4.5 11-4.5z" fill="#FFC94D"/>
+              <!-- sparkle biru -->
+              <path d="M232 40l3.5 8.5 8.5 3.5-8.5 3.5-3.5 8.5-3.5-8.5-8.5-3.5 8.5-3.5z" fill="#5AB2F5"/>
+              <!-- sparkle ungu kiri -->
+              <path d="M62 92l3.5 8.5 8.5 3.5-8.5 3.5-3.5 8.5-3.5-8.5-8.5-3.5 8.5-3.5z" fill="#9C8CF5"/>
+              <path d="M196 26l3 7.5 7.5 3-7.5 3-3 7.5-3-7.5-7.5-3 7.5-3z" fill="#9C8CF5"/>
+
+              <!-- antena -->
+              <line x1="130" y1="34" x2="122" y2="20" stroke="#7C6BF0" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="120" cy="16" r="7" fill="#FFC94D"/>
+
+              <!-- telinga -->
+              <circle cx="88" cy="76" r="14" fill="#7C6BF0"/>
+              <circle cx="172" cy="76" r="14" fill="#7C6BF0"/>
+              <circle cx="88" cy="76" r="6" fill="#5D4BD6"/>
+              <circle cx="172" cy="76" r="6" fill="#5D4BD6"/>
+
+              <!-- kepala -->
+              <rect x="82" y="36" width="96" height="82" rx="36" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+              <!-- panel wajah -->
+              <rect x="97" y="52" width="66" height="52" rx="22" fill="#171A2E"/>
+              <!-- mata senang -->
+              <path d="M112 74q6-9 12 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M136 74q6-9 12 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <!-- senyum -->
+              <path d="M124 86q6 7 12 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+
+              <!-- badan -->
+              <path d="M100 122c18-8 42-8 60 0l7 40c-26 10-48 10-74 0z" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+              <!-- lengan memegang buku -->
+              <path d="M98 132c-8 6-12 14-10 22" stroke="#E4E1F7" stroke-width="10" fill="none" stroke-linecap="round"/>
+              <path d="M162 132c8 6 12 14 10 22" stroke="#E4E1F7" stroke-width="10" fill="none" stroke-linecap="round"/>
+
+              <!-- buku terbuka -->
+              <path d="M104 148l26-7v30l-26 7z" fill="#4392F0"/>
+              <path d="M156 148l-26-7v30l26 7z" fill="#6FB2F5"/>
+              <path d="M130 141v30" stroke="#2E7BD6" stroke-width="2.5"/>
+              <path d="M110 154l14-3M110 161l14-3M146 154l-14-3M146 161l-14-3" stroke="#DCEEFF" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total penguasaan -->
+      <div class="stat-card">
+        <span class="corner-dashes" aria-hidden="true">
+          <svg viewBox="0 0 24 40" fill="none" stroke="#F5A93F" stroke-width="2.4" stroke-linecap="round">
+            <line x1="6" y1="5" x2="15" y2="9"/>
+            <line x1="4" y1="18" x2="14" y2="20"/>
+            <line x1="7" y1="32" x2="16" y2="30"/>
+          </svg>
+        </span>
+        <div class="donut" role="img" aria-label="78 persen total penguasaan">
+          <div class="donut-txt"><b>78%</b><span>Total Penguasaan</span></div>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat-right">
+          <span class="badge-bagus"><span class="sp">✨</span> Bagus!</span>
+          <p>Pemahaman Anda sudah cukup baik. Tetap lanjutkan untuk memperkuat konsep lainnya!</p>
+        </div>
+      </div>
+
+      <!-- Penguasaan per konsep -->
+      <div class="sec-head">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg>
+        </span>
+        <h2>Penguasaan per Konsep</h2>
+        <a onclick="location.href='ringkasan.html#map'">Lihat Detail →</a>
+      </div>
+
+      <div class="rows">
+        <div class="row">
+          <span class="ric green" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 7h6a4 4 0 010 8H9"/><path d="M9 11l-2 4 4 0"/><path d="M17 17h-6a4 4 0 010-8h4"/><path d="M15 13l2-4-4 0"/></svg>
+          </span>
+          <div class="rmain">
+            <div class="rname">Rekursi</div>
+            <div class="bar"><i class="g"></i></div>
+          </div>
+          <span class="rpill">90%</span>
+          <span class="rbadge green">Sangat Baik</span>
+        </div>
+
+        <div class="row">
+          <span class="ric blue" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 6h10M7 10h10M7 14h6"/><path d="M16 14l3 4 3-4" transform="translate(-4 0)"/></svg>
+          </span>
+          <div class="rmain">
+            <div class="rname">Induksi</div>
+            <div class="bar"><i class="b"></i></div>
+          </div>
+          <span class="rpill">75%</span>
+          <span class="rbadge blue">Baik</span>
+        </div>
+
+        <div class="row">
+          <span class="ric orange" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="5" cy="7" r="2"/><circle cx="19" cy="7" r="2"/><circle cx="12" cy="17" r="2"/><path d="M7 8l3.5 7M17 8l-3.5 7M7 7h10"/></svg>
+          </span>
+          <div class="rmain">
+            <div class="rname">Teori Graf</div>
+            <div class="bar"><i class="o"></i></div>
+          </div>
+          <span class="rpill">52%</span>
+          <span class="rbadge orange">Perlu Latihan</span>
+        </div>
+      </div>
+
+      <!-- Rekomendasi belajar -->
+      <div class="reco">
+        <span class="bulb" aria-hidden="true">
+          <svg viewBox="0 0 44 44">
+            <g stroke="#F5A93F" stroke-width="2.2" stroke-linecap="round" fill="none">
+              <line x1="22" y1="3" x2="22" y2="7"/>
+              <line x1="7.5" y1="8.5" x2="10.3" y2="11.3"/>
+              <line x1="36.5" y1="8.5" x2="33.7" y2="11.3"/>
+              <line x1="4" y1="22" x2="8" y2="22"/>
+              <line x1="40" y1="22" x2="36" y2="22"/>
+            </g>
+            <path d="M22 9.5a11 11 0 00-6.3 20c1.1.8 1.8 2.1 1.8 3.4v2.1h9v-2.1c0-1.3.7-2.6 1.8-3.4A11 11 0 0022 9.5z" fill="#FFD34E" stroke="#F5A93F" stroke-width="1.6"/>
+            <rect x="17.5" y="36" width="9" height="4" rx="2" fill="#7C6BF0"/>
+            <path d="M19 25.5h6M19 29h6" stroke="#F5A93F" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <div class="rtxt">
+          <b>Rekomendasi Belajar</b>
+          <p>Perkuat konsep 'Teori Graf' dengan latihan tambahan.</p>
+        </div>
+        <button class="go" onclick="location.href='latihan.html'">Mulai Latihan →</button>
+      </div>
+
+      <!-- Tren penguasaan -->
+      <div class="tren">
+        <div class="tren-head">
+          <span class="ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg>
+          </span>
+          <h3>Tren Penguasaan</h3>
+          <div class="tabs" id="sesiTabs">
+            <button class="on" data-sesi="1">Sesi 1</button>
+            <button data-sesi="2">Sesi 2</button>
+            <button data-sesi="3">Sesi 3</button>
+          </div>
+        </div>
+        <div class="chart" aria-label="Grafik tren penguasaan dari sesi 1 sampai sesi 3, berakhir 78 persen">
+          <svg viewBox="0 0 320 150" preserveAspectRatio="none">
+            <!-- grid + label sumbu -->
+            <line x1="34" y1="14" x2="310" y2="14" stroke="#ECECF1" stroke-width="1"/>
+            <line x1="34" y1="70" x2="310" y2="70" stroke="#ECECF1" stroke-width="1"/>
+            <line x1="34" y1="126" x2="310" y2="126" stroke="#ECECF1" stroke-width="1"/>
+            <text x="28" y="18" text-anchor="end" font-size="10" font-weight="700" fill="#9A96B8" font-family="Poppins,sans-serif">100%</text>
+            <text x="28" y="74" text-anchor="end" font-size="10" font-weight="700" fill="#9A96B8" font-family="Poppins,sans-serif">50%</text>
+            <text x="28" y="130" text-anchor="end" font-size="10" font-weight="700" fill="#9A96B8" font-family="Poppins,sans-serif">0%</text>
+            <!-- area di bawah garis -->
+            <path d="M70 66 C130 52, 200 42, 270 40 L270 126 L70 126 Z" fill="#EFEAFD" opacity=".8"/>
+            <!-- garis tren -->
+            <path d="M70 66 C130 52, 200 42, 270 40" fill="none" stroke="#7C6BF0" stroke-width="3" stroke-linecap="round"/>
+            <!-- titik data -->
+            <circle cx="70" cy="66" r="6" fill="#7C6BF0" stroke="#fff" stroke-width="3"/>
+            <circle cx="170" cy="46" r="6" fill="#7C6BF0" stroke="#fff" stroke-width="3"/>
+            <circle cx="270" cy="40" r="6" fill="#7C6BF0" stroke="#fff" stroke-width="3"/>
+            <!-- badge 78% -->
+            <rect x="248" y="8" width="44" height="22" rx="11" fill="#7C6BF0"/>
+            <text x="270" y="23" text-anchor="middle" font-size="11.5" font-weight="800" fill="#fff" font-family="Poppins,sans-serif">78%</text>
+            <!-- label x -->
+            <text x="70" y="146" text-anchor="middle" font-size="10.5" font-weight="700" fill="#5C587F" font-family="Poppins,sans-serif">Sesi 1</text>
+            <text x="170" y="146" text-anchor="middle" font-size="10.5" font-weight="700" fill="#5C587F" font-family="Poppins,sans-serif">Sesi 2</text>
+            <text x="270" y="146" text-anchor="middle" font-size="10.5" font-weight="700" fill="#5C587F" font-family="Poppins,sans-serif">Sesi 3</text>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <nav class="nav" id="nav">
+    <button onclick="location.href='beranda-reason.html'" aria-label="Beranda">
+      <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg>
+    </button>
+    <button onclick="location.href='tugas.html'" aria-label="Tugas">
+      <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg>
+    </button>
+    <button class="on" onclick="location.href='peta.html'" aria-label="Peta">
+      <svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg>
+    </button>
+    <button onclick="location.href='scraping.html'" aria-label="Scraping">
+      <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M12 11v5m0 0l-2.5-2.5M12 16l2.5-2.5"/></svg>
+    </button>
+    <button onclick="location.href='dosen.html'" aria-label="Dosen">
+      <svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg>
+    </button>
+  </nav>
+  <div class="home-ind"></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ============ TOAST ============ */
+let toastT;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* Tab sesi (tren) — state pill saja, data statis prototipe */
+document.getElementById('sesiTabs').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  document.querySelectorAll('#sesiTabs button').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+});
+</script>
+
+<script type="module">
+/* Bimo 3D (wobnimo) — mount menggantikan SVG statis; fallback SVG bila WebGL2 absen */
+import { mount } from '../vendor/wobnimo.js';
+import { bimo } from '../mascots/bimo.js';
+
+/* Profil ringan utk HP (layar high-DPR / RAM kecil): pixel ratio 1 & tanpa
+   interaksi pointer — beban GPU & baterai jauh lebih rendah. */
+const LIGHT = matchMedia('(pointer: coarse)').matches || (navigator.deviceMemory || 8) <= 4;
+const M_OPTS = LIGHT ? { maxPixelRatio: 1, interactive: false } : {};
+window.__bimoLight = LIGHT;
+
+const slot = document.getElementById('bimoSlot');
+let mascot = null;
+let currentState = 'happy';
+
+function setState(s){
+  currentState = s;
+  if (mascot) { try { mascot.setState(s); } catch (e) { console.warn('[bimo] setState', e); } }
+}
+
+/* Gate fallback: SVG statis TIDAK dihapus saat mount. Canvas menumpuk di atasnya
+   (absolutely positioned), dan SVG baru disembunyikan setelah canvas benar-benar
+   berisi gambar. Canvas kosong / tak pernah terisi → canvas dibuang, SVG tetap. */
+function canvasHasInk(c){
+  try{
+    const s=document.createElement('canvas');s.width=32;s.height=32;
+    const x=s.getContext('2d');x.drawImage(c,0,0,32,32);
+    const d=x.getImageData(0,0,32,32).data;
+    for(let i=3;i<d.length;i+=4){if(d[i]>8)return true}
+    return false;
+  }catch(e){return true}
+}
+function gateSlot(host,m,tag){
+  const svg=host.querySelector('svg');
+  const canvas=host.querySelector('canvas');
+  if(canvas){
+    if(getComputedStyle(host).position==='static')host.style.position='relative';
+    canvas.style.position='absolute';canvas.style.inset='0';canvas.style.zIndex='1';
+  }
+  if(!svg||!canvas)return;
+  let done=false,blank=0;
+  const poll=setInterval(()=>{
+    if(done){clearInterval(poll);return}
+    if(m.drawn){
+      if(canvasHasInk(canvas)){done=true;svg.style.visibility='hidden';clearInterval(poll)}
+      else if(++blank>=4){                 // sudah "menggambar" tapi tetap kosong → gagal
+        done=true;clearInterval(poll);
+        try{if(typeof m.dispose==='function')m.dispose()}catch(e){}
+        if(canvas.parentNode)canvas.parentNode.removeChild(canvas);
+        svg.style.visibility='';
+        console.warn('['+tag+'] canvas kosong — SVG statis dipertahankan');
+      }
+    }
+    /* belum pernah menggambar: terus menunggu (mungkin belum terlihat di viewport) */
+  },150);
+}
+
+function boot(){
+  if (!slot) return;
+  try {
+    if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
+    mascot = mount(slot, bimo, { state: currentState, ...M_OPTS });
+    gateSlot(slot, mascot, 'bimo');
+  } catch (err) {
+    console.warn('[bimo] WebGL2 absen — pakai SVG statis:', err && err.message);
+    const c = slot.querySelector('canvas');   // buang canvas parsial; SVG tak pernah disentuh
+    if (c && c.parentNode) c.parentNode.removeChild(c);
+  }
+}
+/* HP: mount saat browser longgar supaya kompilasi shader tak menahan load awal
+   (SVG statis tampil dulu, lalu berganti 3D) */
+if (LIGHT && 'requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 1200 });
+else boot();
+
+window.__bimo = {
+  get mounted(){ return !!mascot; },
+  get state(){ return currentState; },
+  setState
+};
+</script>
+
+</body>
+</html>

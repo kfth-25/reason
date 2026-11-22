@@ -1,11 +1,12 @@
 /* Service Worker REASON — cache-first + network refresh (stale-while-revalidate) */
-const CACHE = 'reason-v3';
+const CACHE = 'reason-v4';
 const CORE = [
   'beranda-reason.html',
   'tugas.html',
   'ringkasan.html',
   'dosen.html',
   'scraping.html',
+  'peta.html',
   'diagnostik.html',
   'latihan.html',
   'soal.html',
