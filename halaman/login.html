@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>REASON — Masuk</title>
+<style>
+  :root{
+    --blue:#4392F0; --blue-deep:#2E7BD6; --blue-soft:#D6E8FF;
+    --purple:#7C6BF0; --purple-deep:#5D4BD6; --purple-soft:#EFEAFD;
+    --orange:#F5A93F; --pink:#F9A9E8; --pink-soft:#FCE3F8;
+    --green:#C5EE93; --cyan:#3DD3F6; --lavender:#D8D2F3;
+    --bg:#F7F6FC; --card:#FFFFFF; --text:#15161C; --muted:#8A8B98;
+    --line:#ECECF1; --nav-dark:#15161C;
+    --r-card:22px; --r-pill:999px;
+    --shadow:0 8px 24px rgba(20,22,40,.07);
+    --font:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:var(--font);background:#DDE1EA;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  @media (max-width:520px){ body{padding:0} }
+  .phone{
+    width:390px;height:844px;max-height:100vh;
+    background:linear-gradient(180deg,#EFEBFC 0%,#F5F2FE 46%,#F1EDFC 100%);
+    border-radius:44px;overflow:hidden;
+    position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35;
+  }
+  @media (max-width:520px){ .phone{width:100%;height:100vh;border-radius:0;box-shadow:none} }
+  .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;background:#0B0D12;border-radius:20px;z-index:60}
+  .statusbar{
+    position:absolute;top:0;left:0;right:0;height:52px;z-index:55;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 28px 0;font-size:14px;font-weight:600;color:var(--text);pointer-events:none;
+  }
+  .statusbar .sb-icons{display:flex;gap:6px;align-items:center}
+  .sb-icons svg{width:16px;height:16px;fill:var(--text)}
+
+  /* ============ LATAR BLOB LAVENDER ============ */
+  .log-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+  .log-bg i{position:absolute;display:block}
+  .log-bg .b1{top:-64px;right:-78px;width:230px;height:200px;background:#DBD4F7;border-radius:55% 45% 62% 38%/52% 58% 42% 48%}
+  .log-bg .b2{top:236px;left:-88px;width:200px;height:180px;background:#E4DEFB;border-radius:48% 52% 42% 58%/55% 45% 55% 45%}
+  .log-bg .b3{top:268px;right:6px;width:212px;height:212px;background:#D6CEF6;border-radius:50%}
+  .log-bg .b4{bottom:-84px;left:-70px;width:250px;height:230px;background:#CFC5F4;border-radius:58% 42% 50% 50%/48% 55% 45% 52%}
+  .log-bg .b5{bottom:120px;right:-60px;width:170px;height:160px;background:#DAD3F8;border-radius:52% 48% 45% 55%/50% 42% 58% 50%}
+
+  /* ============ KONTEN ============ */
+  .log-screen{
+    position:absolute;inset:0;padding-top:52px;overflow-y:auto;overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;z-index:2;
+  }
+  .log-screen::-webkit-scrollbar{display:none}
+  .pad{padding:14px 22px 34px}
+
+  /* Brand */
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .mark{width:36px;height:36px;flex-shrink:0}
+  .brand .txt b{display:block;font-size:23px;font-weight:800;letter-spacing:.6px;color:#171A2E;line-height:1.1}
+  .brand .txt span{display:block;font-size:11.5px;font-weight:600;color:#7E7A9E;margin-top:3px;letter-spacing:.2px}
+
+  /* Judul & body */
+  .lead-h{font-size:23.5px;font-weight:800;line-height:1.32;color:#26235A;margin-top:26px;letter-spacing:-.2px}
+  .hero{display:flex;align-items:center;gap:2px;margin-top:14px}
+  .hero .lead{flex:1;font-size:13.5px;line-height:1.68;color:#7E7A9E}
+  .hero-m{position:relative;width:188px;height:156px;flex-shrink:0;margin-top:-10px}
+  .mascot{position:absolute;inset:0}
+  .mascot>svg,.mascot>canvas{width:100%;height:100%;display:block}
+  .bulb{position:absolute;top:-14px;left:6px;width:36px;height:36px;z-index:3;pointer-events:none}
+  .bulb svg{width:100%;height:100%;display:block}
+  .dashes{position:absolute;left:-17px;top:64px;width:26px;height:46px;z-index:3;pointer-events:none}
+  .dashes svg{width:100%;height:100%;display:block}
+
+  /* Tombol */
+  .actions{margin-top:26px;position:relative;z-index:2}
+  .btn{
+    width:100%;border:none;cursor:pointer;font-family:var(--font);
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    transition:transform .15s,filter .2s;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn-masuk{
+    height:54px;border-radius:var(--r-pill);
+    background:linear-gradient(135deg,#7C6BF0 0%,#5D4BD6 100%);
+    color:#fff;font-size:16px;font-weight:700;
+    box-shadow:0 12px 26px rgba(108,92,231,.35);position:relative;
+  }
+  .btn-masuk .chev{position:absolute;right:22px;top:50%;transform:translateY(-50%);display:flex}
+  .btn-masuk .chev svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  .btn-daftar{
+    height:52px;border-radius:var(--r-pill);margin-top:11px;
+    background:#fff;border:1.5px solid #DAD5F5;
+    color:#3D3A66;font-size:15px;font-weight:600;
+    box-shadow:0 4px 14px rgba(60,50,120,.06);
+  }
+  .btn-daftar svg{width:19px;height:19px;stroke:#3D3A66;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .or{text-align:center;font-size:12px;font-weight:500;color:#9A96B8;margin:15px 0}
+  .btn-oauth{
+    height:50px;border-radius:15px;margin-top:10px;position:relative;
+    background:#fff;border:1px solid #ECE9F8;
+    box-shadow:0 4px 14px rgba(60,50,120,.08);
+    font-size:14.5px;font-weight:600;color:#2E2B4A;
+  }
+  .btn-oauth .ico{position:absolute;left:18px;top:50%;transform:translateY(-50%);width:22px;height:22px;display:flex;align-items:center;justify-content:center}
+  .btn-oauth .ico svg{width:20px;height:20px;display:block}
+  .legal{
+    margin-top:20px;text-align:center;font-size:11px;line-height:1.75;
+    color:#9A96B8;padding-bottom:22px;
+  }
+  .legal a{color:var(--purple);font-weight:600;text-decoration:none;cursor:pointer}
+
+  .home-ind{
+    position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+    width:130px;height:5px;border-radius:3px;background:#171A2E;opacity:.85;z-index:51;
+    pointer-events:none;
+  }
+
+  /* Toast */
+  .toast{
+    position:absolute;left:50%;bottom:120px;transform:translateX(-50%) translateY(20px);
+    background:var(--nav-dark);color:#F6F6F9;font-size:13px;font-weight:600;
+    padding:12px 22px;border-radius:var(--r-pill);z-index:80;max-width:86%;text-align:center;
+    opacity:0;pointer-events:none;transition:all .3s;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+  <div class="log-bg" aria-hidden="true">
+    <i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i><i class="b5"></i>
+  </div>
+
+  <div class="notch"></div>
+  <div class="statusbar">
+    <span>9:41</span>
+    <span class="sb-icons">
+      <svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zm5-3h3v7H7zm5-4h3v11h-3zm5-5h3v16h-3z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 18.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM7.7 14.4a6.2 6.2 0 018.6 0l1.4-1.5a8.2 8.2 0 00-11.4 0zM4.3 11a10.2 10.2 0 0115.4 0l1.4-1.5a12.2 12.2 0 00-18.2 0z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.7 4H8.3C7 4 6 5 6 6.3v11.4C6 19 7 20 8.3 20h7.4c1.3 0 2.3-1 2.3-2.3V6.3C18 5 17 4 15.7 4zM16 17.5c0 .8-.7 1.5-1.5 1.5h-5c-.8 0-1.5-.7-1.5-1.5v-11c0-.8.7-1.5 1.5-1.5h5c.8 0 1.5.7 1.5 1.5v11z"/></svg>
+    </span>
+  </div>
+
+  <section class="log-screen">
+    <div class="pad">
+
+      <!-- Brand REASON -->
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 24 24" aria-hidden="true">
+          <g stroke="#7C6BF0" stroke-width="2.9" stroke-linecap="round" fill="none">
+            <line x1="12" y1="2.8" x2="12" y2="21.2"/>
+            <line x1="4.1" y1="7.4" x2="19.9" y2="16.6"/>
+            <line x1="4.1" y1="16.6" x2="19.9" y2="7.4"/>
+          </g>
+        </svg>
+        <div class="txt">
+          <b>REASON</b>
+          <span>Learn · Think · Improve</span>
+        </div>
+      </div>
+
+      <h1 class="lead-h">Belajar Lebih Dalam,<br>Bukan Sekadar Jawaban</h1>
+
+      <!-- Body + maskot Bimo (menggantikan kelinci pada mockup) -->
+      <div class="hero">
+        <p class="lead">REASON membantu kamu memahami alasan di balik jawaban, dan meningkatkan penalaranmu.</p>
+        <div class="hero-m">
+          <span class="bulb" aria-hidden="true">
+            <svg viewBox="0 0 32 32">
+              <g stroke="#F5A93F" stroke-width="2" stroke-linecap="round" fill="none">
+                <line x1="16" y1="2" x2="16" y2="5.2"/>
+                <line x1="5.6" y1="6.6" x2="7.8" y2="8.8"/>
+                <line x1="26.4" y1="6.6" x2="24.2" y2="8.8"/>
+              </g>
+              <path d="M16 6.2a7.8 7.8 0 00-4.4 14.2c.8.6 1.3 1.5 1.3 2.4V24.6h6.2v-1.8c0-.9.5-1.8 1.3-2.4A7.8 7.8 0 0016 6.2z" fill="#FFD34E"/>
+              <rect x="12.6" y="25.6" width="6.8" height="3" rx="1.5" fill="#F5A93F"/>
+            </svg>
+          </span>
+          <span class="dashes" aria-hidden="true">
+            <svg viewBox="0 0 26 46" fill="none" stroke="#2B2755" stroke-width="2.4" stroke-linecap="round">
+              <line x1="7" y1="6" x2="16" y2="11"/>
+              <line x1="4" y1="20" x2="15" y2="22"/>
+              <line x1="7" y1="35" x2="17" y2="33"/>
+            </svg>
+          </span>
+          <!-- Maskot REASON — Bimo (wobnimo); SVG ini tetap dipakai sbg fallback bila WebGL2 absen -->
+          <div class="mascot" id="bimoSlot" aria-hidden="true">
+            <svg viewBox="0 0 260 190">
+              <!-- daun dekor -->
+              <path d="M36 118c14-30 6-52-12-64 24 4 42 24 40 52-1 12-12 18-28 12z" fill="#E7E3FB"/>
+              <path d="M222 66c-12-24-4-44 12-54-20 6-34 24-32 48 1 10 10 14 20 6z" fill="#E7E3FB"/>
+              <path d="M46 60c8-8 20-8 26 0-8 8-20 8-26 0z" fill="#D9D3FA"/>
+              <!-- sparkle kuning -->
+              <path d="M212 96l4.5 11 11 4.5-11 4.5-4.5 11-4.5-11-11-4.5 11-4.5z" fill="#FFC94D"/>
+              <!-- sparkle biru -->
+              <path d="M232 40l3.5 8.5 8.5 3.5-8.5 3.5-3.5 8.5-3.5-8.5-8.5-3.5 8.5-3.5z" fill="#5AB2F5"/>
+              <!-- sparkle ungu kiri -->
+              <path d="M62 92l3.5 8.5 8.5 3.5-8.5 3.5-3.5 8.5-3.5-8.5-8.5-3.5 8.5-3.5z" fill="#9C8CF5"/>
+              <path d="M196 26l3 7.5 7.5 3-7.5 3-3 7.5-3-7.5-7.5-3 7.5-3z" fill="#9C8CF5"/>
+
+              <!-- antena -->
+              <line x1="130" y1="34" x2="122" y2="20" stroke="#7C6BF0" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="120" cy="16" r="7" fill="#FFC94D"/>
+
+              <!-- telinga -->
+              <circle cx="88" cy="76" r="14" fill="#7C6BF0"/>
+              <circle cx="172" cy="76" r="14" fill="#7C6BF0"/>
+              <circle cx="88" cy="76" r="6" fill="#5D4BD6"/>
+              <circle cx="172" cy="76" r="6" fill="#5D4BD6"/>
+
+              <!-- kepala -->
+              <rect x="82" y="36" width="96" height="82" rx="36" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+              <!-- panel wajah -->
+              <rect x="97" y="52" width="66" height="52" rx="22" fill="#171A2E"/>
+              <!-- mata senang -->
+              <path d="M112 74q6-9 12 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M136 74q6-9 12 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <!-- senyum -->
+              <path d="M124 86q6 7 12 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+
+              <!-- badan -->
+              <path d="M100 122c18-8 42-8 60 0l7 40c-26 10-48 10-74 0z" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+              <!-- lengan memegang buku -->
+              <path d="M98 132c-8 6-12 14-10 22" stroke="#E4E1F7" stroke-width="10" fill="none" stroke-linecap="round"/>
+              <path d="M162 132c8 6 12 14 10 22" stroke="#E4E1F7" stroke-width="10" fill="none" stroke-linecap="round"/>
+
+              <!-- buku terbuka -->
+              <path d="M104 148l26-7v30l-26 7z" fill="#4392F0"/>
+              <path d="M156 148l-26-7v30l26 7z" fill="#6FB2F5"/>
+              <path d="M130 141v30" stroke="#2E7BD6" stroke-width="2.5"/>
+              <path d="M110 154l14-3M110 161l14-3M146 154l-14-3M146 161l-14-3" stroke="#DCEEFF" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aksi -->
+      <div class="actions">
+        <button class="btn btn-masuk" onclick="location.href='beranda-reason.html'">
+          Masuk
+          <span class="chev"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
+        </button>
+        <button class="btn btn-daftar" onclick="toast('Pendaftaran akun baru belum dibuka di prototipe ini')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M5 19.5c1.6-3.6 4.2-5.2 7-5.2s5.4 1.6 7 5.2"/></svg>
+          Daftar Akun
+        </button>
+
+        <div class="or">atau</div>
+
+        <button class="btn btn-oauth" onclick="toast('Login Google belum dihubungkan di prototipe ini')">
+          <span class="ico">
+            <svg viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.2H12v4.1h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.3-2.1 3.7-5.2 3.7-8.6z"/>
+              <path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.2 1.2-3.2 0-6-2.1-6.9-5.1L1.2 17C3.2 21.1 7.3 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.1 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3L1.2 5.7C.4 7.4 0 9.1 0 11s.4 3.6 1.2 5.3l3.9-2z"/>
+              <path fill="#EA4335" d="M12 4.7c2.3 0 3.8 1 4.7 1.8l3.4-3.3C18 1.2 15.2 0 12 0 7.3 0 3.2 2.9 1.2 6.9l3.9 3c.9-3 3.7-5.2 6.9-5.2z"/>
+            </svg>
+          </span>
+          Lanjut dengan Google
+        </button>
+        <button class="btn btn-oauth" onclick="toast('SSO Kampus belum dihubungkan di prototipe ini')">
+          <span class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#3D3A66" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 4L2.5 8.6 12 13.2l9.5-4.6L12 4z"/>
+              <path d="M6.5 10.8V15c0 1.7 2.6 3.2 5.5 3.2s5.5-1.5 5.5-3.2v-4.2"/>
+            </svg>
+          </span>
+          Lanjut dengan SSO Kampus
+        </button>
+
+        <p class="legal">
+          Dengan melanjutkan, kamu menyetujui<br>
+          <a onclick="toast('Syarat &amp; Ketentuan belum tersedia di prototipe ini')">Syarat &amp; Ketentuan</a> dan
+          <a onclick="toast('Kebijakan Privasi belum tersedia di prototipe ini')">Kebijakan Privasi</a>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="home-ind"></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ============ TOAST ============ */
+let toastT;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 2600);
+}
+</script>
+
+<script type="module">
+/* Bimo 3D (wobnimo) — mount menggantikan SVG statis; fallback SVG bila WebGL2 absen */
+import { mount } from '../vendor/wobnimo.js';
+import { bimo } from '../mascots/bimo.js';
+
+/* Profil ringan utk HP (layar high-DPR / RAM kecil): pixel ratio 1 & tanpa
+   interaksi pointer — beban GPU & baterai jauh lebih rendah. */
+const LIGHT = matchMedia('(pointer: coarse)').matches || (navigator.deviceMemory || 8) <= 4;
+const M_OPTS = LIGHT ? { maxPixelRatio: 1, interactive: false } : {};
+window.__bimoLight = LIGHT;
+
+const slot = document.getElementById('bimoSlot');
+let mascot = null;
+let currentState = 'happy';
+
+function setState(s){
+  currentState = s;
+  if (mascot) { try { mascot.setState(s); } catch (e) { console.warn('[bimo] setState', e); } }
+}
+
+/* Gate fallback: SVG statis TIDAK dihapus saat mount. Canvas menumpuk di atasnya
+   (absolutely positioned), dan SVG baru disembunyikan setelah canvas benar-benar
+   berisi gambar. Canvas kosong / tak pernah terisi → canvas dibuang, SVG tetap. */
+function canvasHasInk(c){
+  try{
+    const s=document.createElement('canvas');s.width=32;s.height=32;
+    const x=s.getContext('2d');x.drawImage(c,0,0,32,32);
+    const d=x.getImageData(0,0,32,32).data;
+    for(let i=3;i<d.length;i+=4){if(d[i]>8)return true}
+    return false;
+  }catch(e){return true}
+}
+function gateSlot(host,m,tag){
+  const svg=host.querySelector('svg');
+  const canvas=host.querySelector('canvas');
+  if(canvas){
+    if(getComputedStyle(host).position==='static')host.style.position='relative';
+    canvas.style.position='absolute';canvas.style.inset='0';canvas.style.zIndex='1';
+  }
+  if(!svg||!canvas)return;
+  let done=false,blank=0;
+  const poll=setInterval(()=>{
+    if(done){clearInterval(poll);return}
+    if(m.drawn){
+      if(canvasHasInk(canvas)){done=true;svg.style.visibility='hidden';clearInterval(poll)}
+      else if(++blank>=4){                 // sudah "menggambar" tapi tetap kosong → gagal
+        done=true;clearInterval(poll);
+        try{if(typeof m.dispose==='function')m.dispose()}catch(e){}
+        if(canvas.parentNode)canvas.parentNode.removeChild(canvas);
+        svg.style.visibility='';
+        console.warn('['+tag+'] canvas kosong — SVG statis dipertahankan');
+      }
+    }
+    /* belum pernah menggambar: terus menunggu (mungkin belum terlihat di viewport) */
+  },150);
+}
+
+function boot(){
+  if (!slot) return;
+  try {
+    if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
+    mascot = mount(slot, bimo, { state: currentState, ...M_OPTS });
+    gateSlot(slot, mascot, 'bimo');
+  } catch (err) {
+    console.warn('[bimo] WebGL2 absen — pakai SVG statis:', err && err.message);
+    const c = slot.querySelector('canvas');   // buang canvas parsial; SVG tak pernah disentuh
+    if (c && c.parentNode) c.parentNode.removeChild(c);
+  }
+}
+/* HP: mount saat browser longgar supaya kompilasi shader tak menahan load awal
+   (SVG statis tampil dulu, lalu berganti 3D) */
+if (LIGHT && 'requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 1200 });
+else boot();
+
+window.__bimo = {
+  get mounted(){ return !!mascot; },
+  get state(){ return currentState; },
+  setState
+};
+</script>
+
+</body>
+</html>
