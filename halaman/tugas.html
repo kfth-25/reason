@@ -179,6 +179,14 @@
   .sheet-actions button{flex:1;padding:13px;border-radius:var(--r-pill);font-size:12.5px;font-weight:700;cursor:pointer;border:none;font-family:var(--font)}
   .sheet-actions .primary{background:var(--nav-dark);color:#F6F6F9}
   .sheet-actions .ghost{background:var(--card);color:var(--text);border:1.5px solid var(--line)}
+  /* Mobile: buang chrome mockup (notch/statusbar/home-ind) -> full layar + dvh */
+  @media (max-width:520px){
+    html,body{height:auto;min-height:100dvh}
+    .phone{height:100vh;height:100dvh}
+    .notch,.statusbar,.home-ind{display:none}
+    .screen,.log-screen{padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
+    .theme-fab{top:calc(env(safe-area-inset-top,0px) + 10px)}
+  }
 </style>
 </head>
 <body>

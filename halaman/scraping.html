@@ -202,6 +202,14 @@
     position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
     width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:51;
   }
+  /* Mobile: buang chrome mockup (notch/statusbar/home-ind) -> full layar + dvh */
+  @media (max-width:520px){
+    html,body{height:auto;min-height:100dvh}
+    .phone{height:100vh;height:100dvh}
+    .notch,.statusbar,.home-ind{display:none}
+    .screen,.log-screen{padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
+    .theme-fab{top:calc(env(safe-area-inset-top,0px) + 10px)}
+  }
 </style>
 </head>
 <body>

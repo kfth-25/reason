@@ -130,6 +130,14 @@
     opacity:0;pointer-events:none;transition:all .3s;
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* Mobile: buang chrome mockup (notch/statusbar/home-ind) -> full layar + dvh */
+  @media (max-width:520px){
+    html,body{height:auto;min-height:100dvh}
+    .phone{height:100vh;height:100dvh}
+    .notch,.statusbar,.home-ind{display:none}
+    .screen,.log-screen{padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
+    .theme-fab{top:calc(env(safe-area-inset-top,0px) + 10px)}
+  }
 </style>
 </head>
 <body>

@@ -228,6 +228,14 @@
   }
   .goal-go:active{transform:scale(.97)}
   .goal-go svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  /* Mobile: buang chrome mockup (notch/statusbar/home-ind) -> full layar + dvh */
+  @media (max-width:520px){
+    html,body{height:auto;min-height:100dvh}
+    .phone{height:100vh;height:100dvh}
+    .notch,.statusbar,.home-ind{display:none}
+    .screen,.log-screen{padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
+    .theme-fab{top:calc(env(safe-area-inset-top,0px) + 10px)}
+  }
 </style>
 </head>
 <body>
@@ -541,6 +549,7 @@ function boot(){
     if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
     mascot = mount(slot, bimo, { state: currentState, ...M_OPTS });
     gateSlot(slot, mascot, 'bimo');
+    try { window.__bimo?.sync?.(); } catch (e) {}   // hormati gerbang bila user sudah scroll sebelum mount
   } catch (err) {
     console.warn('[bimo] WebGL2 absen — pakai SVG statis:', err && err.message);
     const c = slot.querySelector('canvas');   // buang canvas parsial; SVG tak pernah disentuh
@@ -567,17 +576,30 @@ hook('pickTopic', () => {
   setState(on && on.dataset.topic === 'graf' ? 'sad' : 'happy');
 });
 
+/* Gerbang pause maskot: layar aktif + tab terlihat + TIDAK sedang scroll.
+   Saat scroll, render dihentikan sementara (pose beku; 150ms setelah scroll
+   berhenti → jalan lagi). Kualitas TIDAK disentuh — maxPixelRatio tetap 1. */
+let scrollFree = true, scrollT = 0;
+function applyPause(){
+  if (!mascot) return;
+  const scr = slot.closest('.screen');
+  const on = !scr || scr.classList.contains('active');
+  const should = on && scrollFree && !document.hidden;
+  try { if (should) mascot.play(); else mascot.pause(); } catch (e) {}
+}
+function onScrollGate(){
+  if (scrollFree){ scrollFree = false; applyPause(); }
+  clearTimeout(scrollT);
+  scrollT = setTimeout(() => { scrollFree = true; applyPause(); }, 150);
+}
+window.addEventListener('scroll', onScrollGate, { capture: true, passive: true });
+document.addEventListener('visibilitychange', applyPause);
+
 window.__bimo = {
   get mounted(){ return !!mascot; },
   get state(){ return currentState; },
-  /* layar non-aktif hanya opacity:0 (IntersectionObserver tetap anggap terlihat)
-     → pause manual supaya maskot tak terus merender di belakang layar */
-  sync(){
-    if (!mascot) return;
-    const scr = slot.closest('.screen');
-    const on = !scr || scr.classList.contains('active');
-    try { if (on) mascot.play(); else mascot.pause(); } catch (e) {}
-  },
+  /* dipanggil MutationObserver saat .screen ganti aktif, dan dari boot() */
+  sync: applyPause,
   setState
 };
 

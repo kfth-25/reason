@@ -334,6 +334,14 @@
     font-size:13px;line-height:1.7;color:var(--text);white-space:pre-line;
   }
   .sheet .verified{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:11px;font-weight:700;color:#3F7A1E;background:var(--green);border-radius:var(--r-pill);padding:6px 13px}
+  /* Mobile: buang chrome mockup (notch/statusbar/home-ind) -> full layar + dvh */
+  @media (max-width:520px){
+    html,body{height:auto;min-height:100dvh}
+    .phone{height:100vh;height:100dvh}
+    .notch,.statusbar,.home-ind{display:none}
+    .screen,.log-screen{padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
+    .theme-fab{top:calc(env(safe-area-inset-top,0px) + 10px)}
+  }
 </style>
 </head>
 <body>
