@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#EDE9FB">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script src="pwa.js" defer></script>
+<title>REASON — Tutor AI</title>
+<style>
+  :root{
+    --blue:#4392F0; --blue-deep:#2E7BD6; --blue-soft:#D6E8FF;
+    --purple:#7C6BF0; --purple-deep:#5D4BD6; --purple-soft:#EFEAFD;
+    --orange:#F5A93F; --pink:#F9A9E8; --pink-soft:#FCE3F8;
+    --green:#C5EE93; --cyan:#3DD3F6; --lavender:#D8D2F3;
+    --bg:#F7F6FC; --card:#FFFFFF; --text:#15161C; --muted:#8A8B98;
+    --line:#ECECF1; --nav-dark:#15161C;
+    --navy:#26235A; --navy-soft:#7E7A9E;
+    --r-card:22px; --r-pill:999px;
+    --shadow:0 8px 24px rgba(20,22,40,.07);
+    --font:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:var(--font);background:#DDE1EA;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  @media (max-width:520px){ body{padding:0} }
+  .phone{
+    width:390px;height:844px;max-height:100vh;
+    background:linear-gradient(180deg,#EDE9FB 0%,#F3F0FE 46%,#EDE9FB 100%);
+    border-radius:44px;overflow:hidden;
+    position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35;
+  }
+  @media (max-width:520px){ .phone{width:100%;height:100vh;border-radius:0;box-shadow:none} }
+  .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;background:#0B0D12;border-radius:20px;z-index:60}
+  .statusbar{
+    position:absolute;top:0;left:0;right:0;height:52px;z-index:55;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 28px 0;font-size:14px;font-weight:600;color:var(--text);pointer-events:none;
+  }
+  .statusbar .sb-icons{display:flex;gap:6px;align-items:center}
+  .sb-icons svg{width:16px;height:16px;fill:var(--text)}
+
+  /* dekor latar lembut */
+  .deco{position:absolute;border-radius:50%;pointer-events:none;z-index:0}
+  .deco.d1{width:190px;height:190px;top:-70px;left:-80px;background:rgba(124,107,240,.10)}
+  .deco.d2{width:150px;height:150px;top:180px;right:-70px;background:rgba(67,146,240,.09)}
+  .deco.d3{width:220px;height:220px;bottom:-90px;left:-60px;background:rgba(124,107,240,.08)}
+
+  /* ============ TOPBAR: back + brand REASON + status online ============ */
+  .topbar{
+    position:absolute;top:52px;left:0;right:0;z-index:40;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:8px 18px;
+  }
+  .tb-left{display:flex;align-items:center;gap:10px}
+  .tb-btn{
+    width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;
+    background:var(--card);box-shadow:var(--shadow);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .15s;font-family:var(--font);font-size:16px;font-weight:700;color:var(--text);
+  }
+  .tb-btn:active{transform:scale(.92)}
+  .tb-btn svg{width:18px;height:18px;stroke:var(--text);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .brand{display:flex;align-items:center;gap:7px}
+  .brand .mark{width:24px;height:24px;flex-shrink:0}
+  .brand b{font-size:16.5px;font-weight:800;color:var(--text);letter-spacing:.3px}
+  .online{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#DFF6D0;border-radius:var(--r-pill);padding:7px 13px;
+    font-size:12.5px;font-weight:700;color:#3E9A1F;
+  }
+  .online i{width:8px;height:8px;border-radius:50%;background:#4BB32A;display:block}
+
+  /* ============ KONTEN ============ */
+  .tutor-screen{
+    position:absolute;inset:0;padding-top:104px;overflow-y:auto;overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;z-index:2;
+  }
+  .tutor-screen::-webkit-scrollbar{display:none}
+  .pad{padding:6px 20px 116px;position:relative;z-index:1}
+
+  /* Kartu judul Tutor AI */
+  .tutor-head{
+    background:var(--card);border-radius:20px;box-shadow:var(--shadow);
+    padding:14px 14px;display:flex;align-items:center;gap:12px;
+  }
+  .tutor-head .eq{width:40px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+  .tutor-head .eq svg{width:34px;height:34px;display:block}
+  .tutor-head .tt{flex:1;min-width:0}
+  .tutor-head .tt b{display:block;font-size:16.5px;font-weight:800;color:var(--text)}
+  .tutor-head .tt span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+  .gear{
+    width:40px;height:40px;border-radius:50%;flex-shrink:0;cursor:pointer;
+    background:var(--card);border:1.5px solid var(--line);
+    display:flex;align-items:center;justify-content:center;transition:transform .15s;
+  }
+  .gear:active{transform:scale(.92)}
+  .gear svg{width:19px;height:19px;stroke:var(--text);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+  /* Panggung maskot: lingkaran lavender + dash + pill AI REASON */
+  .stage{display:flex;justify-content:center;margin-top:18px}
+  .stage-circle{
+    position:relative;width:232px;height:232px;border-radius:50%;
+    background:radial-gradient(circle at 50% 42%,#E6E0FB 0%,#DDD6F9 100%);
+  }
+  .stage-circle .dashes{position:absolute;left:16px;top:52px;width:30px;height:54px;z-index:3;pointer-events:none}
+  .stage-circle .dashes svg{width:100%;height:100%;display:block}
+  .mascot{
+    position:absolute;left:26px;right:26px;top:38px;bottom:44px;
+    cursor:pointer;
+  }
+  .mascot>svg,.mascot>canvas{width:100%;height:100%;display:block}
+  .ai-pill{
+    position:absolute;right:8px;bottom:26px;z-index:4;
+    background:#EFEBFE;border:1.5px solid #DCD4FB;border-radius:var(--r-pill);
+    padding:6px 13px;font-size:12px;font-weight:800;color:var(--purple-deep);
+    letter-spacing:.3px;box-shadow:0 4px 12px rgba(93,75,214,.12);
+  }
+
+  /* Pill status mic */
+  .mic-state{
+    display:flex;justify-content:center;margin-top:20px;
+  }
+  .mic-state span{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--card);border-radius:var(--r-pill);
+    padding:10px 20px;box-shadow:var(--shadow);
+    font-size:13px;font-weight:600;color:var(--muted);
+  }
+  .mic-state svg{width:16px;height:16px;stroke:var(--purple);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  /* Tombol mic besar + gelombang */
+  .mic-row{
+    display:flex;align-items:center;justify-content:center;gap:14px;
+    margin-top:18px;
+  }
+  .wave{width:74px;height:48px;flex-shrink:0}
+  .wave svg{width:100%;height:100%;display:block}
+  .wave.mirror{transform:scaleX(-1)}
+  .mic-btn{
+    width:86px;height:86px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;
+    background:linear-gradient(180deg,#8E7DF3 0%,#6A55E0 100%);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 12px rgba(124,107,240,.14),0 16px 36px rgba(93,75,214,.42);
+    transition:transform .15s;
+  }
+  .mic-btn:active{transform:scale(.95)}
+  .mic-btn svg{width:34px;height:34px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  /* Chip aksi cepat */
+  .chips{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+    margin-top:22px;
+  }
+  .chip{
+    background:var(--card);border:none;cursor:pointer;font-family:var(--font);
+    border-radius:16px;padding:12px 6px 11px;
+    display:flex;flex-direction:column;align-items:center;gap:7px;
+    box-shadow:0 4px 14px rgba(20,22,40,.06);transition:transform .15s;
+  }
+  .chip:active{transform:scale(.95)}
+  .chip svg{width:21px;height:21px;stroke:var(--purple);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .chip.alt svg{stroke:var(--blue)}
+  .chip span{font-size:10.5px;font-weight:700;color:var(--text);line-height:1.3;text-align:center}
+
+  /* Kartu progress belajar */
+  .progress-card{
+    display:flex;align-items:center;gap:12px;
+    background:var(--purple-soft);border-radius:20px;
+    padding:14px 14px;margin-top:16px;cursor:pointer;border:none;
+    font-family:var(--font);width:100%;text-align:left;transition:transform .15s;
+  }
+  .progress-card:active{transform:scale(.98)}
+  .progress-card .pic{
+    width:40px;height:40px;border-radius:12px;background:var(--blue-soft);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .progress-card .pic svg{width:20px;height:20px;stroke:var(--blue-deep);fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+  .progress-card .pmain{flex:1;min-width:0}
+  .progress-card .pmain b{display:block;font-size:14.5px;font-weight:800;color:var(--navy)}
+  .progress-card .pmain span{display:block;font-size:12px;color:var(--navy-soft);margin-top:2px}
+  .progress-card .pbar{
+    height:9px;border-radius:var(--r-pill);background:#fff;overflow:hidden;margin-top:9px;
+  }
+  .progress-card .pbar i{
+    display:block;height:100%;width:78%;border-radius:var(--r-pill);
+    background:linear-gradient(90deg,#8B7BF0,#5D4BD6);
+  }
+  .progress-card .chev{
+    width:34px;height:34px;border-radius:50%;background:#fff;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(40,35,90,.08);
+  }
+  .progress-card .chev svg{width:16px;height:16px;stroke:var(--purple-deep);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+
+  .home-ind{
+    position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+    width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:51;
+    pointer-events:none;
+  }
+  .toast{
+    position:absolute;left:50%;bottom:130px;transform:translateX(-50%) translateY(20px);
+    background:var(--nav-dark);color:#F6F6F9;font-size:13px;font-weight:600;
+    padding:12px 22px;border-radius:var(--r-pill);z-index:80;max-width:86%;text-align:center;
+    opacity:0;pointer-events:none;transition:all .3s;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* Mobile: buang chrome mockup */
+  @media (max-width:520px){
+    html,body{height:auto;min-height:100dvh}
+    .phone{height:100vh;height:100dvh}
+    .notch,.statusbar,.home-ind{display:none}
+    .tutor-screen{padding-top:calc(env(safe-area-inset-top,0px) + 62px)}
+    .topbar{top:calc(env(safe-area-inset-top,0px) + 8px)}
+  }
+  /* ============ NAV PILL GELAP (seragam) ============ */
+  .nav{
+    position:absolute;left:50%;transform:translateX(-50%);
+    bottom:26px;bottom:calc(26px + env(safe-area-inset-bottom,0px));
+    background:var(--nav-dark);border-radius:var(--r-pill);
+    display:flex;gap:6px;padding:8px;z-index:50;
+    box-shadow:0 12px 32px rgba(0,0,0,.28);
+  }
+  .nav button{
+    width:58px;height:58px;border:none;border-radius:50%;
+    background:transparent;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .nav button svg{width:23px;height:23px;stroke:#7C8496;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .nav button.on{background:#F6F6F9}
+  .nav button.on svg{stroke:#15161C}
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+  <div class="deco d1" aria-hidden="true"></div>
+  <div class="deco d2" aria-hidden="true"></div>
+  <div class="deco d3" aria-hidden="true"></div>
+  <div class="notch"></div>
+  <div class="statusbar">
+    <span>9:41</span>
+    <span class="sb-icons">
+      <svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zm5-3h3v7H7zm5-4h3v11h-3zm5-5h3v16h-3z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 18.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM7.7 14.4a6.2 6.2 0 018.6 0l1.4-1.5a8.2 8.2 0 00-11.4 0zM4.3 11a10.2 10.2 0 0115.4 0l1.4-1.5a12.2 12.2 0 00-18.2 0z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.7 4H8.3C7 4 6 5 6 6.3v11.4C6 19 7 20 8.3 20h7.4c1.3 0 2.3-1 2.3-2.3V6.3C18 5 17 4 15.7 4zM16 17.5c0 .8-.7 1.5-1.5 1.5h-5c-.8 0-1.5-.7-1.5-1.5v-11c0-.8.7-1.5 1.5-1.5h5c.8 0 1.5.7 1.5 1.5v11z"/></svg>
+    </span>
+  </div>
+
+  <header class="topbar">
+    <div class="tb-left">
+      <button class="tb-btn" onclick="location.href='beranda-reason.html'" aria-label="Kembali">
+        <svg viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></svg>
+      </button>
+      <span class="brand">
+        <svg class="mark" viewBox="0 0 24 24" aria-hidden="true">
+          <g stroke="#7C6BF0" stroke-width="2.9" stroke-linecap="round" fill="none">
+            <line x1="12" y1="2.8" x2="12" y2="21.2"/>
+            <line x1="4.1" y1="7.4" x2="19.9" y2="16.6"/>
+            <line x1="4.1" y1="16.6" x2="19.9" y2="7.4"/>
+          </g>
+        </svg>
+        <b>REASON</b>
+      </span>
+    </div>
+    <span class="online"><i aria-hidden="true"></i>Online</span>
+  </header>
+
+  <section class="tutor-screen">
+    <div class="pad">
+
+      <!-- Kartu judul -->
+      <div class="tutor-head">
+        <span class="eq" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-width="2.4">
+            <path d="M3.5 10.5v3" stroke="#4392F0"/>
+            <path d="M7.5 7v10" stroke="#5B7CFA"/>
+            <path d="M11.5 4v16" stroke="#7C6BF0"/>
+            <path d="M15.5 8.5v7" stroke="#5B7CFA"/>
+            <path d="M19.5 11v2" stroke="#4392F0"/>
+          </svg>
+        </span>
+        <div class="tt">
+          <b>Tutor AI</b>
+          <span>Belajar lebih mudah dengan suara</span>
+        </div>
+        <button class="gear" onclick="toast('Pengaturan Tutor AI akan segera hadir.')" aria-label="Pengaturan Tutor AI">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+        </button>
+      </div>
+
+      <!-- Panggung maskot Bimo (menggantikan kelinci pada mockup) -->
+      <div class="stage">
+        <div class="stage-circle">
+          <span class="dashes" aria-hidden="true">
+            <svg viewBox="0 0 30 54" fill="none" stroke="#9C8CF5" stroke-width="3" stroke-linecap="round">
+              <line x1="9" y1="8" x2="21" y2="14"/>
+              <line x1="5" y1="26" x2="19" y2="28"/>
+              <line x1="9" y1="45" x2="22" y2="42"/>
+            </svg>
+          </span>
+          <!-- Maskot REASON — Bimo (wobnimo); SVG ini tetap dipakai sbg fallback bila WebGL2 absen -->
+          <div class="mascot" id="bimoSlot" aria-hidden="true">
+            <svg viewBox="0 0 260 190">
+              <!-- daun dekor -->
+              <path d="M36 118c14-30 6-52-12-64 24 4 42 24 40 52-1 12-12 18-28 12z" fill="#E7E3FB"/>
+              <path d="M222 66c-12-24-4-44 12-54-20 6-34 24-32 48 1 10 10 14 20 6z" fill="#E7E3FB"/>
+              <path d="M46 60c8-8 20-8 26 0-8 8-20 8-26 0z" fill="#D9D3FA"/>
+              <!-- sparkle kuning -->
+              <path d="M212 96l4.5 11 11 4.5-11 4.5-4.5 11-4.5-11-11-4.5 11-4.5z" fill="#FFC94D"/>
+              <!-- sparkle biru -->
+              <path d="M232 40l3.5 8.5 8.5 3.5-8.5 3.5-3.5 8.5-3.5-8.5-8.5-3.5 8.5-3.5z" fill="#5AB2F5"/>
+              <!-- sparkle ungu kiri -->
+              <path d="M62 92l3.5 8.5 8.5 3.5-8.5 3.5-3.5 8.5-3.5-8.5-8.5-3.5 8.5-3.5z" fill="#9C8CF5"/>
+              <path d="M196 26l3 7.5 7.5 3-7.5 3-3 7.5-3-7.5-7.5-3 7.5-3z" fill="#9C8CF5"/>
+
+              <!-- antena -->
+              <line x1="130" y1="34" x2="122" y2="20" stroke="#7C6BF0" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="120" cy="16" r="7" fill="#FFC94D"/>
+
+              <!-- telinga -->
+              <circle cx="88" cy="76" r="14" fill="#7C6BF0"/>
+              <circle cx="172" cy="76" r="14" fill="#7C6BF0"/>
+              <circle cx="88" cy="76" r="6" fill="#5D4BD6"/>
+              <circle cx="172" cy="76" r="6" fill="#5D4BD6"/>
+
+              <!-- kepala -->
+              <rect x="82" y="36" width="96" height="82" rx="36" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+              <!-- panel wajah -->
+              <rect x="97" y="52" width="66" height="52" rx="22" fill="#171A2E"/>
+              <!-- mata senang -->
+              <path d="M112 74q6-9 12 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M136 74q6-9 12 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <!-- senyum -->
+              <path d="M124 86q6 7 12 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+
+              <!-- badan -->
+              <path d="M100 122c18-8 42-8 60 0l7 40c-26 10-48 10-74 0z" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+              <!-- lengan memegang buku -->
+              <path d="M98 132c-8 6-12 14-10 22" stroke="#E4E1F7" stroke-width="10" fill="none" stroke-linecap="round"/>
+              <path d="M162 132c8 6 12 14 10 22" stroke="#E4E1F7" stroke-width="10" fill="none" stroke-linecap="round"/>
+
+              <!-- buku terbuka -->
+              <path d="M104 148l26-7v30l-26 7z" fill="#4392F0"/>
+              <path d="M156 148l-26-7v30l26 7z" fill="#6FB2F5"/>
+              <path d="M130 141v30" stroke="#2E7BD6" stroke-width="2.5"/>
+              <path d="M110 154l14-3M110 161l14-3M146 154l-14-3M146 161l-14-3" stroke="#DCEEFF" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="ai-pill">AI REASON</span>
+        </div>
+      </div>
+
+      <!-- Status mic (voice-first: tanpa bubble teks AI) -->
+      <div class="mic-state">
+        <span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg>
+          Kamu sedang berbicara...
+        </span>
+      </div>
+
+      <!-- Tombol mic + gelombang suara -->
+      <div class="mic-row">
+        <span class="wave mirror" aria-hidden="true">
+          <svg viewBox="0 0 74 48" fill="none" stroke="#A78BFA" stroke-width="3.6" stroke-linecap="round">
+            <path d="M6 20v8"/><path d="M17 14v20"/><path d="M28 7v34"/><path d="M39 16v16"/><path d="M50 11v26"/><path d="M61 18v12"/><path d="M71 22v4"/>
+          </svg>
+        </span>
+        <button class="mic-btn" onclick="toast('Mikrofon aktif — silakan bicara.')" aria-label="Aktifkan mikrofon">
+          <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21M9 21h6"/></svg>
+        </button>
+        <span class="wave" aria-hidden="true">
+          <svg viewBox="0 0 74 48" fill="none" stroke="#A78BFA" stroke-width="3.6" stroke-linecap="round">
+            <path d="M6 20v8"/><path d="M17 14v20"/><path d="M28 7v34"/><path d="M39 16v16"/><path d="M50 11v26"/><path d="M61 18v12"/><path d="M71 22v4"/>
+          </svg>
+        </span>
+      </div>
+
+      <!-- Chip aksi cepat -->
+      <div class="chips">
+        <button class="chip" onclick="toast('Tutor AI menyiapkan contoh...')">
+          <svg viewBox="0 0 24 24"><path d="M12 6.5C10.5 5 8.5 4.5 5 4.8v13c3.5-.3 5.5.2 7 1.7 1.5-1.5 3.5-2 7-1.7v-13c-3.5-.3-5.5.2-7 1.7z"/><path d="M12 6.5v13"/></svg>
+          <span>Minta Contoh</span>
+        </button>
+        <button class="chip" onclick="toast('Tutor AI menyederhanakan penjelasan...')">
+          <svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6.5 6.5 0 00-3.8 11.8c.5.4.8 1 .8 1.7V17h6v-.5c0-.7.3-1.3.8-1.7A6.5 6.5 0 0012 3z"/></svg>
+          <span>Penjelasan Lebih Sederhana</span>
+        </button>
+        <button class="chip alt" onclick="toast('Tutor AI merangkum materi...')">
+          <svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></svg>
+          <span>Ringkas Materi</span>
+        </button>
+        <button class="chip" onclick="toast('Ajukan pertanyaan lewat suara ke Tutor AI.')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 015 .9c0 1.7-2.5 2-2.5 3.6"/><path d="M12 17.5h.01"/></svg>
+          <span>Ajukan Pertanyaan</span>
+        </button>
+      </div>
+
+      <!-- Progress belajar -->
+      <button class="progress-card" onclick="location.href='peta.html'" aria-label="Buka peta penguasaan, penguasaan konsep 78 persen">
+        <span class="pic" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg>
+        </span>
+        <span class="pmain">
+          <b>Progress Belajar</b>
+          <span>Penguasaan Konsep: 78%</span>
+          <span class="pbar" aria-hidden="true"><i></i></span>
+        </span>
+        <span class="chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></svg>
+        </span>
+      </button>
+
+    </div>
+  </section>
+
+    <nav class="nav">
+    <button onclick="location.href='beranda-reason.html'" aria-label="Beranda"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg></button>
+    <button onclick="location.href='tugas.html'" aria-label="Tugas"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg></button>
+    <button onclick="location.href='peta.html'" aria-label="Peta"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg></button>
+    <button onclick="location.href='scraping.html'" aria-label="Scraping"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M12 11v5m0 0l-2.5-2.5M12 16l2.5-2.5"/></svg></button>
+    <button onclick="location.href='dosen.html'" aria-label="Dosen"><svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg></button>
+  </nav>
+  <div class="home-ind"></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ============ TOAST ============ */
+let toastT;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 2600);
+}
+</script>
+
+<script type="module">
+/* Bimo 3D (wobnimo) — mount menggantikan SVG statis; fallback SVG bila WebGL2 absen */
+import { mount } from '../vendor/wobnimo.js';
+import { bimo } from '../mascots/bimo.js';
+
+/* Profil ringan utk HP (layar high-DPR / RAM kecil): pixel ratio 1 & tanpa
+   interaksi pointer — beban GPU & baterai jauh lebih rendah. */
+const LIGHT = matchMedia('(pointer: coarse)').matches || (navigator.deviceMemory || 8) <= 4;
+const M_OPTS = LIGHT ? { maxPixelRatio: 1, interactive: false } : {};
+window.__bimoLight = LIGHT;
+
+const slot = document.getElementById('bimoSlot');
+let mascot = null;
+let currentState = 'happy';
+
+function setState(s){
+  currentState = s;
+  if (mascot) { try { mascot.setState(s); } catch (e) { console.warn('[bimo] setState', e); } }
+}
+
+/* Gate fallback: SVG statis TIDAK dihapus saat mount. Canvas menumpuk di atasnya
+   (absolutely positioned), dan SVG baru disembunyikan setelah canvas benar-benar
+   berisi gambar. Canvas kosong / tak pernah terisi → canvas dibuang, SVG tetap. */
+function canvasHasInk(c){
+  try{
+    const s=document.createElement('canvas');s.width=32;s.height=32;
+    const x=s.getContext('2d');x.drawImage(c,0,0,32,32);
+    const d=x.getImageData(0,0,32,32).data;
+    for(let i=3;i<d.length;i+=4){if(d[i]>8)return true}
+    return false;
+  }catch(e){return true}
+}
+function gateSlot(host,m,tag){
+  const svg=host.querySelector('svg');
+  const canvas=host.querySelector('canvas');
+  if(canvas){
+    if(getComputedStyle(host).position==='static')host.style.position='relative';
+    canvas.style.position='absolute';canvas.style.inset='0';canvas.style.zIndex='1';
+  }
+  if(!svg||!canvas)return;
+  let done=false,blank=0;
+  const poll=setInterval(()=>{
+    if(done){clearInterval(poll);return}
+    if(m.drawn){
+      if(canvasHasInk(canvas)){done=true;svg.style.visibility='hidden';clearInterval(poll)}
+      else if(++blank>=4){                 // sudah "menggambar" tapi tetap kosong → gagal
+        done=true;clearInterval(poll);
+        try{if(typeof m.dispose==='function')m.dispose()}catch(e){}
+        if(canvas.parentNode)canvas.parentNode.removeChild(canvas);
+        svg.style.visibility='';
+        console.warn('['+tag+'] canvas kosong — SVG statis dipertahankan');
+      }
+    }
+    /* belum pernah menggambar: terus menunggu (mungkin belum terlihat di viewport) */
+  },150);
+}
+
+function boot(){
+  if (!slot) return;
+  try {
+    if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
+    mascot = mount(slot, bimo, { state: currentState, ...M_OPTS });
+    gateSlot(slot, mascot, 'bimo');
+  } catch (err) {
+    console.warn('[bimo] WebGL2 absen — pakai SVG statis:', err && err.message);
+    const c = slot.querySelector('canvas');   // buang canvas parsial; SVG tak pernah disentuh
+    if (c && c.parentNode) c.parentNode.removeChild(c);
+  }
+}
+/* HP: mount saat browser longgar supaya kompilasi shader tak menahan load awal
+   (SVG statis tampil dulu, lalu berganti 3D) */
+if (LIGHT && 'requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 1200 });
+else boot();
+
+window.__bimo = {
+  get mounted(){ return !!mascot; },
+  get state(){ return currentState; },
+  setState
+};
+</script>
+
+</body>
+</html>

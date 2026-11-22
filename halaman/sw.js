@@ -1,5 +1,5 @@
 /* Service Worker REASON — cache-first + network refresh (stale-while-revalidate) */
-const CACHE = 'reason-v6';
+const CACHE = 'reason-v7';
 const CORE = [
   'beranda-reason.html',
   'tugas.html',
@@ -7,6 +7,7 @@ const CORE = [
   'dosen.html',
   'scraping.html',
   'peta.html',
+  'tutor-ai.html',
   'diagnostik.html',
   'latihan.html',
   'soal.html',

@@ -112,7 +112,7 @@
   .bell .dot{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;background:#F0506E;border:2px solid var(--card)}
 
   /* ============ MASCOT ============ */
-  .mascot{width:255px;height:200px;margin:6px auto 0;position:relative}
+  .mascot{width:255px;height:200px;margin:6px auto 0;position:relative;cursor:pointer}
   .mascot>svg,.mascot>canvas{width:100%;height:100%;display:block}
 
   /* ============ SESI BERJALAN ============ */
@@ -268,9 +268,11 @@
         </button>
       </div>
 
-      <!-- Maskot REASON — Bimo (wobnimo); SVG ini tetap dipakai sbg fallback bila WebGL2 absen -->
-      <div class="mascot" id="bimoSlot" aria-hidden="true">
-        <svg viewBox="0 0 260 190">
+      <!-- Maskot REASON — Bimo (wobnimo); klik maskot → halaman Tutor AI (suara) -->
+      <div class="mascot" id="bimoSlot" role="link" tabindex="0" aria-label="Buka Tutor AI"
+           onclick="location.href='tutor-ai.html'"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();location.href='tutor-ai.html'}">
+        <svg viewBox="0 0 260 190" aria-hidden="true">
           <!-- daun dekor -->
           <path d="M36 118c14-30 6-52-12-64 24 4 42 24 40 52-1 12-12 18-28 12z" fill="#E7E3FB"/>
           <path d="M222 66c-12-24-4-44 12-54-20 6-34 24-32 48 1 10 10 14 20 6z" fill="#E7E3FB"/>
