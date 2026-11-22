@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>REASON — Scraping Materi</title>
+<style>
+  /* ============ TOKEN REASON (konsisten dgn beranda) ============ */
+  :root{
+    --blue:#4392F0; --blue-deep:#2E7BD6; --blue-soft:#D6E8FF;
+    --purple:#7C6BF0; --purple-deep:#5D4BD6; --purple-soft:#EFEAFD;
+    --orange:#F5A93F; --pink:#F9A9E8; --pink-soft:#FCE3F8;
+    --green:#C5EE93; --cyan:#3DD3F6; --lavender:#D8D2F3;
+    --bg:#F7F6FC; --card:#FFFFFF; --text:#15161C; --muted:#8A8B98;
+    --line:#ECECF1; --nav-dark:#15161C;
+    --ok:#4E9B1E;
+    --r-card:22px; --r-pill:999px;
+    --shadow:0 8px 24px rgba(20,22,40,.07);--font:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  [data-theme="dark"]{
+    --bg:#1A2434; --card:#152030; --text:#F2F4F8; --muted:#8B97AB;
+    --line:#253147; --nav-dark:#0F1724; --blue-soft:#1E3A5F;
+    --purple-soft:#2A2750; --pink-soft:#402A45; --ok:var(--green);
+    --shadow:0 8px 24px rgba(0,0,0,.28);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:var(--font);background:#DDE1EA;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  @media (max-width:520px){ body{padding:0} }
+  .phone{
+    width:390px;height:844px;max-height:100vh;
+    background:var(--bg);border-radius:44px;overflow:hidden;
+    position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35;
+    transition:background .3s;
+  }
+  @media (max-width:520px){ .phone{width:100%;height:100vh;border-radius:0;box-shadow:none} }
+  .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;background:#0B0D12;border-radius:20px;z-index:60}
+  .statusbar{
+    position:absolute;top:0;left:0;right:0;height:52px;z-index:55;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 28px 0;font-size:14px;font-weight:600;color:var(--text);pointer-events:none;
+  }
+  .statusbar .sb-icons{display:flex;gap:6px;align-items:center}
+  .sb-icons svg{width:16px;height:16px;fill:var(--text)}
+  .screen{
+    position:absolute;inset:0;padding-top:52px;overflow-y:auto;overflow-x:hidden;
+    padding-bottom:126px;-webkit-overflow-scrolling:touch;
+    opacity:0;visibility:hidden;transform:translateX(18px);
+    transition:opacity .3s ease,transform .3s ease,visibility .3s;
+  }
+  .screen.active{opacity:1;visibility:visible;transform:translateX(0)}
+  .screen::-webkit-scrollbar{display:none}
+  .pad{padding:0 20px}
+  .pill-btn{border:none;font-family:var(--font);cursor:pointer;border-radius:var(--r-pill);font-weight:600;transition:transform .15s}
+  .pill-btn:active{transform:scale(.96)}
+  .toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%) translateY(20px);background:var(--nav-dark);color:#F6F6F9;font-size:13px;font-weight:600;padding:12px 22px;border-radius:var(--r-pill);z-index:80;max-width:86%;text-align:center;opacity:0;pointer-events:none;transition:all .3s}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ============ HEADER ============ */
+  .sc-head{display:flex;align-items:center;gap:12px;padding-top:12px}
+  .back{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+  .back svg{width:19px;height:19px;stroke:var(--text);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .sc-head h1{flex:1;text-align:center;font-size:16.5px;font-weight:700;color:var(--text)}
+  .help{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;background:var(--purple-soft);color:var(--purple-deep);font-family:var(--font);font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:transform .15s}
+  .help:active{transform:scale(.92)}
+  [data-theme="dark"] .help{color:var(--purple)}
+
+  /* ============ HERO ============ */
+  .sc-hero{display:flex;align-items:center;gap:4px;margin-top:14px}
+  .sc-hero .htxt{flex:1;min-width:0}
+  .sc-hero h2{font-size:23px;line-height:1.28;font-weight:700;color:var(--text);letter-spacing:-.2px}
+  .sc-hero p{font-size:12.5px;line-height:1.55;color:var(--muted);margin-top:8px;max-width:215px}
+  .sc-art{width:136px;flex-shrink:0;margin-right:-6px}
+  .sc-art svg{width:100%;height:auto;display:block}
+  /* Slot maskot 3D (wobnimo) — SVG tetap sbg fallback; canvas menumpuk di atasnya */
+  .sc-art .mascot{position:relative;isolation:isolate}
+  .sc-art .mascot>canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1}
+
+  /* ============ KARTU URL ============ */
+  .url-card{margin-top:16px;background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:15px 15px 16px;box-shadow:var(--shadow)}
+  .url-lbl{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--text)}
+  .url-lbl svg{width:15px;height:15px;stroke:var(--purple);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .url-field{position:relative;margin-top:10px}
+  .url-field input{
+    width:100%;border:1.5px solid transparent;background:var(--line);
+    border-radius:13px;padding:12px 42px 12px 14px;
+    font-family:var(--font);font-size:13px;font-weight:500;color:var(--text);
+    outline:none;transition:border-color .2s;
+  }
+  .url-field input::placeholder{color:var(--muted);font-weight:400}
+  .url-field input:focus{border-color:var(--purple)}
+  .url-x{
+    position:absolute;right:9px;top:50%;transform:translateY(-50%);
+    width:24px;height:24px;border-radius:50%;border:none;cursor:pointer;
+    background:var(--purple);color:#fff;font-size:12px;line-height:1;
+    display:flex;align-items:center;justify-content:center;font-weight:700;
+    transition:transform .15s;
+  }
+  .url-x:active{transform:translateY(-50%) scale(.9)}
+  .go-btn{
+    margin-top:11px;width:100%;height:46px;border:none;cursor:pointer;
+    border-radius:14px;background:var(--purple-deep);color:#fff;
+    font-family:var(--font);font-size:14.5px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    transition:transform .15s,opacity .2s;
+  }
+  .go-btn:active{transform:scale(.98)}
+  .go-btn:disabled{opacity:.55;cursor:default}
+  .go-btn svg{width:15px;height:15px;fill:#fff}
+
+  /* ============ KARTU PROGRESS ============ */
+  .prog-card{
+    margin-top:14px;background:var(--purple-soft);border-radius:20px;
+    padding:16px 16px 15px;display:flex;gap:14px;position:relative;overflow:hidden;
+  }
+  .ring{width:74px;height:74px;flex-shrink:0;position:relative}
+  .ring svg{width:74px;height:74px;transform:rotate(-90deg);display:block}
+  .ring .rtrack{stroke:rgba(124,107,240,.18)}
+  .ring .rfg{stroke:var(--purple);transition:stroke-dashoffset .12s linear}
+  .ring .pct{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:16px;font-weight:700;color:var(--purple-deep);
+  }
+  [data-theme="dark"] .ring .pct{color:var(--purple)}
+  .pinfo{flex:1;min-width:0;position:relative;z-index:1}
+  .pinfo b{display:block;font-size:14.5px;font-weight:700;color:var(--text)}
+  .pinfo small{display:block;font-size:11.5px;line-height:1.45;color:var(--muted);margin-top:4px}
+  .pbar{margin-top:10px;height:7px;border-radius:5px;background:rgba(255,255,255,.75);overflow:hidden}
+  [data-theme="dark"] .pbar{background:rgba(0,0,0,.28)}
+  .pbar i{display:block;height:100%;width:70%;border-radius:5px;background:var(--purple);transition:width .12s linear}
+  .pdec{position:absolute;right:12px;bottom:9px;display:flex;gap:7px;opacity:.4;pointer-events:none}
+  .pdec svg{width:17px;height:17px;stroke:var(--purple-deep);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  [data-theme="dark"] .pdec svg{stroke:var(--purple)}
+
+  /* ============ HASIL SCRAPING ============ */
+  .res-head{display:flex;align-items:center;justify-content:space-between;margin-top:20px}
+  .res-head .rt{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--text)}
+  .res-head .rt svg{width:17px;height:17px;stroke:var(--purple);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .count-badge{
+    font-size:10.5px;font-weight:600;background:var(--purple-soft);
+    color:var(--purple-deep);padding:5px 11px;border-radius:var(--r-pill);
+  }
+  [data-theme="dark"] .count-badge{color:var(--purple)}
+  .res-list{margin-top:11px;display:flex;flex-direction:column;gap:10px}
+  .ritem{
+    display:flex;align-items:center;gap:12px;
+    background:var(--card);border:1.5px solid var(--line);
+    border-radius:16px;padding:12px 13px;box-shadow:var(--shadow);
+    animation:rowin .3s ease;
+  }
+  .ritem[hidden]{display:none}
+  @keyframes rowin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .fico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .fico svg{width:22px;height:22px}
+  .f-pdf{background:#FDECEC;color:#D64545}
+  .f-vid{background:#ECEAFC;color:#5D4BD6}
+  .f-doc{background:#E3EFFD;color:#2E7BD6}
+  .f-ppt{background:#FFEEE3;color:#E8763A}
+  .rinfo{flex:1;min-width:0}
+  .rinfo b{display:block;font-size:13.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rinfo small{display:block;font-size:10.5px;color:var(--muted);margin-top:3px}
+  .rstat{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;flex-shrink:0}
+  .rstat svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .st-ok{color:var(--ok)}
+  .st-proc{color:var(--purple-deep)}
+  .st-proc svg{animation:spin 1.6s linear infinite;transform-origin:center}
+  .st-wait{color:var(--muted);font-weight:600}
+  [data-theme="dark"] .st-proc{color:var(--purple)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ============ CATATAN ============ */
+  .sc-note{
+    margin-top:14px;background:var(--purple-soft);border-radius:14px;
+    padding:11px 13px;display:flex;gap:9px;align-items:flex-start;
+  }
+  .sc-note svg{width:16px;height:16px;flex-shrink:0;margin-top:1px;stroke:var(--purple-deep);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .sc-note span{font-size:11px;line-height:1.5;color:var(--muted)}
+  [data-theme="dark"] .sc-note svg{stroke:var(--purple)}
+
+  /* ============ NAV TERANG BER-LABEL (ala beranda + mockup) ============ */
+  .nav{
+    position:absolute;left:0;right:0;bottom:0;z-index:50;
+    background:var(--card);display:flex;justify-content:space-around;align-items:flex-end;
+    padding:10px 6px 26px;box-shadow:0 -8px 28px rgba(40,35,90,.08);
+  }
+  .nav button{
+    flex:1;border:none;background:transparent;cursor:pointer;font-family:var(--font);
+    display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 0;
+  }
+  .nav button svg{width:23px;height:23px;stroke:#9A97B8;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s}
+  .nav button span{font-size:10px;font-weight:600;color:#9A97B8;transition:color .2s}
+  .nav button.on svg{stroke:var(--purple)}
+  .nav button.on span{color:var(--purple);font-weight:700}
+  .home-ind{
+    position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+    width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:51;
+  }
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="notch"></div>
+  <div class="statusbar">
+    <span>9:41</span>
+    <span class="sb-icons">
+      <svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zm5-3h3v7H7zm5-4h3v11h-3zm5-5h3v16h-3z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 18.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM7.7 14.4a6.2 6.2 0 018.6 0l1.4-1.5a8.2 8.2 0 00-11.4 0zM4.3 11a10.2 10.2 0 0115.4 0l1.4-1.5a12.2 12.2 0 00-18.2 0z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.7 4H8.3C7 4 6 5 6 6.3v11.4C6 19 7 20 8.3 20h7.4c1.3 0 2.3-1 2.3-2.3V6.3C18 5 17 4 15.7 4zM16 17.5c0 .8-.7 1.5-1.5 1.5h-5c-.8 0-1.5-.7-1.5-1.5v-11c0-.8.7-1.5 1.5-1.5h5c.8 0 1.5.7 1.5 1.5v11z"/></svg>
+    </span>
+  </div>
+
+  <section class="screen active" id="s-main">
+    <div class="pad">
+
+      <!-- HEADER: kembali + judul + bantuan -->
+      <div class="sc-head">
+        <button class="back" onclick="location.href='beranda-reason.html'" aria-label="Kembali">
+          <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        </button>
+        <h1>Scraping Materi</h1>
+        <button class="help" onclick="toast('Masukkan URL website kampus, lalu tekan Mulai Scraping untuk mengambil materinya.')" aria-label="Bantuan">?</button>
+      </div>
+
+      <!-- HERO -->
+      <div class="sc-hero">
+        <div class="htxt">
+          <h2>Ambil Materi dari Web Kampus</h2>
+          <p>REASON akan mengambil materi kuliah dari website resmi kampus secara otomatis.</p>
+        </div>
+        <div class="sc-art" aria-hidden="true">
+          <!-- Maskot REASON — Bimo (wobnimo); SVG ini tetap dipakai sbg fallback bila WebGL2 absen -->
+          <div class="mascot" id="bimoSlot">
+          <svg viewBox="0 0 165 148">
+            <!-- latar bulat -->
+            <circle cx="86" cy="78" r="54" fill="#ECEAFC"/>
+            <!-- sparkle kuning -->
+            <path d="M128 62l3 7.5 7.5 3-7.5 3-3 7.5-3-7.5-7.5-3 7.5-3z" fill="#FFC94D"/>
+            <!-- sparkle ungu -->
+            <path d="M22 44l3 7.5 7.5 3-7.5 3-3 7.5-3-7.5-7.5-3 7.5-3z" fill="#9C8CF5"/>
+            <!-- sparkle biru -->
+            <path d="M30 116l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z" fill="#5AB2F5"/>
+            <!-- Bimo (maskot beranda) -->
+            <g transform="translate(-18,8) scale(0.72)">
+              <line x1="130" y1="34" x2="122" y2="20" stroke="#7C6BF0" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="120" cy="16" r="7" fill="#FFC94D"/>
+              <circle cx="88" cy="76" r="14" fill="#7C6BF0"/>
+              <circle cx="172" cy="76" r="14" fill="#7C6BF0"/>
+              <circle cx="88" cy="76" r="6" fill="#5D4BD6"/>
+              <circle cx="172" cy="76" r="6" fill="#5D4BD6"/>
+              <rect x="82" y="36" width="96" height="82" rx="36" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+              <rect x="97" y="52" width="66" height="52" rx="22" fill="#171A2E"/>
+              <path d="M112 74q6-9 12 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M136 74q6-9 12 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M124 86q6 7 12 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+              <path d="M100 122c18-8 42-8 60 0l7 40c-26 10-48 10-74 0z" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+              <path d="M98 132c-8 6-12 14-10 22" stroke="#E4E1F7" stroke-width="10" fill="none" stroke-linecap="round"/>
+              <path d="M162 132c8 6 12 14 10 22" stroke="#E4E1F7" stroke-width="10" fill="none" stroke-linecap="round"/>
+              <path d="M104 148l26-7v30l-26 7z" fill="#4392F0"/>
+              <path d="M156 148l-26-7v30l26 7z" fill="#6FB2F5"/>
+              <path d="M130 141v30" stroke="#2E7BD6" stroke-width="2.5"/>
+              <path d="M110 154l14-3M110 161l14-3M146 154l-14-3M146 161l-14-3" stroke="#DCEEFF" stroke-width="2" stroke-linecap="round"/>
+            </g>
+            <!-- globe badge -->
+            <g>
+              <circle cx="141" cy="27" r="17" fill="#7C6BF0"/>
+              <ellipse cx="141" cy="27" rx="7.5" ry="17" fill="none" stroke="#fff" stroke-width="1.6"/>
+              <path d="M124.5 27h33M127 18.5q14 5 28 0M127 35.5q14-5 28 0" stroke="#fff" stroke-width="1.6" fill="none"/>
+            </g>
+          </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- KARTU URL -->
+      <div class="url-card">
+        <div class="url-lbl">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.5.5l2-2a5 5 0 00-7-7l-1.2 1.2"/><path d="M14 11a5 5 0 00-7.5-.5l-2 2a5 5 0 007 7l1.2-1.2"/></svg>
+          URL Website Kampus
+        </div>
+        <div class="url-field">
+          <input id="urlIn" type="url" inputmode="url" spellcheck="false"
+                 value="https://polindra.ac.id/materi/teknik-informatika"
+                 placeholder="https://kampus.ac.id/materi/..."
+                 onkeydown="if(event.key==='Enter')startScrape()">
+          <button class="url-x" onclick="clearUrl()" aria-label="Hapus URL">✕</button>
+        </div>
+        <button class="go-btn pill-btn" id="goBtn" onclick="startScrape()">
+          <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>
+          Mulai Scraping
+        </button>
+      </div>
+
+      <!-- KARTU PROGRESS -->
+      <div class="prog-card">
+        <div class="ring">
+          <svg viewBox="0 0 74 74">
+            <circle class="rtrack" cx="37" cy="37" r="32" fill="none" stroke-width="8"/>
+            <circle class="rfg" id="ringFg" cx="37" cy="37" r="32" fill="none" stroke-width="8"
+                    stroke-linecap="round" stroke-dasharray="201.06" stroke-dashoffset="60.32"/>
+          </svg>
+          <span class="pct" id="ringPct">70%</span>
+        </div>
+        <div class="pinfo">
+          <b id="pTitle">Mengambil materi…</b>
+          <small id="pSub">Sedang memproses halaman web, mohon tunggu sebentar</small>
+          <div class="pbar"><i id="barFill"></i></div>
+        </div>
+        <div class="pdec" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M14 3v4h4M9 13h6M9 16h4"/></svg>
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+        </div>
+      </div>
+
+      <!-- HASIL SCRAPING -->
+      <div class="res-head">
+        <span class="rt">
+          <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 10h6M9 14h4"/></svg>
+          Hasil Scraping
+        </span>
+        <span class="count-badge" id="cnt">5 dari 7 materi</span>
+      </div>
+      <div class="res-list" id="list"></div>
+
+      <!-- CATATAN -->
+      <div class="sc-note">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+        <span>Proses scraping dapat memakan waktu tergantung ukuran website dan koneksi internet Anda.</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- NAV (ber-label, aktif ungu — sesuai mockup) -->
+  <nav class="nav">
+    <button onclick="location.href='beranda-reason.html'" aria-label="Beranda">
+      <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg>
+      <span>Beranda</span>
+    </button>
+    <button onclick="location.href='tugas.html'" aria-label="Tugas">
+      <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg>
+      <span>Tugas</span>
+    </button>
+    <button onclick="location.href='ringkasan.html'" aria-label="Peta">
+      <svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg>
+      <span>Peta</span>
+    </button>
+    <button class="on" aria-label="Scraping">
+      <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M12 11v5m0 0l-2.5-2.5M12 16l2.5-2.5"/></svg>
+      <span>Scraping</span>
+    </button>
+    <button onclick="location.href='dosen.html'" aria-label="Dosen">
+      <svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg>
+      <span>Dosen</span>
+    </button>
+  </nav>
+  <div class="home-ind"></div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ============ TOAST ============ */
+let toastT;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* ============ DATA MATERI (contoh isi website kampus) ============ */
+const TOTAL = 7;
+const ITEMS = [
+  {t:'pdf', title:'Modul Rekursi - Bab 4.2.pdf',   meta:'Ukuran: 2,4 MB · Diperbarui: 21 Nov 2026'},
+  {t:'vid', title:'Video Pembahasan Induksi',      meta:'Durasi: 12:04 · Diperbarui: 20 Nov 2026'},
+  {t:'doc', title:'Materi Teori Graf.docx',        meta:'Ukuran: 890 KB · Diperbarui: 19 Nov 2026'},
+  {t:'pdf', title:'Rangkuman Kalkulus.pdf',        meta:'Ukuran: 1,1 MB · Diperbarui: 18 Nov 2026'},
+  {t:'pdf', title:'Simulasi Algoritma',            meta:'Ukuran: 860 KB · Diperbarui: 17 Nov 2026'},
+  {t:'pdf', title:'Latihan Induksi - Set 1.pdf',   meta:'Ukuran: 640 KB · Diperbarui: 16 Nov 2026'},
+  {t:'ppt', title:'Slide Bab 5 — Graf.pptx',       meta:'Ukuran: 3,2 MB · Diperbarui: 15 Nov 2026'}
+];
+const ICONS = {
+  pdf:'<svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z" fill="currentColor" opacity=".18"/><path d="M7 3h7l4 4v14a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M14 3v4h4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 14h7M8.5 17h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  vid:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="currentColor" opacity=".18"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor"/></svg>',
+  doc:'<svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z" fill="currentColor" opacity=".18"/><path d="M7 3h7l4 4v14a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M14 3v4h4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 14h7M8.5 17h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  ppt:'<svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z" fill="currentColor" opacity=".18"/><path d="M7 3h7l4 4v14a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M14 3v4h4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 14h7M8.5 17h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
+};
+const STAT = {
+  ok:  {cls:'ok',   txt:'Berhasil',     svg:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5.5"/></svg>'},
+  proc:{cls:'proc', txt:'Memproses...', svg:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-dasharray="14 6"/><path d="M12 7.5V12l3 2"/></svg>'},
+  wait:{cls:'wait', txt:'Menunggu',     svg:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l2.5 1.8"/></svg>'}
+};
+
+/* ============ STATE ============ */
+let phase = 'mid';          // 'mid' (kondisi mockup) | 'running' | 'done'
+let timers = [];
+let ringTimer = null;
+let autoT = null;
+const C = 2 * Math.PI * 32; // keliling lingkaran progress
+
+const el = id => document.getElementById(id);
+
+function setStat(i, s){
+  const n = el('rs' + i);
+  n.className = 'rstat st-' + STAT[s].cls;
+  n.innerHTML = STAT[s].svg + '<span>' + STAT[s].txt + '</span>';
+}
+function showItem(i, s){ el('ri' + i).hidden = false; setStat(i, s); }
+function hideItem(i){ el('ri' + i).hidden = true; }
+function setBadge(n){ el('cnt').textContent = n + ' dari ' + TOTAL + ' materi'; }
+function setRing(p){
+  p = Math.max(0, Math.min(100, p));
+  el('ringFg').style.strokeDashoffset = (C * (1 - p / 100)).toFixed(1);
+  el('ringPct').textContent = Math.round(p) + '%';
+  el('barFill').style.width = p + '%';
+}
+function animateRing(from, to, dur){
+  clearInterval(ringTimer);
+  const t0 = Date.now();
+  ringTimer = setInterval(() => {
+    const k = Math.min(1, (Date.now() - t0) / dur);
+    setRing(from + (to - from) * k);
+    if (k >= 1) clearInterval(ringTimer);
+  }, 60);
+}
+function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+function clearAll(){
+  timers.forEach(clearTimeout); timers = [];
+  clearInterval(ringTimer);
+  if (autoT){ clearTimeout(autoT); autoT = null; }
+}
+function setHead(b, s){ el('pTitle').textContent = b; el('pSub').textContent = s; }
+function runBusy(on){ el('goBtn').disabled = on; }
+
+function finish(){
+  phase = 'done';
+  runBusy(false);
+  setHead('Berhasil mengambil materi!', '7 materi berhasil diambil dari website kampus.');
+  setRing(100);
+  setBadge(TOTAL);
+  toast('Scraping selesai — 7 materi ditemukan');
+}
+
+/* Lanjut dari kondisi persis mockup: 70%, 5 materi (2✓ 1 proses 2 menunggu) */
+function resumeRun(){
+  if (phase !== 'mid') return;
+  phase = 'running';
+  runBusy(true);
+  animateRing(70, 100, 4200);
+  later(() => setStat(2, 'ok'),   1000);
+  later(() => setStat(3, 'proc'), 1300);
+  later(() => setStat(3, 'ok'),   1900);
+  later(() => setStat(4, 'proc'), 2200);
+  later(() => setStat(4, 'ok'),   2800);
+  later(() => { showItem(5, 'wait'); setBadge(6); }, 3100);
+  later(() => setStat(5, 'proc'), 3300);
+  later(() => setStat(5, 'ok'),   3800);
+  later(() => { showItem(6, 'wait'); setBadge(7); }, 4100);
+  later(() => setStat(6, 'proc'), 4300);
+  later(() => setStat(6, 'ok'),   4800);
+  later(finish, 5100);
+}
+
+/* Scraping penuh dari nol (tombol Mulai Scraping) */
+function runFromZero(){
+  clearAll();
+  phase = 'running';
+  runBusy(true);
+  setHead('Mengambil materi…', 'Sedang memproses halaman web, mohon tunggu sebentar');
+  for (let i = 0; i < TOTAL; i++) hideItem(i);
+  setBadge(0);
+  setRing(0);
+  animateRing(0, 100, 5100);
+  for (let i = 0; i < TOTAL; i++){
+    const b = 300 + i * 650;
+    later(() => { showItem(i, 'wait'); setBadge(i + 1); }, b);
+    later(() => setStat(i, 'proc'), b + 200);
+    later(() => setStat(i, 'ok'),   b + 550);
+  }
+  later(finish, 5500);
+}
+
+function startScrape(){
+  const v = el('urlIn').value.trim();
+  if (!v){ toast('Isi dulu URL website kampus'); el('urlIn').focus(); return; }
+  if (phase === 'running') return;
+  runFromZero();
+}
+function clearUrl(){
+  el('urlIn').value = '';
+  el('urlIn').focus();
+}
+
+/* ============ INIT: render daftar + kondisi mockup, lalu lanjut otomatis ============ */
+(function init(){
+  el('list').innerHTML = ITEMS.map((it, i) =>
+    '<div class="ritem" id="ri' + i + '" hidden>' +
+      '<span class="fico f-' + it.t + '">' + ICONS[it.t] + '</span>' +
+      '<span class="rinfo"><b>' + it.title + '</b><small>' + it.meta + '</small></span>' +
+      '<span class="rstat" id="rs' + i + '"></span>' +
+    '</div>').join('');
+  const st0 = ['ok', 'ok', 'proc', 'wait', 'wait'];
+  for (let i = 0; i < 5; i++) showItem(i, st0[i]);
+  setBadge(5);
+  setRing(70);
+  autoT = setTimeout(resumeRun, 1400);
+})();
+</script>
+
+<script type="module">
+/* Bimo 3D (wobnimo) — mount menggantikan SVG statis; fallback SVG bila WebGL2 absen */
+import { mount } from '../vendor/wobnimo.js';
+import { bimo } from '../mascots/bimo.js';
+
+/* Profil ringan utk HP (layar high-DPR / RAM kecil): pixel ratio 1 & tanpa
+   interaksi pointer — beban GPU & baterai jauh lebih rendah. */
+const LIGHT = matchMedia('(pointer: coarse)').matches || (navigator.deviceMemory || 8) <= 4;
+const M_OPTS = LIGHT ? { maxPixelRatio: 1, interactive: false } : {};
+window.__bimoLight = LIGHT;
+
+const slot = document.getElementById('bimoSlot');
+let mascot = null;
+let currentState = 'happy';
+
+function setState(s){
+  currentState = s;
+  if (mascot) { try { mascot.setState(s); } catch (e) { console.warn('[bimo] setState', e); } }
+}
+
+/* Gate fallback: SVG statis TIDAK dihapus saat mount. Canvas menumpuk di atasnya
+   (absolutely positioned), dan SVG baru disembunyikan setelah canvas benar-benar
+   berisi gambar. Canvas kosong / tak pernah terisi → canvas dibuang, SVG tetap. */
+function canvasHasInk(c){
+  try{
+    const s=document.createElement('canvas');s.width=32;s.height=32;
+    const x=s.getContext('2d');x.drawImage(c,0,0,32,32);
+    const d=x.getImageData(0,0,32,32).data;
+    for(let i=3;i<d.length;i+=4){if(d[i]>8)return true}
+    return false;
+  }catch(e){return true}
+}
+function gateSlot(host,m,tag){
+  const svg=host.querySelector('svg');
+  const canvas=host.querySelector('canvas');
+  if(canvas){
+    if(getComputedStyle(host).position==='static')host.style.position='relative';
+    canvas.style.position='absolute';canvas.style.inset='0';canvas.style.zIndex='1';
+  }
+  if(!svg||!canvas)return;
+  let done=false,blank=0;
+  const poll=setInterval(()=>{
+    if(done){clearInterval(poll);return}
+    if(m.drawn){
+      if(canvasHasInk(canvas)){done=true;svg.style.visibility='hidden';clearInterval(poll)}
+      else if(++blank>=4){                 // sudah "menggambar" tapi tetap kosong → gagal
+        done=true;clearInterval(poll);
+        try{if(typeof m.dispose==='function')m.dispose()}catch(e){}
+        if(canvas.parentNode)canvas.parentNode.removeChild(canvas);
+        svg.style.visibility='';
+        console.warn('['+tag+'] canvas kosong — SVG statis dipertahankan');
+      }
+    }
+    /* belum pernah menggambar: terus menunggu (mungkin belum terlihat di viewport) */
+  },150);
+}
+
+function boot(){
+  if (!slot) return;
+  try {
+    if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
+    mascot = mount(slot, bimo, { state: currentState, ...M_OPTS });
+    gateSlot(slot, mascot, 'bimo');
+  } catch (err) {
+    console.warn('[bimo] WebGL2 absen — pakai SVG statis:', err && err.message);
+    const c = slot.querySelector('canvas');   // buang canvas parsial; SVG tak pernah disentuh
+    if (c && c.parentNode) c.parentNode.removeChild(c);
+  }
+}
+/* HP: mount saat browser longgar supaya kompilasi shader tak menahan load awal
+   (SVG statis tampil dulu, lalu berganti 3D) */
+if (LIGHT && 'requestIdleCallback' in window) requestIdleCallback(boot, { timeout: 1200 });
+else boot();
+
+window.__bimo = {
+  get mounted(){ return !!mascot; },
+  get state(){ return currentState; },
+  setState
+};
+</script>
+</body>
+</html>
