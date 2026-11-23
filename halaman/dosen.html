@@ -304,7 +304,7 @@ function pickKelas(k){
   renderClass();showScreen('s-class');
 }
 function hash01(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0)/4294967296}
-function setScope(s){scope=s;document.getElementById('scopeAll').classList.toggle('on',s==='all');document.getElementById('scopeOne').classList.toggle('on',s==='one');if(s==='one'&&!currentStudent&&currentDosen)currentStudent=currentDosen.students[0];renderClass()}
+function setScope(s){scope=s;document.getElementById('scopeAll').classList.toggle('on',s==='all');document.getElementById('scopeOne').classList.toggle('on',s==='one');if(s!=='one')currentStudent=null;renderClass()}
 function pickStudent(id){currentStudent=currentDosen.students.find(x=>x.id===id)||null;renderClass()}
 function backToStudentList(){currentStudent=null;renderClass()}
 function studentPcts(st){const t=currentDosen.topics[currentTopic];return t.chart.map((c,i)=>Math.max(15,Math.min(97,c[1]+Math.round(hash01(st.id+currentTopic)*44)-26+Math.round(hash01(st.id+currentTopic+i)*20)-10)))}
