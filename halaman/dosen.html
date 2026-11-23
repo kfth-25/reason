@@ -47,7 +47,7 @@
   <section class="screen active" id="s-pick">
     <div class="pad">
       <div class="top-head"><div class="brand"><svg viewBox="0 0 24 24"><path d="M12 3a7 7 0 017 7c0 2.4-1.2 4.2-2.6 5.6-.9.9-1.4 2-1.4 3.4H9c0-1.4-.5-2.5-1.4-3.4C6.2 14.2 5 12.4 5 10a7 7 0 017-7z"/><path d="M9.5 21h5"/></svg></div><div class="ht"><b>REASON untuk Dosen</b><span>Masuk sebagai dosen pengampu</span></div></div>
-      <div class="pick-hero"><span class="eyebrow">DASHBOARD PER DOSEN</span><h1>Pilih akun dosenmu.</h1><p>Setiap dosen hanya melihat data penalaran mahasiswa pada mata kuliah yang diampu — agregat dan tanpa nama.</p></div>
+      <div class="pick-hero"><span class="eyebrow">DASHBOARD PER DOSEN</span><h1>Pilih akun dosenmu.</h1><p>Setiap dosen hanya melihat data penalaran mahasiswa pada mata kuliah yang diampu — ringkasan agregat tanpa nama, atau detail pemahaman per mahasiswa.</p></div>
       <div class="privacy"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>Hanya data agregat. Nama mahasiswa tidak ditampilkan.</div>
       <h2 class="sec-title">Dosen pengampu</h2>
       <div id="dosenList"></div>
@@ -60,8 +60,10 @@
     <div class="pad">
       <div class="top-head"><div class="brand"><svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg></div><div class="ht"><b id="clsName">—</b><span id="clsMatkul">—</span></div></div>
       <button class="backlink" onclick="gantiDosen()">← Ganti dosen</button>
-      <div class="privacy"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>Hanya data agregat. Nama mahasiswa tidak ditampilkan.</div>
+      <div class="privacy"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>Agregat tanpa nama · detail per mahasiswa hanya terlihat oleh dosen pengampu.</div>
       <select class="topic-select" id="topicSelect" onchange="changeTopic()" aria-label="Pilih topik"></select>
+      <div class="tabs" aria-label="Cakupan data"><button id="scopeAll" class="on" onclick="setScope('all')">Semua mahasiswa</button><button id="scopeOne" onclick="setScope('one')">Per mahasiswa</button></div>
+      <select class="topic-select" id="studentSelect" style="display:none" onchange="changeStudent()" aria-label="Pilih mahasiswa"></select>
       <div id="classData"></div>
       <div id="draftNotice" style="display:none"><div class="hero"><span class="eyebrow">RUBRIK BELUM DISETUJUI</span><h1>Ringkasan kelas belum tersedia.</h1><p>Materi sudah dapat disiapkan. Penilaian alasan baru aktif setelah rubrik divalidasi dosen.</p></div><button class="pill-btn primary" onclick="openMaterials('rubrics')">Tinjau & setujui rubrik</button></div>
     </div>
@@ -84,7 +86,7 @@
         <div class="privacy"><svg viewBox="0 0 24 24"><path d="M9 11l2.5 2.5L16 8"/><rect x="4" y="3" width="16" height="18" rx="3"/></svg>Penilaian agen hanya memakai rubrik yang sudah disetujui.</div>
         <div id="rubricList"></div>
         <button class="pill-btn secondary" onclick="openRubricEditor()">+ Buat rubrik konsep</button>
-        <div class="form-card" id="rubricEditor" style="display:none"><label class="label">Nama konsep</label><input class="input" id="newConcept" placeholder="Contoh: Rekursi bercabang"><label class="label">Alasan yang memenuhi rubrik</label><textarea class="textarea" id="newReason" placeholder="Tuliskan bukti penalaran yang perlu muncul…"></textarea><label class="label">Miskonsepsi umum</label><textarea class="textarea" id="newMisconception" placeholder="Tuliskan 2–3 miskonsepsi yang perlu dideteksi…"></textarea><button class="pill-btn primary" onclick="saveRubric()">Simpan sebagai draf</button></div>
+        <div class="form-card" id="rubricEditor" style="display:none"><label class="label">Nama konsep</label><input class="input" id="newConcept" placeholder="Contoh: Rekursi bercabang"><label class="label">Berlaku untuk</label><select class="input" id="rubricScope"><option value="all">Semua mahasiswa</option></select><label class="label">Alasan yang memenuhi rubrik</label><textarea class="textarea" id="newReason" placeholder="Tuliskan bukti penalaran yang perlu muncul…"></textarea><label class="label">Miskonsepsi umum</label><textarea class="textarea" id="newMisconception" placeholder="Tuliskan 2–3 miskonsepsi yang perlu dideteksi…"></textarea><button class="pill-btn primary" onclick="saveRubric()">Simpan sebagai draf</button></div>
         <div class="note">Draf awal disiapkan tim. Dosen meninjau alasan yang benar dan miskonsepsi umum sebelum menyetujui.</div>
       </div>
       <button class="pill-btn secondary" onclick="showScreen('s-class')">← Kembali ke ringkasan kelas</button>
@@ -110,6 +112,7 @@ const DOSEN=[
 {
   id:'rina',name:'Dr. Rina Wijaya, M.T.',short:'Dr. Rina W.',ava:'RW',color:'#FCE3F8',
   matkul:'Matematika Diskrit',tags:['Rekursi','Induksi','Graf'],
+  students:[{id:'r1',name:'Andi Pratama',nim:'2410511001'},{id:'r2',name:'Bella Safira',nim:'2410511002'},{id:'r3',name:'Candra Dewi',nim:'2410511003'},{id:'r4',name:'Dimas Arya',nim:'2410511004'},{id:'r5',name:'Eka Putri',nim:'2410511005'},{id:'r6',name:'Farhan Maulana',nim:'2410511006'}],
   topics:{
     rekursi:{label:'Rekursi · 24 mahasiswa',
       hero:{t:'Jejak eksekusi paling sering terlewat.',p:'Jawaban akhir sering benar, tetapi alasan belum menunjukkan urutan pemanggilan.'},
@@ -154,6 +157,7 @@ const DOSEN=[
 {
   id:'budi',name:'Dr. Budi Hartono, S.T., M.T.',short:'Dr. Budi H.',ava:'BH',color:'#D6E8FF',
   matkul:'Kalkulus',tags:['Limit','Turunan'],
+  students:[{id:'b1',name:'Gilang Ramadhan',nim:'2420512001'},{id:'b2',name:'Hana Permata',nim:'2420512002'},{id:'b3',name:'Indra Kusuma',nim:'2420512003'},{id:'b4',name:'Jihan Aulia',nim:'2420512004'},{id:'b5',name:'Kurnia Sari',nim:'2420512005'},{id:'b6',name:'Luthfi Hakim',nim:'2420512006'}],
   topics:{
     limit:{label:'Limit Fungsi · 21 mahasiswa',
       hero:{t:'Konsep limit sering dijawab dengan substitusi buta.',p:'Jawaban angka benar, tetapi alasan belum membedakan pendekatan dari kiri dan kanan.'},
@@ -195,6 +199,7 @@ const DOSEN=[
 {
   id:'citra',name:'Citra Lestari, S.Kom., M.T.',short:'Citra L.',ava:'CL',color:'#FDF3E2',
   matkul:'Algoritma',tags:['Sorting','Kompleksitas'],
+  students:[{id:'c1',name:'Maya Anggraini',nim:'2430513001'},{id:'c2',name:'Nadia Zahra',nim:'2430513002'},{id:'c3',name:'Okta Riyadi',nim:'2430513003'},{id:'c4',name:'Putri Handayani',nim:'2430513004'},{id:'c5',name:'Rizky Nugraha',nim:'2430513005'},{id:'c6',name:'Sinta Dewi',nim:'2430513006'}],
   topics:{
     sorting:{label:'Algoritma Sorting · 20 mahasiswa',
       hero:{t:'Pemilihan algoritma belum berdasar kompleksitas.',p:'Jawaban benar memilih quicksort, tetapi alasan belum membandingkan kasus terburuknya.'},
@@ -233,7 +238,7 @@ const DOSEN=[
 }
 ];
 
-let currentDosen=null,currentTopic=null;
+let currentDosen=null,currentTopic=null,scope='all',currentStudent=null;
 function renderDosenList(){
   document.getElementById('dosenList').innerHTML=DOSEN.map(d=>`
     <button class="dosen-card" onclick="pilihDosen('${d.id}')">
@@ -251,19 +256,29 @@ function pilihDosen(id){
   document.getElementById('matMatkul').textContent=currentDosen.matkul+' · '+currentDosen.name;
   const sel=document.getElementById('topicSelect');
   sel.innerHTML=Object.keys(currentDosen.topics).map(k=>`<option value="${k}">${escapeHTML(currentDosen.topics[k].label)}</option>`).join('');
+  document.getElementById('studentSelect').innerHTML=currentDosen.students.map(s=>`<option value="${s.id}">${escapeHTML(s.name)} · ${s.nim}</option>`).join('');
+  document.getElementById('rubricScope').innerHTML='<option value="all">Semua mahasiswa</option>'+currentDosen.students.map(s=>`<option value="one:${s.id}">${escapeHTML(s.name)} · ${s.nim}</option>`).join('');
+  scope='all';currentStudent=null;
+  document.getElementById('scopeAll').classList.add('on');
+  document.getElementById('scopeOne').classList.remove('on');
   currentTopic=Object.keys(currentDosen.topics)[0];
   loadRubrics();renderRubrics();renderMaterials();
   renderClass();
   showScreen('s-class');
 }
 function changeTopic(){currentTopic=document.getElementById('topicSelect').value;renderClass()}
+function hash01(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0)/4294967296}
+function setScope(s){scope=s;document.getElementById('scopeAll').classList.toggle('on',s==='all');document.getElementById('scopeOne').classList.toggle('on',s==='one');if(s==='one'&&!currentStudent&&currentDosen)currentStudent=currentDosen.students[0];renderClass()}
+function changeStudent(){const id=document.getElementById('studentSelect').value;currentStudent=currentDosen.students.find(x=>x.id===id)||null;renderClass()}
 function renderClass(){
   const d=currentDosen;if(!d)return;
   const t=d.topics[currentTopic];if(!t)return;
   const draft=!!t.draft;
+  document.getElementById('studentSelect').style.display=(!draft&&scope==='one')?'block':'none';
   document.getElementById('classData').style.display=draft?'none':'block';
   document.getElementById('draftNotice').style.display=draft?'block':'none';
   if(draft)return;
+  if(scope==='one'){if(!currentStudent)currentStudent=d.students[0];renderStudentDetail();return}
   const gaps=t.gaps.map((g,i)=>`
     <div class="gap-card" onclick="openEx('${d.id}','${currentTopic}',${i})">
       <div class="gap-top"><span class="rank">${i+1}</span><div class="gap-info"><b>${escapeHTML(g.t)}</b><small>${escapeHTML(g.s)}</small></div><span class="gap-pct">${g.pct}%</span></div>
@@ -297,6 +312,40 @@ function openEx(did,tkey,i){
 }
 function closeSheet(){document.getElementById('sheet').classList.remove('show');document.getElementById('overlay').classList.remove('show')}
 
+/* ============ DETAIL PEMAHAMAN PER MAHASISWA ============ */
+function renderStudentDetail(){
+  const d=currentDosen,t=d.topics[currentTopic],st=currentStudent;
+  if(!d||!t||!st||!t.chart.length)return;
+  const pcts=t.chart.map((c,i)=>Math.max(15,Math.min(97,c[1]+Math.round(hash01(st.id+currentTopic)*44)-26+Math.round(hash01(st.id+currentTopic+i)*20)-10)));
+  const avg=Math.round(pcts.reduce((a,b)=>a+b,0)/pcts.length);
+  const ok=[],low=[];
+  pcts.forEach((p,i)=>(p>=60?ok:low).push({p,i}));
+  const row=(x,good)=>`<div class="concept-row"><span class="ci">${x.i+1}</span><b>${escapeHTML(t.chart[x.i][0])} · ${x.p}%</b><span class="status ${good?'approved':'draft'}">${good?'Dipahami':'Perlu diperkuat'}</span></div>`;
+  const sesi=3+Math.round(hash01(st.id+currentTopic+'s')*9);
+  const focus=low.map(x=>t.chart[x.i][0]).join(', ');
+  document.getElementById('classData').innerHTML=`
+    <div class="hero"><span class="eyebrow">DETAIL PEMAHAMAN · ${escapeHTML(st.nim)}</span><h1>${escapeHTML(st.name)}</h1><p>Rata-rata ${avg}% pada topik ini · ${low.length?low.length+' konsep masih perlu diperkuat':'semua konsep sudah dikuasai'}.</p></div>
+    <div class="stats">
+      <div class="stat"><b>${avg}%</b><small>rata-rata penguasaan</small></div>
+      <div class="stat"><b>${ok.length}/${pcts.length}</b><small>konsep dikuasai</small></div>
+      <div class="stat"><b>${sesi}</b><small>sesi cek ulang</small></div>
+    </div>
+    ${ok.length?`<h2 class="sec-title">✅ Sudah dipahami</h2>${ok.map(x=>row(x,true)).join('')}`:''}
+    ${low.length?`<h2 class="sec-title">⚠️ Belum dipahami</h2>${low.map(x=>row(x,false)).join('')}<div class="insight"><h3>Fokus ulang</h3><p><b>${escapeHTML(focus)}</b> — penalarannya belum memenuhi rubrik. Ajak mahasiswa menelusuri alasan langkah demi langkah, bukan hanya hasil akhir.</p></div>`:`<div class="insight"><h3>🎉 Semua konsep dikuasai</h3><p>Tidak ada konsep merah pada topik ini. Bisa lanjut ke topik berikutnya atau soal campuran.</p></div>`}
+    <button class="pill-btn primary" onclick="openRubricForStudent()">Isi rubrik untuk ${escapeHTML(st.name.split(' ')[0])}</button>
+    ${t.gaps.length?`<button class="pill-btn secondary" onclick="openEx('${d.id}','${currentTopic}',0)">Contoh miskonsepsi kelas (anonim)</button>`:''}
+    <div class="note">Detail ini khusus untuk dosen pengampu mata kuliah ini. Contoh miskonsepsi tetap anonim tanpa nama mahasiswa.</div>`;
+}
+function openRubricForStudent(){
+  if(!currentStudent){toast('Pilih mahasiswa dulu');return}
+  openMaterials('rubrics');
+  document.getElementById('rubricEditor').style.display='block';
+  const sel=document.getElementById('rubricScope');const v='one:'+currentStudent.id;
+  if(Array.from(sel.options).some(o=>o.value===v))sel.value=v;
+  document.getElementById('rubricEditor').scrollIntoView({behavior:'smooth',block:'start'});
+  toast('Rubrik akan disimpan untuk '+currentStudent.name);
+}
+
 /* Materi & rubrik per dosen */
 function renderMaterials(){
   const d=currentDosen;if(!d)return;
@@ -313,11 +362,11 @@ function loadRubrics(){
   const d=currentDosen;rubrics=d?d.rubrics.map(r=>({...r})):[];
   try{const saved=JSON.parse(localStorage.getItem(rubricKey())||'null');if(Array.isArray(saved)&&saved.length)rubrics=saved}catch(e){}
 }
-function renderRubrics(){document.getElementById('rubricList').innerHTML=rubrics.map(r=>`<div class="rubric-card"><div class="rubric-head"><div class="rc"><b>${escapeHTML(r.name)}</b><small>Rubrik alasan · 2 miskonsepsi</small></div><span class="status ${r.status}">${r.status==='approved'?'Disetujui':'Draf'}</span></div><p>${escapeHTML(r.criteria)}</p><div class="rubric-actions"><button class="pill-btn small-btn alt" onclick="editRubric(${r.id})">Edit</button><button class="pill-btn small-btn" ${r.status==='approved'?'disabled':''} onclick="approveRubric(${r.id})">${r.status==='approved'?'✓ Disetujui':'Setujui rubrik'}</button></div></div>`).join('')}
+function renderRubrics(){document.getElementById('rubricList').innerHTML=rubrics.map(r=>`<div class="rubric-card"><div class="rubric-head"><div class="rc"><b>${escapeHTML(r.name)}</b><small>Rubrik alasan · ${r.scope&&r.scope.type==='one'?'Untuk '+escapeHTML(r.scope.name):'Semua mahasiswa'}</small></div><span class="status ${r.status}">${r.status==='approved'?'Disetujui':'Draf'}</span></div><p>${escapeHTML(r.criteria)}</p><div class="rubric-actions"><button class="pill-btn small-btn alt" onclick="editRubric(${r.id})">Edit</button><button class="pill-btn small-btn" ${r.status==='approved'?'disabled':''} onclick="approveRubric(${r.id})">${r.status==='approved'?'✓ Disetujui':'Setujui rubrik'}</button></div></div>`).join('')}
 function approveRubric(id){const r=rubrics.find(x=>x.id===id);if(!r)return;r.status='approved';saveRubrics();renderRubrics();toast('Rubrik disetujui — dapat dipakai agen untuk menilai alasan')}
-function editRubric(id){const r=rubrics.find(x=>x.id===id);if(!r)return;document.getElementById('rubricEditor').style.display='block';document.getElementById('newConcept').value=r.name;document.getElementById('newReason').value=r.criteria;document.getElementById('newMisconception').value='Contoh miskonsepsi akan ditinjau dosen.';document.getElementById('rubricEditor').scrollIntoView({behavior:'smooth',block:'start'});toast('Ubah lalu simpan sebagai draf baru')}
+function editRubric(id){const r=rubrics.find(x=>x.id===id);if(!r)return;document.getElementById('rubricEditor').style.display='block';document.getElementById('newConcept').value=r.name;document.getElementById('newReason').value=r.criteria;document.getElementById('newMisconception').value='Contoh miskonsepsi akan ditinjau dosen.';const sel=document.getElementById('rubricScope');let v='all';if(r.scope&&r.scope.type==='one'){const opt=Array.from(sel.options).find(o=>(r.scope.id&&o.value==='one:'+r.scope.id)||o.textContent.indexOf(r.scope.name)===0);if(opt)v=opt.value}sel.value=v;document.getElementById('rubricEditor').scrollIntoView({behavior:'smooth',block:'start'});toast('Ubah lalu simpan sebagai draf baru')}
 function openRubricEditor(){document.getElementById('rubricEditor').style.display=document.getElementById('rubricEditor').style.display==='none'?'block':'none'}
-function saveRubric(){const name=document.getElementById('newConcept').value.trim(),criteria=document.getElementById('newReason').value.trim();if(!name||!criteria){toast('Nama konsep dan kriteria alasan perlu diisi');return}rubrics.push({id:Date.now(),name,criteria,status:'draft'});saveRubrics();renderRubrics();document.getElementById('rubricEditor').style.display='none';document.getElementById('newConcept').value='';document.getElementById('newReason').value='';document.getElementById('newMisconception').value='';toast('Rubrik tersimpan sebagai draf')}
+function saveRubric(){const name=document.getElementById('newConcept').value.trim(),criteria=document.getElementById('newReason').value.trim();if(!name||!criteria){toast('Nama konsep dan kriteria alasan perlu diisi');return}let sc={type:'all'};const sv=document.getElementById('rubricScope').value;if(sv.indexOf('one:')===0&&currentDosen){const st=currentDosen.students.find(x=>x.id===sv.slice(4));if(st)sc={type:'one',id:st.id,name:st.name,nim:st.nim}}rubrics.push({id:Date.now(),name,criteria,status:'draft',scope:sc});saveRubrics();renderRubrics();document.getElementById('rubricEditor').style.display='none';document.getElementById('newConcept').value='';document.getElementById('newReason').value='';document.getElementById('newMisconception').value='';toast(sc.type==='one'?'Rubrik tersimpan untuk '+sc.name:'Rubrik tersimpan — berlaku untuk semua mahasiswa')}
 function handleFile(input){const file=input.files[0];if(!file)return;if(file.size>20*1024*1024){toast('Berkas melebihi batas 20 MB');input.value='';return}const card=document.createElement('div');card.className='file-card';card.innerHTML=`<span class="fi">📄</span><div class="ft"><b>${escapeHTML(file.name)}</b><small>${Math.max(1,Math.round(file.size/1024))} KB · baru dipilih</small></div><span class="status draft">Diproses</span>`;document.getElementById('fileList').appendChild(card);toast('Berkas dipilih — simulasi indeks materi dimulai');setTimeout(()=>{const s=card.querySelector('.status');s.textContent='Terindeks';s.className='status';toast('Materi siap menjadi sumber kutipan')},1400);input.value=''}
 
 renderDosenList();setTheme('light');
