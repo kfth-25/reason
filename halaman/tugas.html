@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script src="pwa.js" defer></script>
-<title>REASON — Tugas</title>
+<title>REASON — Rak Materi</title>
 <style>
   /* ============ TOKEN REASON (konsisten dgn halaman lain) ============ */
   :root{
@@ -21,7 +21,7 @@
     --line:#ECECF1;--nav-dark:#15161C;--r-card:22px;--r-pill:999px;
     --shadow:0 8px 24px rgba(20,22,40,.07);--font:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   }
-  [data-theme="dark"]{--bg:#1A2434;--card:#152030;--text:#F2F4F8;--muted:#8B97AB;--line:#253147;--nav-dark:#0F1724;--blue-soft:#1E3A5F;--purple-soft:#2A2750;--pink-soft:#402A45;--shadow:0 8px 24px rgba(0,0,0,.28)}
+  [data-theme="dark"]{--bg:#1A2434;--card:#152030;--text:#F2F4F8;--muted:#8B97AB;--line:#253147;--nav-dark:#0F1724;--blue-soft:#1E3A5F;--purple-soft:#2A2750;--pink-soft:#402A45;--green-soft:#1E3322;--shadow:0 8px 24px rgba(0,0,0,.28)}
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   body{font-family:var(--font);background:#DDE1EA;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
   .phone{width:390px;height:844px;max-height:100vh;background:var(--bg);border-radius:44px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35;transition:background .3s}
@@ -49,31 +49,33 @@
   .brand svg{width:24px;height:24px;stroke:var(--blue);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .top-head .ht{flex:1}.top-head b{display:block;font-size:17px;font-weight:700;color:var(--text)}.top-head span{font-size:12px;color:var(--muted)}
 
-  /* ============ STRIP HARI (dipinjam dari prototipe Harian) ============ */
-  .dstrip{display:flex;gap:9px;margin-top:16px;justify-content:space-between}
-  .dcard{
-    width:60px;height:84px;border-radius:28px;flex-shrink:0;cursor:pointer;
-    background:var(--card);display:flex;flex-direction:column;
-    align-items:center;justify-content:center;transition:all .22s;opacity:.55;
-    border:1.5px solid var(--line);
-  }
-  .dcard b{font-size:19px;font-weight:700;color:var(--text)}
-  .dcard small{font-size:11.5px;color:var(--muted);margin-top:3px}
-  .dcard.on{background:var(--green);opacity:1;transform:scale(1.08);border-color:transparent;box-shadow:0 10px 22px rgba(197,238,147,.4)}
-  .dcard.on b,.dcard.on small{color:#15161C}
-  .dcard.on small{opacity:.75}
-  .dcard .due-dot{position:absolute}
-
   /* ============ STATS ============ */
   .stats{display:flex;gap:9px;margin-top:14px}
   .stat{flex:1;background:var(--card);border-radius:16px;padding:12px 13px;box-shadow:var(--shadow);border:1.5px solid var(--line)}
   .stat b{display:block;font-size:20px;color:var(--text)}
   .stat small{display:block;font-size:10px;color:var(--muted);margin-top:2px}
-  .stat.s-done b{color:#4E9B1E}[data-theme="dark"] .stat.s-done b{color:var(--green)}
-  .stat.s-run b{color:var(--blue-deep)}[data-theme="dark"] .stat.s-run b{color:#9CC4F5}
-  .stat.s-wait b{color:#B0408F}[data-theme="dark"] .stat.s-wait b{color:var(--pink)}
+  .stat.s-dosen b{color:#4E9B1E}[data-theme="dark"] .stat.s-dosen b{color:var(--green)}
+  .stat.s-scrape b{color:var(--blue-deep)}[data-theme="dark"] .stat.s-scrape b{color:#9CC4F5}
 
-  /* ============ FOLDER (folder tugas) ============ */
+  /* ============ CARI + FILTER SUMBER ============ */
+  .searchbar{
+    display:flex;align-items:center;gap:10px;background:var(--card);
+    border:1.5px solid var(--line);border-radius:var(--r-pill);
+    padding:11px 16px;margin-top:16px;box-shadow:var(--shadow);
+  }
+  .searchbar svg{width:17px;height:17px;stroke:var(--muted);fill:none;stroke-width:2.1;stroke-linecap:round;flex-shrink:0}
+  .searchbar input{border:none;outline:none;background:transparent;font-family:var(--font);font-size:13.5px;color:var(--text);width:100%}
+  .searchbar input::placeholder{color:var(--muted)}
+  .chips{display:flex;gap:8px;margin-top:11px}
+  .chip{
+    border:1.5px solid var(--line);background:var(--card);border-radius:var(--r-pill);
+    padding:8px 14px;font-family:var(--font);font-size:11.5px;font-weight:700;
+    color:var(--muted);cursor:pointer;transition:all .18s;
+  }
+  .chip:active{transform:scale(.96)}
+  .chip.on{background:var(--nav-dark);border-color:var(--nav-dark);color:#F6F6F9}
+
+  /* ============ FOLDER (per topik) ============ */
   .sec-title{font-size:16px;font-weight:700;color:var(--text);margin:20px 0 11px;display:flex;align-items:center;justify-content:space-between}
   .sec-title .hint{font-size:10.5px;font-weight:600;color:var(--muted)}
   .folder{background:var(--card);border-radius:20px;margin-bottom:12px;box-shadow:var(--shadow);overflow:hidden;border:1.5px solid var(--line);transition:border-color .2s}
@@ -98,29 +100,44 @@
   .folder-head .chev{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .28s;flex-shrink:0}
   .folder.open .chev{transform:rotate(180deg)}
   .folder-body{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.2,.8,.25,1)}
-  .folder.open .folder-body{max-height:1400px}
+  .folder.open .folder-body{max-height:1800px}
   .folder-inner{padding:2px 14px 16px}
 
-  /* ============ KARTU TUGAS (potongan kode prototipe Harian) ============ */
+  /* ============ KARTU MATERI ============ */
   .tgroup{margin-top:22px;position:relative}
   .tgroup:first-child{margin-top:8px}
   .tcard{
-    background:var(--tc,#C5EE93);border-radius:20px;padding:16px 15px;
+    background:var(--card);border-radius:20px;padding:16px 15px;
     cursor:pointer;transition:transform .15s;position:relative;
+    border:1.5px solid var(--line);box-shadow:var(--shadow);
   }
   .tcard:active{transform:scale(.98)}
   .tcard .tab{
-    position:absolute;top:-14px;left:15px;background:var(--tc,#C5EE93);
+    position:absolute;top:-14px;left:15px;background:var(--tc,#D8D2F3);
     border-radius:12px 12px 0 0;padding:4px 13px 6px;
     font-size:11.5px;font-weight:700;color:#15161C;
   }
-  .tcard .meta-row{display:flex;align-items:center;justify-content:space-between;margin-top:-4px}
-  .tcard .who{font-size:10.5px;font-weight:700;color:#15161C;opacity:.65}
-  .prog-wrap{display:flex;align-items:center;gap:8px}
-  .prog-wrap .track{width:54px;height:5px;border-radius:3px;background:rgba(0,0,0,.16);overflow:hidden}
-  .prog-wrap .track i{display:block;height:100%;background:#152030;border-radius:3px;transition:width .5s}
-  .prog-wrap span{font-size:12px;font-weight:700;color:#152030}
-  .tcard .body{display:flex;align-items:center;gap:13px;margin-top:12px}
+  /* Profil dosen di POJOK KANAN atas kartu materi */
+  .dpf{
+    position:absolute;top:11px;right:11px;z-index:2;
+    display:flex;align-items:center;gap:6px;
+    background:var(--purple-soft);border-radius:var(--r-pill);
+    padding:4px 10px 4px 4px;max-width:62%;
+  }
+  .dpf .ava{
+    width:26px;height:26px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(135deg,#8574F4,#6555E6);
+    color:#fff;font-size:10.5px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 6px rgba(105,87,235,.4);
+  }
+  .dpf span{font-size:10px;font-weight:700;color:#5A4BC7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  [data-theme="dark"] .dpf span{color:#C5BBFB}
+  .dpf.scrape{background:var(--blue-soft)}
+  .dpf.scrape .ava{background:linear-gradient(135deg,#4392F0,#2E7BD6);box-shadow:0 2px 6px rgba(46,123,214,.4)}
+  .dpf.scrape span{color:#1E5FA8}
+  [data-theme="dark"] .dpf.scrape span{color:#9CC4F5}
+  .tcard .body{display:flex;align-items:center;gap:13px;margin-top:10px}
   .ticon{
     width:50px;height:50px;flex-shrink:0;background:#152030;
     display:flex;align-items:center;justify-content:center;
@@ -128,41 +145,21 @@
   }
   .ticon svg{width:23px;height:23px;stroke:var(--tc,#C5EE93);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transform:rotate(-45deg)}
   .tinfo{flex:1;min-width:0}
-  .tinfo h3{font-size:15.5px;font-weight:700;color:#15161C;line-height:1.3}
-  .tinfo p{font-size:12px;color:#15161C;opacity:.62;margin-top:3px}
-  .dots{font-size:22px;color:#15161C;letter-spacing:1px;line-height:1;cursor:pointer;padding:4px;flex-shrink:0}
-  .tcard.locked-card{filter:grayscale(.35);opacity:.8;cursor:default}
-  .tcard.locked-card:active{transform:none}
-
-  /* potongan kode di dalam tugas */
-  .code-toggle{
-    display:flex;align-items:center;gap:7px;margin-top:12px;
-    background:rgba(21,32,48,.12);border:none;border-radius:var(--r-pill);
-    padding:8px 14px;font-family:var(--font);font-size:11px;font-weight:700;
-    color:#152030;cursor:pointer;
+  .tinfo h3{font-size:15px;font-weight:700;color:var(--text);line-height:1.3}
+  .tinfo p{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .mrow{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .src{font-size:9.5px;font-weight:700;padding:4px 9px;border-radius:var(--r-pill)}
+  .s-dosen{background:var(--green);color:#2E4A12}
+  .s-scrape{background:var(--blue-soft);color:#1E5FA8}
+  [data-theme="dark"] .s-dosen{background:#24401A;color:#C5EE93}
+  [data-theme="dark"] .s-scrape{background:#1E3A5F;color:#9CC4F5}
+  .mrow .meta{font-size:10.5px;color:var(--muted);font-weight:600}
+  .readflag{
+    display:none;font-size:9.5px;font-weight:700;color:#3F7A1E;
+    background:var(--green);border-radius:var(--r-pill);padding:4px 9px;
   }
-  .code-toggle svg{width:13px;height:13px;stroke:#152030;fill:none;stroke-width:2.2;stroke-linecap:round}
-  .code-wrap{max-height:0;overflow:hidden;transition:max-height .35s ease}
-  .code-wrap.open{max-height:340px}
-  .code{
-    margin-top:11px;background:#152030;border-radius:14px;padding:14px 15px;
-    font-family:'Cascadia Code','Consolas',monospace;font-size:12px;line-height:1.65;
-    color:#E8ECF4;overflow-x:auto;white-space:pre;
-  }
-  .code .kw{color:#8FB8FF}.code .num{color:#F5C97B}.code .cm{color:#7C8496}.code .fn{color:#C5EE93}
-
-  /* ============ HERO TENGGAT ============ */
-  .hero{margin-top:16px;background:var(--orange);border-radius:var(--r-card);padding:18px 19px;color:#15161C;position:relative;overflow:hidden}
-  .hero .lbl{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.4px;background:rgba(255,255,255,.6);border-radius:var(--r-pill);padding:4px 11px}
-  .hero h2{font-size:18.5px;font-weight:700;line-height:1.3;margin-top:9px;max-width:84%}
-  .hero p{font-size:11.5px;font-weight:600;margin-top:5px;opacity:.85;max-width:84%}
-  .hero .due{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;font-weight:700}
-  .hero .blob{position:absolute;right:-8px;top:22px;font-size:60px;transform:rotate(14deg);opacity:.55;pointer-events:none}
-  .hero .go{
-    position:absolute;right:16px;bottom:16px;width:44px;height:44px;border-radius:50%;
-    background:#15161C;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  }
-  .hero .go svg{width:20px;height:20px;stroke:var(--orange);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .tcard.read .readflag{display:inline-block}
+  .tcard.hidden{display:none}
 
   .note{font-size:10.5px;color:var(--muted);line-height:1.6;margin-top:12px}
 
@@ -172,12 +169,18 @@
   .sheet{position:absolute;left:0;right:0;bottom:0;z-index:76;background:var(--bg);border-radius:30px 30px 0 0;padding:14px 22px 32px;transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.25,1);max-height:78%;overflow-y:auto}
   .sheet::-webkit-scrollbar{display:none}.sheet.show{transform:translateY(0)}
   .grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 16px}
-  .sheet h3{font-size:16px;color:var(--text);line-height:1.4}.sheet .meta{font-size:11px;color:var(--muted);margin-top:5px}
+  .sheet h3{font-size:16px;color:var(--text);line-height:1.4}
+  .sheet .meta{font-size:11px;color:var(--muted);margin-top:5px}
+  .sheet .src-line{display:flex;gap:8px;align-items:center;margin-top:9px;flex-wrap:wrap}
   .sheet .content{margin-top:13px;background:var(--card);border-radius:16px;padding:16px;font-size:12.5px;line-height:1.7;color:var(--text);white-space:pre-line}
   .verified{display:inline-block;margin-top:12px;font-size:11px;font-weight:700;color:#3F7A1E;background:var(--green);border-radius:var(--r-pill);padding:6px 13px}
+  .verified.scrape{background:var(--blue-soft);color:#1E5FA8}
+  [data-theme="dark"] .verified{background:#24401A;color:#C5EE93}
+  [data-theme="dark"] .verified.scrape{background:#1E3A5F;color:#9CC4F5}
   .sheet-actions{display:flex;gap:9px;margin-top:14px}
   .sheet-actions button{flex:1;padding:13px;border-radius:var(--r-pill);font-size:12.5px;font-weight:700;cursor:pointer;border:none;font-family:var(--font)}
   .sheet-actions .primary{background:var(--nav-dark);color:#F6F6F9}
+  .sheet-actions .primary:disabled{opacity:.55;cursor:default}
   .sheet-actions .ghost{background:var(--card);color:var(--text);border:1.5px solid var(--line)}
   /* Mobile: buang chrome mockup (notch/statusbar/home-ind) -> full layar + dvh */
   @media (max-width:520px){
@@ -198,120 +201,112 @@
   <section class="screen">
     <div class="pad">
       <div class="top-head">
-        <div class="brand"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg></div>
-        <div class="ht"><b>Hai, Rizky 👋</b><span>Yuk cek tugasmu hari ini</span></div>
-      </div>
-
-      <!-- Strip hari (interaktif) -->
-      <div class="dstrip" id="dstrip">
-        <div class="dcard" data-day="Sen" onclick="pickDay(this)"><b>10</b><small>Sen</small></div>
-        <div class="dcard" data-day="Sel" onclick="pickDay(this)"><b>11</b><small>Sel</small></div>
-        <div class="dcard on" data-day="Rab" onclick="pickDay(this)"><b>12</b><small>Rab</small></div>
-        <div class="dcard" data-day="Kam" onclick="pickDay(this)"><b>13</b><small>Kam</small></div>
-        <div class="dcard" data-day="Jum" onclick="pickDay(this)"><b>14</b><small>Jum</small></div>
-      </div>
-
-      <!-- Tenggat terdekat -->
-      <div class="hero">
-        <span class="lbl">JATUH TEMPO BESOK</span>
-        <h2>Cek ulang: Jejak eksekusi</h2>
-        <p>Satu soal, sekitar 5 menit — hasilnya memperbarui peta penguasaanmu.</p>
-        <div class="due">⏱️ Besok, 20.00 WIB</div>
-        <span class="blob">📌</span>
-        <button class="go" onclick="location.href='latihan.html'" aria-label="Kerjakan">
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </button>
+        <div class="brand"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+        <div class="ht"><b>Rak Materi</b><span>Simpan materi — unggahan dosen &amp; scraping</span></div>
       </div>
 
       <div class="stats">
-        <div class="stat s-done"><b id="stDone">1</b><small>selesai</small></div>
-        <div class="stat s-run"><b id="stRun">1</b><small>berjalan</small></div>
-        <div class="stat s-wait"><b id="stWait">4</b><small>menunggu</small></div>
+        <div class="stat"><b id="stDoc">6</b><small>dokumen</small></div>
+        <div class="stat s-dosen"><b id="stDosen">4</b><small>dari dosen</small></div>
+        <div class="stat s-scrape"><b id="stScrape">2</b><small>dari scraping</small></div>
       </div>
 
-      <div class="sec-title">Folder tugas <span class="hint">ketuk untuk buka</span></div>
+      <!-- Cari + filter sumber -->
+      <div class="searchbar">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="mSearch" type="search" placeholder="Cari judul materi…" oninput="applyFilter()">
+      </div>
+      <div class="chips" id="chips">
+        <button class="chip on" data-f="all" onclick="pickFilter(this)">Semua</button>
+        <button class="chip" data-f="dosen" onclick="pickFilter(this)">🎓 Dari Dosen</button>
+        <button class="chip" data-f="scrape" onclick="pickFilter(this)">🌐 Scraping</button>
+      </div>
+
+      <div class="sec-title">Folder materi <span class="hint">ketuk kartu untuk baca</span></div>
 
       <!-- ===== FOLDER 1: REKURSI ===== -->
       <div class="folder open" id="f-rekursi">
         <button class="folder-head" onclick="toggleFolder('f-rekursi')">
           <span class="fico" style="background:var(--blue-soft)">🔁</span>
-          <div class="finfo"><b>Rekursi</b><small>Matematika Diskrit · rubrik disetujui</small></div>
-          <div class="fmeta"><span class="fpct" id="pct-rekursi">38%</span><span class="fcount">4 tugas</span></div>
+          <div class="finfo"><b>Rekursi</b><small>Matematika Diskrit · Dr. Rina Wijaya, M.T.</small></div>
+          <div class="fmeta"><span class="fpct">4</span><span class="fcount">dokumen</span></div>
           <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
         </button>
         <div class="folder-body">
-          <div class="folder-inner" data-folder-tasks="rekursi">
+          <div class="folder-inner">
 
-            <!-- Selesai -->
             <div class="tgroup">
-              <div class="tcard" style="--tc:#C5EE93" data-prog="100" data-status="done" onclick="cardTap(this,'ringkasan.html')">
-                <div class="tab">Selesai</div>
-                <div class="meta-row">
-                  <span class="who">12 Nov · 4 konsep</span>
-                  <div class="prog-wrap"><div class="track"><i style="width:100%"></i></div><span>100%</span></div>
-                </div>
-                <div class="body">
-                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M9 11l2.5 2.5L16 8"/><rect x="4" y="3" width="16" height="18" rx="3"/></svg></div>
-                  <div class="tinfo"><h3>Diagnostik awal</h3><p>Fondasi kamu terpetakan</p></div>
-                  <div class="dots" onclick="event.stopPropagation();openMenu(this)">⋮</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Berjalan + potongan kode -->
-            <div class="tgroup">
-              <div class="tcard" style="--tc:#D8D2F3" data-prog="50" data-status="running" onclick="cardTap(this,'latihan.html')">
-                <div class="tab">Berjalan</div>
-                <div class="meta-row">
-                  <span class="who">2 dari 4 langkah</span>
-                  <div class="prog-wrap"><div class="track"><i style="width:50%"></i></div><span>50%</span></div>
-                </div>
-                <div class="body">
-                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M12 3a7 7 0 017 7c0 2.4-1.2 4.2-2.6 5.6-.9.9-1.4 2-1.4 3.4H9c0-1.4-.5-2.5-1.4-3.4C6.2 14.2 5 12.4 5 10a7 7 0 017-7z"/><path d="M9.5 21h5"/></svg></div>
-                  <div class="tinfo"><h3>Latihan target · Jejak eksekusi</h3><p>Penjelasan dari sudut berbeda</p></div>
-                  <div class="dots" onclick="event.stopPropagation();openMenu(this)">⋮</div>
-                </div>
-                <button class="code-toggle" onclick="event.stopPropagation();toggleCode('code1')">
-                  <svg viewBox="0 0 24 24"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3"/></svg>
-                  Lihat potongan kode
-                </button>
-                <div class="code-wrap" id="code1">
-                  <div class="code"><span class="kw">def</span> <span class="fn">faktorial</span>(n):
-    <span class="cm"># kasus dasar</span>
-    <span class="kw">if</span> n == <span class="num">0</span>:
-        <span class="kw">return</span> <span class="num">1</span>
-    <span class="kw">return</span> n * faktorial(n - <span class="num">1</span>)</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Menunggu -->
-            <div class="tgroup">
-              <div class="tcard" style="--tc:#3DD3F6" data-prog="0" data-status="wait" onclick="openMateri()">
-                <div class="tab">Menunggu</div>
-                <div class="meta-row">
-                  <span class="who">sekitar 15 menit</span>
-                  <div class="prog-wrap"><div class="track"><i style="width:2%"></i></div><span>0%</span></div>
-                </div>
+              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="openDoc('modul4')">
+                <div class="tab">PDF</div>
+                <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
                 <div class="body">
                   <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
-                  <div class="tinfo"><h3>Baca Bab 4.2 · Rekursi</h3><p>Sumber kutipan umpan balik</p></div>
-                  <div class="dots" onclick="event.stopPropagation();openMenu(this)">⋮</div>
+                  <div class="tinfo">
+                    <h3>Modul Diskrit — Bab 4.pdf</h3>
+                    <p>Bab 4.2 · Rekursi &amp; base case</p>
+                    <div class="mrow">
+                      <span class="src s-dosen">🎓 Dari Dosen</span>
+                      <span class="meta">2,4 MB · 12 Nov</span>
+                      <span class="readflag">✓ dibaca</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- Terkunci -->
             <div class="tgroup">
-              <div class="tcard locked-card" style="--tc:#ECECF1" data-prog="0" data-status="locked">
-                <div class="tab" style="color:#8A8B98">Terkunci</div>
-                <div class="meta-row">
-                  <span class="who" style="opacity:.8">setelah latihan target</span>
-                  <div class="prog-wrap"><div class="track"><i style="width:2%"></i></div><span style="opacity:.6">0%</span></div>
-                </div>
+              <div class="tcard" style="--tc:#BFD9FF" data-src="dosen" onclick="openDoc('catatan-rek')">
+                <div class="tab">DOCX</div>
+                <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
                 <div class="body">
-                  <div class="ticon" style="background:#8A8B98"><svg viewBox="0 0 24 24" style="stroke:#ECECF1"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div>
-                  <div class="tinfo"><h3 style="opacity:.7">Cek ulang · Base case</h3><p style="opacity:.6">Terbuka otomatis nanti</p></div>
+                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
+                  <div class="tinfo">
+                    <h3>Catatan kuliah — Rekursi.docx</h3>
+                    <p>Situsasi utama umpan balik agen</p>
+                    <div class="mrow">
+                      <span class="src s-dosen">🎓 Dari Dosen</span>
+                      <span class="meta">184 KB · 12 Nov</span>
+                      <span class="readflag">✓ dibaca</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tgroup">
+              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="openDoc('slide-rek')">
+                <div class="tab">PDF</div>
+                <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
+                <div class="body">
+                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
+                  <div class="tinfo">
+                    <h3>Slide Pertemuan 5 — Rekursi.pdf</h3>
+                    <p>Contoh jejak eksekusi &amp; call stack</p>
+                    <div class="mrow">
+                      <span class="src s-dosen">🎓 Dari Dosen</span>
+                      <span class="meta">3,1 MB · 10 Nov</span>
+                      <span class="readflag">✓ dibaca</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tgroup">
+              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="openDoc('scrape-rek')">
+                <div class="tab">PDF</div>
+                <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
+                <div class="body">
+                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
+                  <div class="tinfo">
+                    <h3>Ringkasan Rekursi — Web Kampus.pdf</h3>
+                    <p>Diambil dari halaman mata kuliah</p>
+                    <div class="mrow">
+                      <span class="src s-scrape">🌐 Scraping</span>
+                      <span class="meta">web kampus · 9 Nov</span>
+                      <span class="readflag">✓ dibaca</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -324,88 +319,45 @@
       <div class="folder" id="f-induksi">
         <button class="folder-head" onclick="toggleFolder('f-induksi')">
           <span class="fico" style="background:var(--purple-soft)">🧩</span>
-          <div class="finfo"><b>Induksi Matematika</b><small>Matematika Diskrit · rubrik disetujui</small></div>
-          <div class="fmeta"><span class="fpct" id="pct-induksi">0%</span><span class="fcount">2 tugas</span></div>
-          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="folder-body">
-          <div class="folder-inner" data-folder-tasks="induksi">
-            <div class="tgroup">
-              <div class="tcard" style="--tc:#3DD3F6" data-prog="0" data-status="wait" onclick="toast('Mulai dari diagnostik singkat dulu ya')">
-                <div class="tab">Menunggu</div>
-                <div class="meta-row">
-                  <span class="who">belum dimulai</span>
-                  <div class="prog-wrap"><div class="track"><i style="width:2%"></i></div><span>0%</span></div>
-                </div>
-                <div class="body">
-                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg></div>
-                  <div class="tinfo"><h3>Diagnostik · Induksi</h3><p>3 soal singkat untuk petakan awal</p></div>
-                  <div class="dots" onclick="event.stopPropagation();openMenu(this)">⋮</div>
-                </div>
-              </div>
-            </div>
-            <div class="tgroup">
-              <div class="tcard locked-card" style="--tc:#ECECF1" data-prog="0" data-status="locked">
-                <div class="tab" style="color:#8A8B98">Terkunci</div>
-                <div class="meta-row">
-                  <span class="who" style="opacity:.8">setelah diagnostik</span>
-                  <div class="prog-wrap"><div class="track"><i style="width:2%"></i></div><span style="opacity:.6">0%</span></div>
-                </div>
-                <div class="body">
-                  <div class="ticon" style="background:#8A8B98"><svg viewBox="0 0 24 24" style="stroke:#ECECF1"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div>
-                  <div class="tinfo"><h3 style="opacity:.7">Latihan dasar induksi</h3><p style="opacity:.6">Menunggu langkah pertama</p></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== FOLDER 3: TEORI GRAF (terkunci) ===== -->
-      <div class="folder locked" id="f-graf">
-        <button class="folder-head" onclick="toast('Rubrik topik ini masih draf — menunggu persetujuan dosen')">
-          <span class="fico" style="background:var(--pink-soft)">🕸️</span>
-          <div class="finfo"><b>Teori Graf Dasar</b><small>Rubrik masih draf · menunggu dosen</small></div>
-          <div class="fmeta"><span class="fpct" style="color:var(--muted)">—</span><span class="fcount">0 tugas</span></div>
-          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-      </div>
-
-      <!-- ===== FOLDER 4: MATERI ===== -->
-      <div class="folder" id="f-materi">
-        <button class="folder-head" onclick="toggleFolder('f-materi')">
-          <span class="fico" style="background:var(--green)">📚</span>
-          <div class="finfo"><b>Materi Kuliah</b><small>2 dokumen · sumber kutipan agen</small></div>
-          <div class="fmeta"><span class="fpct">✓</span><span class="fcount">terindeks</span></div>
+          <div class="finfo"><b>Induksi Matematika</b><small>Matematika Diskrit · Dr. Rina Wijaya, M.T.</small></div>
+          <div class="fmeta"><span class="fpct">2</span><span class="fcount">dokumen</span></div>
           <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
         </button>
         <div class="folder-body">
           <div class="folder-inner">
             <div class="tgroup">
-              <div class="tcard" style="--tc:#C5EE93" data-prog="100" data-status="indexed" onclick="openMateri()">
-                <div class="tab">Terindeks</div>
-                <div class="meta-row">
-                  <span class="who">2,4 MB · 12 Nov</span>
-                  <div class="prog-wrap"><div class="track"><i style="width:100%"></i></div><span>100%</span></div>
-                </div>
+              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="openDoc('modul6')">
+                <div class="tab">PDF</div>
+                <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
                 <div class="body">
                   <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
-                  <div class="tinfo"><h3>Modul Diskrit — Bab 4.pdf</h3><p>Diverifikasi dosen</p></div>
-                  <div class="dots" onclick="event.stopPropagation();openMenu(this)">⋮</div>
+                  <div class="tinfo">
+                    <h3>Modul Diskrit — Bab 6.pdf</h3>
+                    <p>Bab 6 · Induksi matematika</p>
+                    <div class="mrow">
+                      <span class="src s-dosen">🎓 Dari Dosen</span>
+                      <span class="meta">1,9 MB · 12 Nov</span>
+                      <span class="readflag">✓ dibaca</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="tgroup">
-              <div class="tcard" style="--tc:#C5EE93" data-prog="100" data-status="indexed" onclick="openMateri()">
-                <div class="tab">Terindeks</div>
-                <div class="meta-row">
-                  <span class="who">184 KB · 12 Nov</span>
-                  <div class="prog-wrap"><div class="track"><i style="width:100%"></i></div><span>100%</span></div>
-                </div>
+              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="openDoc('scrape-ind')">
+                <div class="tab">DOCX</div>
+                <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
                 <div class="body">
                   <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
-                  <div class="tinfo"><h3>Catatan kuliah — Rekursi.docx</h3><p>Sumber utama sitasi</p></div>
-                  <div class="dots" onclick="event.stopPropagation();openMenu(this)">⋮</div>
+                  <div class="tinfo">
+                    <h3>Bukti Induksi — Catatan Web.docx</h3>
+                    <p>Contoh soal dari halaman mata kuliah</p>
+                    <div class="mrow">
+                      <span class="src s-scrape">🌐 Scraping</span>
+                      <span class="meta">web kampus · 9 Nov</span>
+                      <span class="readflag">✓ dibaca</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -413,7 +365,17 @@
         </div>
       </div>
 
-      <p class="note">Tugas datang dari topik yang kamu pilih bersama dosen. Yang dosen lihat hanya progres agregat kelas — bukan tugasmu satu per satu.</p>
+      <!-- ===== FOLDER 3: TEORI GRAF (kosong) ===== -->
+      <div class="folder locked" id="f-graf">
+        <button class="folder-head" onclick="toast('Belum ada materi Teori Graf — menunggu unggahan dosen')">
+          <span class="fico" style="background:var(--pink-soft)">🕸️</span>
+          <div class="finfo"><b>Teori Graf Dasar</b><small>Belum ada materi · menunggu dosen</small></div>
+          <div class="fmeta"><span class="fpct" style="color:var(--muted)">0</span><span class="fcount">dokumen</span></div>
+          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+
+      <p class="note">Materi datang dari dua sumber: unggahan langsung dosen pengampu dan hasil scraping website kampus. Semua kutipan agen hanya mengambil dari materi yang sudah terindeks di rak ini.</p>
     </div>
   </section>
 
@@ -421,8 +383,8 @@
     <button onclick="location.href='beranda-reason.html'" aria-label="Beranda">
       <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg>
     </button>
-    <button class="on" aria-label="Tugas">
-      <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg>
+    <button class="on" aria-label="Materi">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
     </button>
     <button onclick="location.href='peta.html'" aria-label="Peta Penguasaan">
       <svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg>
@@ -438,28 +400,17 @@
 
   <div class="overlay" id="overlay" onclick="closeSheets()"></div>
 
-  <!-- Sheet materi -->
-  <div class="sheet" id="sheetMateri">
+  <!-- Sheet detail materi (diisi dinamis) -->
+  <div class="sheet" id="sheetDoc">
     <div class="grab"></div>
-    <h3>Modul Matematika Diskrit — Bab 4.2 “Rekursi”</h3>
-    <div class="meta">Catatan kuliah dosen pengampu · hlm. 56–58</div>
-    <div class="content">4.2 Rekursi
-
-Sebuah fungsi disebut rekursif apabila di dalam definisinya fungsi tersebut memanggil dirinya sendiri. Rekursi selalu membutuhkan kasus dasar (base case) yang menghentikan pemanggilan diri.
-
-Pada faktorial, kasus dasar n = 0 didefinisikan bernilai 1. Untuk n &gt; 0, berlaku faktorial(n) = n × faktorial(n − 1).</div>
-    <span class="verified">✓ Sumber diverifikasi dosen</span>
-    <div class="sheet-actions"><button class="ghost" onclick="closeSheets()">Tutup</button><button class="primary" onclick="closeSheets();toast('Ditandai selesai — progres folder diperbarui')">Tandai sudah baca</button></div>
-  </div>
-
-  <!-- Sheet menu kartu -->
-  <div class="sheet" id="sheetMenu">
-    <div class="grab"></div>
-    <h3 id="menuTitle">Opsi tugas</h3>
-    <div class="meta" id="menuSub"></div>
+    <h3 id="docTitle">—</h3>
+    <div class="meta" id="docMeta">—</div>
+    <div class="src-line" id="docSrcLine"></div>
+    <div class="content" id="docBody">—</div>
+    <span class="verified" id="docVerified">✓ Sumber diverifikasi dosen</span>
     <div class="sheet-actions">
-      <button class="ghost" onclick="closeSheets()">Batal</button>
-      <button class="primary" id="menuDone" onclick="markDone()">Tandai selesai ✓</button>
+      <button class="ghost" onclick="closeSheets()">Tutup</button>
+      <button class="primary" id="docReadBtn" onclick="markRead()">Tandai sudah baca</button>
     </div>
   </div>
 
@@ -486,91 +437,133 @@ function toast(msg){
 
 /* ============ FOLDER ============ */
 function toggleFolder(id){
-  const f = document.getElementById(id);
-  f.classList.toggle('open');
-}
-
-/* ============ STRIP HARI ============ */
-function pickDay(el){
-  document.querySelectorAll('.dcard').forEach(d => d.classList.remove('on'));
-  el.classList.add('on');
-  toast('Menampilkan tugas hari ' + el.dataset.day);
-}
-
-/* ============ POTONGAN KODE ============ */
-function toggleCode(id){
   document.getElementById(id).classList.toggle('open');
 }
 
-/* ============ KARTU ============ */
-function cardTap(card, url){
-  if(card.dataset.status === 'locked') return;
-  if(card.dataset.status === 'done'){ location.href = url; return; }
-  location.href = url;
+/* ============ DATA MATERI ============ */
+const DOSEN = 'Dr. Rina Wijaya, M.T.';
+const DOCS = {
+  'modul4': {
+    src:'dosen', title:'Modul Diskrit — Bab 4.pdf', dosen:DOSEN,
+    meta:DOSEN + ' · Matematika Diskrit · 2,4 MB · 12 Nov 2026',
+    body:'4.2 Rekursi\n\nSebuah fungsi disebut rekursif apabila di dalam definisinya fungsi tersebut memanggil dirinya sendiri. Rekursi selalu membutuhkan kasus dasar (base case) yang menghentikan pemanggilan diri.\n\nPada faktorial, kasus dasar n = 0 didefinisikan bernilai 1. Untuk n > 0, berlaku faktorial(n) = n × faktorial(n − 1).',
+    verified:'✓ Sumber diverifikasi dosen'
+  },
+  'catatan-rek': {
+    src:'dosen', title:'Catatan kuliah — Rekursi.docx', dosen:DOSEN,
+    meta:DOSEN + ' · Matematika Diskrit · 184 KB · 12 Nov 2026',
+    body:'Catatan pertemuan 5 — Rekursi\n\n• Definisi: fungsi yang memanggil dirinya sendiri dengan input lebih kecil.\n• Wajib ada base case supaya pemanggilan berhenti.\n• Jejak eksekusi: setiap pemanggilan menumpuk di call stack; kasus dasar baru dikembalikan ke atas.\n• Kesalahan umum: lupa base case → stack overflow.',
+    verified:'✓ Sumber diverifikasi dosen'
+  },
+  'slide-rek': {
+    src:'dosen', title:'Slide Pertemuan 5 — Rekursi.pdf', dosen:DOSEN,
+    meta:DOSEN + ' · Matematika Diskrit · 3,1 MB · 10 Nov 2026',
+    body:'Slide Pertemuan 5\n\n1. Rekursi vs iterasi\n2. Anatomi panggilan: pemanggil → tumpukan frame\n3. Contoh jejak eksekusi faktorial(3)\n4. Latihan: tulis jejak f(f(2))\n5. Pengumuman: baca Bab 4.2 sebelum pertemuan berikutnya',
+    verified:'✓ Sumber diverifikasi dosen'
+  },
+  'scrape-rek': {
+    src:'scrape', title:'Ringkasan Rekursi — Web Kampus.pdf', dosen:DOSEN,
+    meta:'Hasil scraping website kampus · ' + DOSEN + ' · diambil 9 Nov 2026',
+    body:'Ringkasan dari halaman mata kuliah\n\nRekursi adalah teknik penyelesaian masalah dengan memecah masalah menjadi submasalah sejenis yang lebih kecil, sampai menemukan kasus dasar. Materi lengkap beserta contoh soal tersedia di berkas modul yang diunggah dosen.\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
+    verified:'✓ Terindeks dari web kampus'
+  },
+  'modul6': {
+    src:'dosen', title:'Modul Diskrit — Bab 6.pdf', dosen:DOSEN,
+    meta:DOSEN + ' · Matematika Diskrit · 1,9 MB · 12 Nov 2026',
+    body:'6.1 Induksi Matematika\n\nBukti induksi bekerja dalam tiga langkah: (1) basis — buktikan untuk n = 1; (2) asumsi — anggap benar untuk n = k; (3) langkah induksi — buktikan berlaku untuk n = k + 1.\n\nJika ketiga langkah terpenuhi, maka pernyataan benar untuk semua n ≥ 1.',
+    verified:'✓ Sumber diverifikasi dosen'
+  },
+  'scrape-ind': {
+    src:'scrape', title:'Bukti Induksi — Catatan Web.docx', dosen:DOSEN,
+    meta:'Hasil scraping website kampus · ' + DOSEN + ' · diambil 9 Nov 2026',
+    body:'Contoh soal dari halaman mata kuliah\n\nBuktikan bahwa 1 + 3 + 5 + … + (2n − 1) = n² untuk semua n ≥ 1.\n\nBasis: n = 1 → 1 = 1². Asumsi benar untuk n = k. Langkah induksi: tambahkan suku berikutnya (2k + 1) dan sederhanakan menjadi (k + 1)².\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
+    verified:'✓ Terindeks dari web kampus'
+  }
+};
+
+/* ============ STAT (dihitung dari DOCS) ============ */
+function updateStats(){
+  const ids = Object.keys(DOCS);
+  document.getElementById('stDoc').textContent = ids.length;
+  document.getElementById('stDosen').textContent = ids.filter(i => DOCS[i].src === 'dosen').length;
+  document.getElementById('stScrape').textContent = ids.filter(i => DOCS[i].src === 'scrape').length;
 }
 
-/* ============ MENU KARTU + TANDAI SELESAI ============ */
-let menuCard = null;
-function openMenu(dots){
-  menuCard = dots.closest('.tcard');
-  const title = menuCard.querySelector('.tinfo h3').textContent;
-  document.getElementById('menuTitle').textContent = title;
-  document.getElementById('menuSub').textContent = 'Status: ' + menuCard.querySelector('.tab').textContent;
-  const doneBtn = document.getElementById('menuDone');
-  doneBtn.style.display = menuCard.dataset.status === 'done' ? 'none' : '';
-  document.getElementById('sheetMenu').classList.add('show');
+/* ============ FILTER SUMBER + PENCARIAN ============ */
+let activeFilter = 'all';
+function pickFilter(el){
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  activeFilter = el.dataset.f;
+  applyFilter();
+}
+function applyFilter(){
+  const q = (document.getElementById('mSearch').value || '').trim().toLowerCase();
+  document.querySelectorAll('.folder').forEach(folder => {
+    const cards = [...folder.querySelectorAll('.tcard')];
+    if(!cards.length) return; // folder kosong (graf) selalu tampil
+    let visible = 0;
+    cards.forEach(card => {
+      const okSrc = activeFilter === 'all' || card.dataset.src === activeFilter;
+      const title = (card.querySelector('h3')?.textContent || '').toLowerCase();
+      const okQ = !q || title.includes(q);
+      const show = okSrc && okQ;
+      card.classList.toggle('hidden', !show);
+      if(show) visible++;
+    });
+    folder.style.display = visible ? '' : 'none';
+  });
+}
+
+/* ============ BACA / TANDAI SUDAH BACA (persist) ============ */
+let readSet = new Set();
+try{ readSet = new Set(JSON.parse(localStorage.getItem('materi_read') || '[]')); }catch(e){}
+function paintRead(){
+  document.querySelectorAll('.tcard').forEach(card => {
+    const m = (card.getAttribute('onclick') || '').match(/openDoc\('([^']+)'\)/);
+    if(m) card.classList.toggle('read', readSet.has(m[1]));
+  });
+}
+let currentDoc = null;
+function openDoc(id){
+  const d = DOCS[id];
+  if(!d){ toast('Materi tidak ditemukan'); return; }
+  currentDoc = id;
+  document.getElementById('docTitle').textContent = d.title;
+  document.getElementById('docMeta').textContent = d.meta;
+  const line = document.getElementById('docSrcLine');
+  line.innerHTML = d.src === 'dosen'
+    ? '<span class="src s-dosen">🎓 Dari Dosen</span><span class="src" style="background:var(--purple-soft);color:#5A4BC7">' + d.dosen + '</span>'
+    : '<span class="src s-scrape">🌐 Scraping</span><span class="src" style="background:var(--purple-soft);color:#5A4BC7">Pengampu: ' + d.dosen + '</span>';
+  document.getElementById('docBody').textContent = d.body;
+  const v = document.getElementById('docVerified');
+  v.textContent = d.verified;
+  v.classList.toggle('scrape', d.src === 'scrape');
+  const btn = document.getElementById('docReadBtn');
+  const sudah = readSet.has(id);
+  btn.textContent = sudah ? 'Sudah dibaca ✓' : 'Tandai sudah baca';
+  btn.disabled = sudah;
+  document.getElementById('sheetDoc').classList.add('show');
   document.getElementById('overlay').classList.add('show');
 }
-function markDone(){
-  if(!menuCard) return;
-  menuCard.dataset.prog = '100';
-  menuCard.dataset.status = 'done';
-  menuCard.style.setProperty('--tc', '#C5EE93');
-  const tab = menuCard.querySelector('.tab');
-  tab.textContent = 'Selesai';
-  tab.style.color = '';
-  menuCard.querySelector('.track i').style.width = '100%';
-  menuCard.querySelector('.prog-wrap span').textContent = '100%';
-  menuCard.classList.remove('locked-card');
-  closeSheets();
-  recompute();
-  toast('Selesai! Progres folder diperbarui ✓');
-}
-
-/* ============ REKOMPILASI STATS + FOLDER % ============ */
-function recompute(){
-  let done = 0, run = 0, wait = 0;
-  document.querySelectorAll('.tcard[data-status]').forEach(c => {
-    const s = c.dataset.status;
-    if(s === 'done') done++;
-    else if(s === 'running') run++;
-    else if(s === 'wait' || s === 'locked') wait++;
-  });
-  document.getElementById('stDone').textContent = done;
-  document.getElementById('stRun').textContent = run;
-  document.getElementById('stWait').textContent = wait;
-  ['rekursi','induksi'].forEach(name => {
-    const inner = document.querySelector(`[data-folder-tasks="${name}"]`);
-    if(!inner) return;
-    const cards = [...inner.querySelectorAll('.tcard[data-prog]')];
-    if(!cards.length) return;
-    const avg = Math.round(cards.reduce((a,c) => a + (+c.dataset.prog || 0), 0) / cards.length);
-    document.getElementById('pct-' + name).textContent = avg + '%';
-  });
-}
-
-/* ============ SHEET ============ */
-function openMateri(){
-  document.getElementById('sheetMateri').classList.add('show');
-  document.getElementById('overlay').classList.add('show');
+function markRead(){
+  if(!currentDoc) return;
+  readSet.add(currentDoc);
+  try{ localStorage.setItem('materi_read', JSON.stringify([...readSet])); }catch(e){}
+  paintRead();
+  const btn = document.getElementById('docReadBtn');
+  btn.textContent = 'Sudah dibaca ✓';
+  btn.disabled = true;
+  toast('Ditandai sudah baca ✓');
 }
 function closeSheets(){
   document.querySelectorAll('.sheet').forEach(s => s.classList.remove('show'));
   document.getElementById('overlay').classList.remove('show');
-  menuCard = null;
+  currentDoc = null;
 }
 
-recompute();
+updateStats();
+paintRead();
 setTheme('light');
 </script>
 </body>
