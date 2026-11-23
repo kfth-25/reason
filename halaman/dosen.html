@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script src="pwa.js" defer></script>
-<title>REASON — Ringkasan Kelas & Rubrik Dosen</title>
+<title>REASON — Dashboard Dosen</title>
 <style>
   :root{--blue:#4392F0;--blue-deep:#2E7BD6;--blue-soft:#D6E8FF;--purple:#B7A6F6;--purple-soft:#EFEAFD;--orange:#F5A93F;--pink:#F9A9E8;--pink-soft:#FCE3F8;--green:#C5EE93;--bg:#F6F6F9;--card:#FFFFFF;--text:#15161C;--muted:#8A8B98;--line:#ECECF1;--nav-dark:#15161C;--r-card:22px;--r-pill:999px;--shadow:0 8px 24px rgba(20,22,40,.07);--font:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
   [data-theme="dark"]{--bg:#1A2434;--card:#152030;--text:#F2F4F8;--muted:#8B97AB;--line:#253147;--nav-dark:#0F1724;--blue-soft:#1E3A5F;--purple-soft:#2A2750;--pink-soft:#402A45;--shadow:0 8px 24px rgba(0,0,0,.28)}
@@ -22,8 +22,12 @@
   .hero{margin-top:14px;background:var(--purple);border-radius:26px;padding:21px 19px;color:#15161C;position:relative;overflow:hidden}.hero::after{content:"📊";position:absolute;right:13px;top:13px;font-size:26px;transform:rotate(13deg);opacity:.9;pointer-events:none}.hero h1{max-width:82%}.hero .eyebrow{font-size:10px;font-weight:700;letter-spacing:.4px}.hero h1{font-size:20px;line-height:1.3;margin-top:6px}.hero p{font-size:11.5px;font-weight:600;line-height:1.55;margin-top:6px;opacity:.8}.stats{display:flex;gap:9px;margin-top:12px}.stat{flex:1;background:var(--card);border-radius:18px;padding:13px 12px;box-shadow:var(--shadow)}.stat b{display:block;font-size:20px;color:var(--text)}.stat small{display:block;font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4}
   .sec-title{font-size:16px;font-weight:700;color:var(--text);margin:21px 0 11px}.gap-card{background:var(--card);border-radius:22px;padding:15px;margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer}.gap-card:active{transform:scale(.98)}.gap-top{display:flex;align-items:center;gap:11px}.rank{width:29px;height:29px;border-radius:10px;background:var(--pink-soft);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#B0408F;flex-shrink:0}[data-theme="dark"] .rank{color:#F0A8DC}.gap-info{flex:1}.gap-info b{display:block;font-size:13px;color:var(--text)}.gap-info small{display:block;font-size:10px;color:var(--muted);margin-top:3px}.gap-pct{font-size:17px;font-weight:700;color:var(--text)}.bar{height:6px;border-radius:4px;background:var(--line);margin-top:11px;overflow:hidden}.bar i{display:block;height:100%;border-radius:4px;background:var(--pink)}.gap-foot{font-size:10.5px;color:var(--muted);margin-top:7px;display:flex;justify-content:space-between}.examples-link{margin-top:10px;background:none;border:0;padding:0;font-family:var(--font);font-size:11px;font-weight:700;color:var(--blue-deep);cursor:pointer}[data-theme="dark"] .examples-link{color:#9CC4F5}
   .insight{background:var(--blue-soft);border-radius:24px;padding:16px;margin-top:14px}.insight h3{font-size:13px;color:var(--blue-deep)}[data-theme="dark"] .insight h3{color:#9CC4F5}.insight p{font-size:12px;line-height:1.6;color:var(--text);margin-top:6px}[data-theme="dark"] .insight p{color:#C9DBF2}.primary{width:100%;padding:15px;margin-top:16px;background:var(--blue);color:#fff;font-size:13.5px;font-weight:700;box-shadow:0 10px 24px rgba(67,146,240,.25)}.secondary{width:100%;padding:13px;margin-top:9px;background:var(--card);color:var(--text);border:1.5px solid var(--line);font-size:12.5px;font-weight:600}
-  .tabs{display:flex;background:var(--card);border-radius:var(--r-pill);padding:5px;margin-top:15px;border:1.5px solid var(--line)}.tabs button{flex:1;border:0;background:transparent;font-family:var(--font);font-size:12px;font-weight:700;color:var(--muted);border-radius:var(--r-pill);padding:10px;cursor:pointer}.tabs button.on{background:var(--nav-dark);color:#F6F6F9}.upload{margin-top:14px;background:var(--card);border:2px dashed var(--blue);border-radius:24px;padding:22px 18px;text-align:center;cursor:pointer}.upload .up-ico{width:48px;height:48px;border-radius:16px;background:var(--blue-soft);display:flex;align-items:center;justify-content:center;font-size:23px;margin:0 auto 10px}.upload h3{font-size:14px;color:var(--text)}.upload p{font-size:11px;color:var(--muted);line-height:1.5;margin-top:5px}.upload-btn{display:inline-block;background:var(--nav-dark);color:#F6F6F9;padding:10px 18px;border-radius:var(--r-pill);font-size:11.5px;font-weight:700;margin-top:12px}.upload input{display:none}.file-card{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:20px;padding:13px 14px;margin-top:10px;box-shadow:var(--shadow)}.file-card .fi{width:38px;height:38px;border-radius:12px;background:var(--pink-soft);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}.file-card .ft{flex:1;min-width:0}.file-card b{display:block;font-size:11.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.file-card small{display:block;font-size:10px;color:var(--muted);margin-top:3px}.file-card .status{font-size:9px;font-weight:700;background:var(--green);color:#2E4A12;border-radius:var(--r-pill);padding:4px 8px;flex-shrink:0}.note{font-size:10.5px;color:var(--muted);line-height:1.55;margin-top:10px}.concept-row{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:15px;padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow)}.concept-row .ci{width:30px;height:30px;border-radius:10px;background:var(--purple-soft);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#6B5BB5}[data-theme="dark"] .concept-row .ci{color:#C5B8F0}.concept-row b{font-size:12px;color:var(--text);flex:1}.status{font-size:9.5px;font-weight:700;border-radius:var(--r-pill);padding:5px 9px}.status.approved{background:var(--green);color:#2E4A12}.status.draft{background:#FDF3E2;color:#A36608}[data-theme="dark"] .status.draft{background:#3A2E18;color:#F0C070}.rubric-card{background:var(--card);border-radius:22px;padding:15px;margin-bottom:11px;box-shadow:var(--shadow)}.rubric-head{display:flex;align-items:center;gap:10px}.rubric-head .rc{flex:1}.rubric-head b{display:block;font-size:13px;color:var(--text)}.rubric-head small{display:block;font-size:10px;color:var(--muted);margin-top:3px}.rubric-card p{font-size:11.5px;color:var(--muted);line-height:1.55;margin-top:10px}.rubric-actions{display:flex;gap:8px;margin-top:11px}.small-btn{padding:9px 13px;border-radius:var(--r-pill);font-size:10.5px;font-weight:700;background:var(--nav-dark);color:#F6F6F9}.small-btn.alt{background:var(--bg);color:var(--text);border:1.5px solid var(--line)}.small-btn:disabled{opacity:.45}.label{font-size:11.5px;font-weight:700;color:var(--text);margin-top:14px;display:block}.input,.textarea{width:100%;margin-top:7px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);padding:12px 14px;font-family:var(--font);font-size:12px;color:var(--text);outline:none}.input:focus,.textarea:focus{border-color:var(--blue)}.textarea{min-height:82px;resize:vertical;line-height:1.55}.form-card{background:var(--card);border-radius:17px;padding:15px;margin-top:14px}.form-card .label:first-child{margin-top:0}.form-card .primary{font-size:12px;padding:13px}
+  .tabs{display:flex;background:var(--card);border-radius:var(--r-pill);padding:5px;margin-top:15px;border:1.5px solid var(--line)}.tabs button{flex:1;border:0;background:transparent;font-family:var(--font);font-size:12px;font-weight:700;color:var(--muted);border-radius:var(--r-pill);padding:10px;cursor:pointer}.tabs button.on{background:var(--nav-dark);color:#F6F6F9}.upload{margin-top:14px;background:var(--card);border:2px dashed var(--blue);border-radius:24px;padding:22px 18px;text-align:center;cursor:pointer;display:block}.upload .up-ico{width:48px;height:48px;border-radius:16px;background:var(--blue-soft);display:flex;align-items:center;justify-content:center;font-size:23px;margin:0 auto 10px}.upload h3{font-size:14px;color:var(--text)}.upload p{font-size:11px;color:var(--muted);line-height:1.5;margin-top:5px}.upload-btn{display:inline-block;background:var(--nav-dark);color:#F6F6F9;padding:10px 18px;border-radius:var(--r-pill);font-size:11.5px;font-weight:700;margin-top:12px}.upload input{display:none}.file-card{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:20px;padding:13px 14px;margin-top:10px;box-shadow:var(--shadow)}.file-card .fi{width:38px;height:38px;border-radius:12px;background:var(--pink-soft);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}.file-card .ft{flex:1;min-width:0}.file-card b{display:block;font-size:11.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.file-card small{display:block;font-size:10px;color:var(--muted);margin-top:3px}.file-card .status{font-size:9px;font-weight:700;background:var(--green);color:#2E4A12;border-radius:var(--r-pill);padding:4px 8px;flex-shrink:0}.note{font-size:10.5px;color:var(--muted);line-height:1.55;margin-top:10px}.concept-row{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:15px;padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow)}.concept-row .ci{width:30px;height:30px;border-radius:10px;background:var(--purple-soft);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#6B5BB5}[data-theme="dark"] .concept-row .ci{color:#C5B8F0}.concept-row b{font-size:12px;color:var(--text);flex:1}.status{font-size:9.5px;font-weight:700;border-radius:var(--r-pill);padding:5px 9px}.status.approved{background:var(--green);color:#2E4A12}.status.draft{background:#FDF3E2;color:#A36608}[data-theme="dark"] .status.draft{background:#3A2E18;color:#F0C070}.rubric-card{background:var(--card);border-radius:22px;padding:15px;margin-bottom:11px;box-shadow:var(--shadow)}.rubric-head{display:flex;align-items:center;gap:10px}.rubric-head .rc{flex:1}.rubric-head b{display:block;font-size:13px;color:var(--text)}.rubric-head small{display:block;font-size:10px;color:var(--muted);margin-top:3px}.rubric-card p{font-size:11.5px;color:var(--muted);line-height:1.55;margin-top:10px}.rubric-actions{display:flex;gap:8px;margin-top:11px}.small-btn{padding:9px 13px;border-radius:var(--r-pill);font-size:10.5px;font-weight:700;background:var(--nav-dark);color:#F6F6F9}.small-btn.alt{background:var(--bg);color:var(--text);border:1.5px solid var(--line)}.small-btn:disabled{opacity:.45}.label{font-size:11.5px;font-weight:700;color:var(--text);margin-top:14px;display:block}.input,.textarea{width:100%;margin-top:7px;border:1.5px solid var(--line);border-radius:14px;background:var(--card);padding:12px 14px;font-family:var(--font);font-size:12px;color:var(--text);outline:none}.input:focus,.textarea:focus{border-color:var(--blue)}.textarea{min-height:82px;resize:vertical;line-height:1.55}.form-card{background:var(--card);border-radius:17px;padding:15px;margin-top:14px}.form-card .label:first-child{margin-top:0}.form-card .primary{font-size:12px;padding:13px}
   .overlay{position:absolute;inset:0;background:rgba(10,12,20,.45);z-index:75;opacity:0;visibility:hidden;transition:all .28s;backdrop-filter:blur(3px)}.overlay.show{opacity:1;visibility:visible}.sheet{position:absolute;left:0;right:0;bottom:0;z-index:76;background:var(--bg);border-radius:30px 30px 0 0;padding:14px 22px 32px;transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.25,1);max-height:78%;overflow-y:auto}.sheet::-webkit-scrollbar{display:none}.sheet.show{transform:translateY(0)}.grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 16px}.sheet h3{font-size:17px;color:var(--text);line-height:1.35}.sheet .meta{font-size:10.5px;color:var(--muted);margin-top:5px}.anon{display:inline-flex;align-items:center;gap:5px;margin-top:10px;background:var(--green);color:#2E4A12;font-size:10px;font-weight:700;border-radius:var(--r-pill);padding:6px 11px}.example{background:var(--card);border-radius:16px;padding:14px;margin-top:11px}.example .et{font-size:10px;font-weight:700;color:var(--muted)}.example blockquote{font-size:12px;color:var(--text);line-height:1.6;margin-top:7px;font-style:italic}.example p{font-size:11px;color:var(--muted);line-height:1.55;margin-top:9px}.example p b{color:var(--text)}.chart{margin-top:14px;background:var(--card);border-radius:24px;padding:17px;box-shadow:var(--shadow)}.chart h3{font-size:13px;color:var(--text)}.chart-row{display:flex;align-items:center;gap:10px;margin-top:12px}.chart-row label{width:88px;font-size:10.5px;color:var(--muted)}.chart-row .cb{flex:1;height:9px;background:var(--line);border-radius:5px;overflow:hidden}.chart-row .cb i{display:block;height:100%;background:var(--blue);border-radius:5px}.chart-row b{font-size:10.5px;color:var(--text);width:30px;text-align:right}
+  /* PILIH DOSEN */
+  .pick-hero{margin-top:16px;background:linear-gradient(135deg,#8574F4,#6555E6);border-radius:26px;padding:22px 20px;color:#fff;position:relative;overflow:hidden}.pick-hero::after{content:"🎓";position:absolute;right:14px;top:14px;font-size:30px;transform:rotate(12deg);opacity:.95}.pick-hero .eyebrow{font-size:10px;font-weight:700;letter-spacing:.4px;opacity:.85}.pick-hero h1{font-size:21px;line-height:1.3;margin-top:7px;max-width:84%}.pick-hero p{font-size:11.5px;font-weight:600;line-height:1.55;margin-top:7px;opacity:.88}
+  .dosen-card{width:100%;display:flex;align-items:center;gap:13px;background:var(--card);border:2px solid transparent;border-radius:22px;padding:15px;margin-top:11px;box-shadow:var(--shadow);cursor:pointer;font-family:var(--font);text-align:left;transition:transform .15s,border-color .15s}.dosen-card:active{transform:scale(.97)}.dosen-card:hover{border-color:var(--blue)}.dosen-card .ava{width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#15161C;flex-shrink:0}.dosen-card .dinfo{flex:1;min-width:0}.dosen-card .dinfo b{display:block;font-size:13.5px;color:var(--text);line-height:1.3}.dosen-card .dinfo small{display:block;font-size:10.5px;color:var(--muted);margin-top:3px}.dosen-card .dinfo .mtags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.dosen-card .mtags i{font-style:normal;font-size:9px;font-weight:700;background:var(--purple-soft);color:#6B5BB5;border-radius:var(--r-pill);padding:3px 8px}[data-theme="dark"] .mtags i{color:#C5B8F0}.dosen-card .go{width:30px;height:30px;border-radius:50%;background:var(--green);color:#2E4A12;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+  .backlink{display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:none;border:1.5px solid var(--line);border-radius:var(--r-pill);padding:9px 15px;font-family:var(--font);font-size:11.5px;font-weight:700;color:var(--text);cursor:pointer;background:var(--card)}
   /* Mobile: buang chrome mockup (notch/statusbar/home-ind) -> full layar + dvh */
   @media (max-width:520px){
     html,body{height:auto;min-height:100dvh}
@@ -39,40 +43,41 @@
   <div class="notch"></div><div class="statusbar"><span>9:41</span><span><svg viewBox="0 0 24 24"><path d="M2 17h3v4H2zm5-3h3v7H7zm5-4h3v11h-3zm5-5h3v16h-3z"/></svg><svg viewBox="0 0 24 24"><path d="M12 18.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM7.7 14.4a6.2 6.2 0 018.6 0l1.4-1.5a8.2 8.2 0 00-11.4 0z"/></svg><svg viewBox="0 0 24 24"><path d="M15.7 4H8.3C7 4 6 5 6 6.3v11.4C6 19 7 20 8.3 20h7.4c1.3 0 2.3-1 2.3-2.3V6.3C18 5 17 4 15.7 4z"/></svg></span></div>
   <button class="theme-fab" id="themeBtn" title="Ganti tema">🌙</button>
 
-  <!-- RINGKASAN KELAS: hanya agregat, anonim -->
-  <section class="screen active" id="s-class">
+  <!-- PILIH DOSEN — tiap dosen punya dashboard sendiri -->
+  <section class="screen active" id="s-pick">
     <div class="pad">
-      <div class="top-head"><div class="brand"><svg viewBox="0 0 24 24"><path d="M12 3a7 7 0 017 7c0 2.4-1.2 4.2-2.6 5.6-.9.9-1.4 2-1.4 3.4H9c0-1.4-.5-2.5-1.4-3.4C6.2 14.2 5 12.4 5 10a7 7 0 017-7z"/><path d="M9.5 21h5"/></svg></div><div class="ht"><b>REASON untuk Dosen</b><span>Ringkasan kelas · Matematika Diskrit</span></div></div>
+      <div class="top-head"><div class="brand"><svg viewBox="0 0 24 24"><path d="M12 3a7 7 0 017 7c0 2.4-1.2 4.2-2.6 5.6-.9.9-1.4 2-1.4 3.4H9c0-1.4-.5-2.5-1.4-3.4C6.2 14.2 5 12.4 5 10a7 7 0 017-7z"/><path d="M9.5 21h5"/></svg></div><div class="ht"><b>REASON untuk Dosen</b><span>Masuk sebagai dosen pengampu</span></div></div>
+      <div class="pick-hero"><span class="eyebrow">DASHBOARD PER DOSEN</span><h1>Pilih akun dosenmu.</h1><p>Setiap dosen hanya melihat data penalaran mahasiswa pada mata kuliah yang diampu — agregat dan tanpa nama.</p></div>
       <div class="privacy"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>Hanya data agregat. Nama mahasiswa tidak ditampilkan.</div>
-      <select class="topic-select" id="topicSelect" onchange="changeTopic()" aria-label="Pilih topik"><option value="rekursi">Rekursi · 24 mahasiswa</option><option value="induksi">Induksi Matematika · 18 mahasiswa</option><option value="graf">Teori Graf Dasar · rubrik masih draf</option></select>
-      <div id="classData">
-        <div class="hero"><span class="eyebrow">YANG PERLU DIULANG DI KELAS</span><h1>Jejak eksekusi paling sering terlewat.</h1><p>Jawaban akhir sering benar, tetapi alasan belum menunjukkan urutan pemanggilan.</p></div>
-        <div class="stats"><div class="stat"><b>24</b><small>mahasiswa dalam agregat</small></div><div class="stat"><b>58%</b><small>rata-rata penguasaan</small></div><div class="stat"><b>7</b><small>benar, alasan keliru</small></div></div>
-        <div class="chart"><h3>Penguasaan agregat per konsep</h3><div class="chart-row"><label>Fungsi</label><div class="cb"><i style="width:83%"></i></div><b>83%</b></div><div class="chart-row"><label>Notasi</label><div class="cb"><i style="width:75%"></i></div><b>75%</b></div><div class="chart-row"><label>Base case</label><div class="cb"><i style="width:54%;background:var(--orange)"></i></div><b>54%</b></div><div class="chart-row"><label>Call stack</label><div class="cb"><i style="width:42%;background:var(--pink)"></i></div><b>42%</b></div></div>
-        <h2 class="sec-title">Konsep paling sering salah</h2>
-        <div class="gap-card" onclick="openExamples('callStack')"><div class="gap-top"><span class="rank">1</span><div class="gap-info"><b>Jejak eksekusi (call stack)</b><small>14 dari 24 perlu penguatan</small></div><span class="gap-pct">58%</span></div><div class="bar"><i style="width:58%"></i></div><div class="gap-foot"><span>7 jawaban benar, alasan keliru</span><span>12 sesi cek ulang</span></div><button class="examples-link">Lihat contoh miskonsepsi anonim →</button></div>
-        <div class="gap-card" onclick="openExamples('baseCase')"><div class="gap-top"><span class="rank">2</span><div class="gap-info"><b>Base case</b><small>11 dari 24 perlu penguatan</small></div><span class="gap-pct">46%</span></div><div class="bar"><i style="width:46%;background:var(--orange)"></i></div><div class="gap-foot"><span>4 jawaban benar, alasan keliru</span><span>15 sesi cek ulang</span></div><button class="examples-link">Lihat contoh miskonsepsi anonim →</button></div>
-        <div class="gap-card" onclick="openExamples('return')"><div class="gap-top"><span class="rank">3</span><div class="gap-info"><b>Nilai saat kembali</b><small>8 dari 24 perlu penguatan</small></div><span class="gap-pct">33%</span></div><div class="bar"><i style="width:33%;background:var(--purple)"></i></div><div class="gap-foot"><span>3 jawaban benar, alasan keliru</span><span>9 sesi cek ulang</span></div><button class="examples-link">Lihat contoh miskonsepsi anonim →</button></div>
-        <div class="insight"><h3>💡 Usulan untuk pertemuan berikutnya</h3><p>Luangkan 10 menit menelusuri satu fungsi dengan dua fase: <b>saat turun</b> dan <b>saat kembali</b>. Gunakan contoh yang mencetak nilai sebelum dan sesudah pemanggilan rekursif.</p></div>
-        <button class="pill-btn primary" onclick="openExamples('callStack')">Buka contoh miskonsepsi</button>
-        <button class="pill-btn secondary" onclick="openMaterials('rubrics')">Tinjau rubrik konsep</button>
-        <div class="note">Data contoh pada prototipe ini bersifat ilustratif. Di produk, agregat kecil dapat disembunyikan untuk menjaga privasi.</div>
-      </div>
+      <h2 class="sec-title">Dosen pengampu</h2>
+      <div id="dosenList"></div>
+      <div class="note">Prototipe: pilih dosen untuk membuka dashboard penalaran mata kuliahnya. Data contoh bersifat ilustratif.</div>
+    </div>
+  </section>
+
+  <!-- RINGKASAN KELAS (per dosen, dirender dari data) -->
+  <section class="screen" id="s-class">
+    <div class="pad">
+      <div class="top-head"><div class="brand"><svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg></div><div class="ht"><b id="clsName">—</b><span id="clsMatkul">—</span></div></div>
+      <button class="backlink" onclick="gantiDosen()">← Ganti dosen</button>
+      <div class="privacy"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>Hanya data agregat. Nama mahasiswa tidak ditampilkan.</div>
+      <select class="topic-select" id="topicSelect" onchange="changeTopic()" aria-label="Pilih topik"></select>
+      <div id="classData"></div>
       <div id="draftNotice" style="display:none"><div class="hero"><span class="eyebrow">RUBRIK BELUM DISETUJUI</span><h1>Ringkasan kelas belum tersedia.</h1><p>Materi sudah dapat disiapkan. Penilaian alasan baru aktif setelah rubrik divalidasi dosen.</p></div><button class="pill-btn primary" onclick="openMaterials('rubrics')">Tinjau & setujui rubrik</button></div>
     </div>
   </section>
 
-  <!-- MATERI & RUBRIK -->
+  <!-- MATERI & RUBRIK (per dosen) -->
   <section class="screen" id="s-materials">
     <div class="pad">
-      <div class="top-head"><div class="brand"><svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg></div><div class="ht"><b>Materi & Rubrik</b><span>Sumber dan standar penilaian REASON</span></div></div>
+      <div class="top-head"><div class="brand"><svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg></div><div class="ht"><b>Materi & Rubrik</b><span id="matMatkul">—</span></div></div>
       <div class="tabs"><button id="tabMaterials" class="on" onclick="switchTab('materials')">Materi kuliah</button><button id="tabRubrics" onclick="switchTab('rubrics')">Rubrik konsep</button></div>
       <div id="materialsPane">
         <label class="upload" for="fileInput"><span class="up-ico">📄</span><h3>Unggah catatan kuliah</h3><p>PDF, DOCX, atau TXT · maksimal 20 MB<br>Materi ini menjadi sumber kutipan agen.</p><span class="upload-btn">Pilih berkas</span><input type="file" id="fileInput" accept=".pdf,.docx,.txt" onchange="handleFile(this)"></label>
-        <div id="fileList"><div class="file-card"><span class="fi">📘</span><div class="ft"><b>Modul Matematika Diskrit — Bab 4.pdf</b><small>2,4 MB · diunggah 12 Nov 2026</small></div><span class="status">Terindeks</span></div><div class="file-card"><span class="fi">📝</span><div class="ft"><b>Catatan kuliah — Rekursi.docx</b><small>184 KB · diunggah 12 Nov 2026</small></div><span class="status">Terindeks</span></div></div>
+        <div id="fileList"></div>
         <div class="note">Agen hanya mengutip bagian yang ditemukan di materi. Jika sumber tidak tersedia, agen wajib menyatakan tidak menemukan sumber.</div>
         <h2 class="sec-title">Daftar konsep</h2>
-        <div class="concept-row"><span class="ci">1</span><b>Fungsi & pemanggilan</b><span class="status approved">Aktif</span></div><div class="concept-row"><span class="ci">2</span><b>Base case</b><span class="status approved">Aktif</span></div><div class="concept-row"><span class="ci">3</span><b>Jejak eksekusi</b><span class="status approved">Aktif</span></div><div class="concept-row"><span class="ci">4</span><b>Nilai saat kembali</b><span class="status approved">Aktif</span></div>
+        <div id="conceptList"></div>
         <button class="pill-btn secondary" onclick="toast('Konsep baru dapat ditambahkan setelah materi terindeks')">+ Tambah konsep</button>
       </div>
       <div id="rubricsPane" style="display:none">
@@ -86,7 +91,7 @@
     </div>
   </section>
 
-  <nav class="nav"><button onclick="location.href='beranda-reason.html'" aria-label="Beranda"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg></button><button onclick="location.href='tugas.html'" aria-label="Tugas"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg></button><button onclick="location.href='peta.html'" aria-label="Peta Penguasaan"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg></button><button onclick="location.href='scraping.html'" aria-label="Scraping"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M12 11v5m0 0l-2.5-2.5M12 16l2.5-2.5"/></svg></button><button class="on" onclick="showScreen('s-class')" aria-label="Tampilan Dosen"><svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg></button></nav>
+  <nav class="nav"><button onclick="location.href='beranda-reason.html'" aria-label="Beranda"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg></button><button onclick="location.href='tugas.html'" aria-label="Tugas"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg></button><button onclick="location.href='peta.html'" aria-label="Peta Penguasaan"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg></button><button onclick="location.href='scraping.html'" aria-label="Scraping"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M12 11v5m0 0l-2.5-2.5M12 16l2.5-2.5"/></svg></button><button class="on" id="navDosen" onclick="navDosen()" aria-label="Tampilan Dosen"><svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg></button></nav>
   <div class="overlay" id="overlay" onclick="closeSheet()"></div>
   <div class="sheet" id="sheet"><div class="grab"></div><h3 id="sheetTitle"></h3><div class="meta" id="sheetMeta"></div><span class="anon">🛡️ Contoh agregat & anonim</span><div id="sheetContent"></div><button class="pill-btn primary" onclick="closeSheet()">Tutup</button></div>
   <div class="home-ind"></div><div class="toast" id="toast"></div>
@@ -96,33 +101,226 @@ function setTheme(mode){document.getElementById('phone').dataset.theme=mode;docu
 document.getElementById('themeBtn').addEventListener('click',()=>setTheme(document.getElementById('phone').dataset.theme==='dark'?'light':'dark'));
 let toastT;function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2600)}
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.getElementById(id).scrollTop=0}
-function openMaterials(tab){switchTab(tab);showScreen('s-materials')}
-function switchTab(tab){const materials=tab==='materials';document.getElementById('materialsPane').style.display=materials?'block':'none';document.getElementById('rubricsPane').style.display=materials?'none':'block';document.getElementById('tabMaterials').classList.toggle('on',materials);document.getElementById('tabRubrics').classList.toggle('on',!materials)}
-function changeTopic(){const draft=document.getElementById('topicSelect').value==='graf';document.getElementById('classData').style.display=draft?'none':'block';document.getElementById('draftNotice').style.display=draft?'block':'none';if(document.getElementById('topicSelect').value==='induksi')toast('Data Induksi Matematika · 18 mahasiswa (agregat)')}
+function escapeHTML(value){const d=document.createElement('div');d.textContent=value;return d.innerHTML}
+function navDosen(){if(currentDosen)showScreen('s-class');else showScreen('s-pick')}
+function gantiDosen(){currentDosen=null;renderDosenList();showScreen('s-pick')}
 
-const EXAMPLES={
-  callStack:{title:'Miskonsepsi · Jejak eksekusi',meta:'14 dari 24 mahasiswa · Rekursi',items:[{quote:'“Dikalikan dari 4 sampai 1, jadi tidak perlu menunggu pemanggilan lain.”',why:'Melihat rekursi sebagai perulangan. Hasil faktorial bisa benar, tetapi model berpikirnya belum sesuai.'},{quote:'“Setelah memanggil faktorial(2), faktorial(3) sudah selesai.”',why:'Menganggap pemanggilan lama hilang, bukan tersimpan sambil menunggu.'}]},
-  baseCase:{title:'Miskonsepsi · Base case',meta:'11 dari 24 mahasiswa · Rekursi',items:[{quote:'“Base case hanya supaya programnya lebih cepat.”',why:'Belum melihat base case sebagai syarat berhentinya pemanggilan diri.'},{quote:'“Kalau nol, hasil faktorial pasti nol juga.”',why:'Menerapkan intuisi perkalian tanpa membaca definisi kasus dasar.'}]},
-  return:{title:'Miskonsepsi · Nilai saat kembali',meta:'8 dari 24 mahasiswa · Rekursi',items:[{quote:'“Instruksi setelah rekursi tidak dijalankan lagi karena fungsinya sudah return.”',why:'Belum membedakan selesainya pemanggilan anak dan pemanggilan induk.'}]}
-};
-function openExamples(key){const data=EXAMPLES[key];document.getElementById('sheetTitle').textContent=data.title;document.getElementById('sheetMeta').textContent=data.meta;document.getElementById('sheetContent').innerHTML=data.items.map((x,i)=>`<div class="example"><span class="et">POLA ${i+1} · BUKAN IDENTITAS MAHASISWA</span><blockquote>${x.quote}</blockquote><p><b>Yang terjadi:</b> ${x.why}</p></div>`).join('');document.getElementById('sheet').classList.add('show');document.getElementById('overlay').classList.add('show')}
+/* ============ DATA: SATU DASHBOARD PER DOSEN (penalaran per matkul) ============ */
+const DOSEN=[
+{
+  id:'rina',name:'Dr. Rina Wijaya, M.T.',short:'Dr. Rina W.',ava:'RW',color:'#FCE3F8',
+  matkul:'Matematika Diskrit',tags:['Rekursi','Induksi','Graf'],
+  topics:{
+    rekursi:{label:'Rekursi · 24 mahasiswa',
+      hero:{t:'Jejak eksekusi paling sering terlewat.',p:'Jawaban akhir sering benar, tetapi alasan belum menunjukkan urutan pemanggilan.'},
+      stats:[['24','mahasiswa dalam agregat'],['58%','rata-rata penguasaan'],['7','benar, alasan keliru']],
+      chart:[['Fungsi',83],['Notasi',75],['Base case',54,'var(--orange)'],['Call stack',42,'var(--pink)']],
+      gaps:[
+        {k:'rek1',t:'Jejak eksekusi (call stack)',s:'14 dari 24 perlu penguatan',pct:58,foot:['7 jawaban benar, alasan keliru','12 sesi cek ulang'],bar:'var(--pink)',
+         ex:[{q:'“Dikalikan dari 4 sampai 1, jadi tidak perlu menunggu pemanggilan lain.”',w:'Melihat rekursi sebagai perulangan. Hasil faktorial bisa benar, tetapi model berpikirnya belum sesuai.'},{q:'“Setelah memanggil faktorial(2), faktorial(3) sudah selesai.”',w:'Menganggap pemanggilan lama hilang, bukan tersimpan sambil menunggu.'}]},
+        {k:'rek2',t:'Base case',s:'11 dari 24 perlu penguatan',pct:46,foot:['4 jawaban benar, alasan keliru','15 sesi cek ulang'],bar:'var(--orange)',
+         ex:[{q:'“Base case hanya supaya programnya lebih cepat.”',w:'Belum melihat base case sebagai syarat berhentinya pemanggilan diri.'},{q:'“Kalau nol, hasil faktorial pasti nol juga.”',w:'Menerapkan intuisi perkalian tanpa membaca definisi kasus dasar.'}]},
+        {k:'rek3',t:'Nilai saat kembali',s:'8 dari 24 perlu penguatan',pct:33,foot:['3 jawaban benar, alasan keliru','9 sesi cek ulang'],bar:'var(--purple)',
+         ex:[{q:'“Instruksi setelah rekursi tidak dijalankan lagi karena fungsinya sudah return.”',w:'Belum membedakan selesainya pemanggilan anak dan pemanggilan induk.'}]}
+      ],
+      insight:'Luangkan 10 menit menelusuri satu fungsi dengan dua fase: <b>saat turun</b> dan <b>saat kembali</b>. Gunakan contoh yang mencetak nilai sebelum dan sesudah pemanggilan rekursif.'},
+    induksi:{label:'Induksi Matematika · 18 mahasiswa',
+      hero:{t:'Langkah basis sering dilewati pada bukti induksi.',p:'Mahasiswa langsung menyimpulkan P(n+1) tanpa memeriksa P(1) dengan teliti.'},
+      stats:[['18','mahasiswa dalam agregat'],['61%','rata-rata penguasaan'],['5','benar, alasan keliru']],
+      chart:[['Basis',72],['Hipotesis',68],['Penalaran',51,'var(--orange)'],['Simpulan',47,'var(--pink)']],
+      gaps:[
+        {k:'ind1',t:'Pemeriksaan basis',s:'9 dari 18 perlu penguatan',pct:50,foot:['5 jawaban benar, alasan keliru','10 sesi cek ulang'],bar:'var(--pink)',
+         ex:[{q:'“Karena bentuk umumnya jelas, P(1) pasti benar.”',w:'Melompati bukti basis; kesalahan pada basis membuat seluruh rantai induksi runtuh.'},{q:'“Basisnya cuma formalitas.”',w:'Belum melihat basis sebagai jangkar seluruh argumentasi.'}]},
+        {k:'ind2',t:'Penerapan hipotesis',s:'8 dari 18 perlu penguatan',pct:44,foot:['4 jawaban benar, alasan keliru','8 sesi cek ulang'],bar:'var(--orange)',
+         ex:[{q:'“Asumsi P(k) benar, jadi P(k+1) juga benar.”',w:'Menganggap transisi tanpa menunjukkan langkah aljabar yang menghubungkan keduanya.'}]},
+        {k:'ind3',t:'Simpulan induksi',s:'6 dari 18 perlu penguatan',pct:33,foot:['2 jawaban benar, alasan keliru','7 sesi cek ulang'],bar:'var(--purple)',
+         ex:[{q:'“Jadi berlaku untuk semua n.”',w:'Simpulan dinyatakan tanpa merujuk kembali pada prinsip induksi yang telah dibuktikan.'}]}
+      ],
+      insight:'Tekankan alur <b>basis → hipotesis → langkah induktif → simpulan</b>. Minta mahasiswa menulis ulang satu bukti dengan menomori tiap langkah sebelum masuk soal berikutnya.'},
+    graf:{label:'Teori Graf Dasar · rubrik masih draf',draft:true,
+      hero:{t:'',p:''},stats:[],chart:[],gaps:[],insight:''}
+  },
+  materials:[
+    {ico:'📘',name:'Modul Matematika Diskrit — Bab 4.pdf',meta:'2,4 MB · diunggah 12 Nov 2026'},
+    {ico:'📝',name:'Catatan kuliah — Rekursi.docx',meta:'184 KB · diunggah 12 Nov 2026'}
+  ],
+  concepts:['Fungsi & pemanggilan','Base case','Jejak eksekusi','Nilai saat kembali'],
+  rubrics:[
+    {id:1,name:'Base case',criteria:'Menjelaskan bahwa kasus dasar menghentikan pemanggilan diri dan menyebut nilai kembalian yang sesuai.',status:'approved'},
+    {id:2,name:'Jejak eksekusi (call stack)',criteria:'Menelusuri urutan masuk, keadaan menunggu, dan urutan kembali dari kasus dasar.',status:'approved'},
+    {id:3,name:'Rekursi bercabang',criteria:'Menelusuri dua cabang pemanggilan tanpa menganggap salah satunya menggantikan cabang lain.',status:'draft'}
+  ]
+},
+{
+  id:'budi',name:'Dr. Budi Hartono, S.T., M.T.',short:'Dr. Budi H.',ava:'BH',color:'#D6E8FF',
+  matkul:'Kalkulus',tags:['Limit','Turunan'],
+  topics:{
+    limit:{label:'Limit Fungsi · 21 mahasiswa',
+      hero:{t:'Konsep limit sering dijawab dengan substitusi buta.',p:'Jawaban angka benar, tetapi alasan belum membedakan pendekatan dari kiri dan kanan.'},
+      stats:[['21','mahasiswa dalam agregat'],['64%','rata-rata penguasaan'],['6','benar, alasan keliru']],
+      chart:[['Substitusi',79],['One-sided',55],['Tak hingga',48,'var(--orange)'],['Bentuk 0/0',40,'var(--pink)']],
+      gaps:[
+        {k:'lim1',t:'Limit satu sisi',s:'11 dari 21 perlu penguatan',pct:52,foot:['6 jawaban benar, alasan keliru','11 sesi cek ulang'],bar:'var(--pink)',
+         ex:[{q:'“Limitnya tinggal masukkan x = 2, hasilnya 4.”',w:'Substitusi dipakai tanpa memeriksa apakah fungsi kontinu di titik tersebut.'},{q:'“Dari kiri dan kanan sama saja, nilainya tetap.”',w:'Benar bila kontinu, tetapi alasan belum menyentuh definisi limit itu sendiri.'}]},
+        {k:'lim2',t:'Bentuk tak tentu 0/0',s:'10 dari 21 perlu penguatan',pct:48,foot:['4 jawaban benar, alasan keliru','9 sesi cek ulang'],bar:'var(--orange)',
+         ex:[{q:'“0 dibagi 0 kan hasilnya 0.”',w:'Belum mengenali bentuk tak tentu sebagai sinyal perlu penyederhanaan.'}]},
+        {k:'lim3',t:'Limit tak hingga',s:'7 dari 21 perlu penguatan',pct:33,foot:['3 jawaban benar, alasan keliru','6 sesi cek ulang'],bar:'var(--purple)',
+         ex:[{q:'“Kalau x makin besar, hasilnya pasti ikut besar.”',w:'Belum membandingkan derajat penyebut dan pembilang.'}]}
+      ],
+      insight:'Latih satu kasus <b>bentuk 0/0</b> secara manual: faktorkan dulu, baru substitusi. Minta mahasiswa menulis kondisi awal sebelum menyederhanakan.'},
+    turunan:{label:'Turunan · 19 mahasiswa',
+      hero:{t:'Aturan rantai paling sering terlewat.',p:'Jawaban benar pada soal langsung, tetapi alasan lupa mengalikan turunan dalam.'},
+      stats:[['19','mahasiswa dalam agregat'],['67%','rata-rata penguasaan'],['5','benar, alasan keliru']],
+      chart:[['Definisi',81],['Aturan dasar',74],['Rantai',52,'var(--orange)'],['Implisit',44,'var(--pink)']],
+      gaps:[
+        {k:'tur1',t:'Aturan rantai',s:'9 dari 19 perlu penguatan',pct:47,foot:['5 jawaban benar, alasan keliru','10 sesi cek ulang'],bar:'var(--pink)',
+         ex:[{q:'“Turunan sin(x²) ya cos(x²).”',w:'Lupa mengalikan dengan turunan fungsi dalam, x² → 2x.'}]},
+        {k:'tur2',t:'Turunan implisit',s:'8 dari 19 perlu penguatan',pct:42,foot:['3 jawaban benar, alasan keliru','8 sesi cek ulang'],bar:'var(--orange)',
+         ex:[{q:'“y'+"'"+' bisa langsung dibaca dari bentuk x.”',w:'Belum memperlakukan y sebagai fungsi dari x saat turunan diterapkan.'}]},
+        {k:'tur3',t:'Interpretasi geometris',s:'6 dari 19 perlu penguatan',pct:31,foot:['2 jawaban benar, alasan keliru','5 sesi cek ulang'],bar:'var(--purple)',
+         ex:[{q:'“Turunan itu cuma rumus.”',w:'Belum mengaitkan nilai turunan dengan kemiringan garis singgung.'}]}
+      ],
+      insight:'Gunakan soal <b>sin(x²)</b> berdampingan dengan <b>sin(x)</b> untuk menunjukkan kapan faktor rantai muncul. Minta mahasiswa menandai fungsi luar dan dalam sebelum menghitung.'}
+  },
+  materials:[
+    {ico:'📗',name:'Rangkuman Limit & Turunan.pdf',meta:'1,6 MB · hasil scraping · 9 Nov 2026'},
+    {ico:'📝',name:'Catatan Web — Aturan Rantai.docx',meta:'96 KB · hasil scraping · 9 Nov 2026'}
+  ],
+  concepts:['Limit satu sisi','Bentuk tak tentu','Aturan rantai','Turunan implisit'],
+  rubrics:[
+    {id:11,name:'Limit satu sisi',criteria:'Menjelaskan pendekatan dari kiri dan kanan serta menyebut nilai yang dituju.',status:'approved'},
+    {id:12,name:'Aturan rantai',criteria:'Menandai fungsi luar dan dalam, lalu mengalikan turunan dalam pada akhir.',status:'draft'}
+  ]
+},
+{
+  id:'citra',name:'Citra Lestari, S.Kom., M.T.',short:'Citra L.',ava:'CL',color:'#FDF3E2',
+  matkul:'Algoritma',tags:['Sorting','Kompleksitas'],
+  topics:{
+    sorting:{label:'Algoritma Sorting · 20 mahasiswa',
+      hero:{t:'Pemilihan algoritma belum berdasar kompleksitas.',p:'Jawaban benar memilih quicksort, tetapi alasan belum membandingkan kasus terburuknya.'},
+      stats:[['20','mahasiswa dalam agregat'],['66%','rata-rata penguasaan'],['6','benar, alasan keliru']],
+      chart:[['Konsep dasar',80],['Stabilitas',57],['Terburuk',49,'var(--orange)'],['Pemilihan',41,'var(--pink)']],
+      gaps:[
+        {k:'sor1',t:'Kasus terburuk quicksort',s:'10 dari 20 perlu penguatan',pct:50,foot:['5 jawaban benar, alasan keliru','9 sesi cek ulang'],bar:'var(--pink)',
+         ex:[{q:'“Quicksort selalu O(n log n).”',w:'Mengabaikan kasus terburuk O(n²) saat partisi selalu memilih elemen ekstrem.'},{q:'“Quicksort paling cepat, jadi selalu dipakai.”',w:'Pemilihan tanpa mempertimbangkan ukuran data dan pola datanya.'}]},
+        {k:'sor2',t:'Stabilitas algoritma',s:'9 dari 20 perlu penguatan',pct:45,foot:['4 jawaban benar, alasan keliru','8 sesi cek ulang'],bar:'var(--orange)',
+         ex:[{q:'“Stabil atau tidak, hasil akhirnya sama.”',w:'Hasil akhir sama, tetapi urutan elemen sekey belum dipertahankan.'}]},
+        {k:'sor3',t:'Pemilihan algoritma',s:'7 dari 20 perlu penguatan',pct:35,foot:['3 jawaban benar, alasan keliru','6 sesi cek ulang'],bar:'var(--purple)',
+         ex:[{q:'“Sorting itu tinggal pakai yang paling umum.”',w:'Belum memetakan kebutuhan: data hampir terurut, memori terbatas, atau perlu stabilitas.'}]}
+      ],
+      insight:'Bandingkan <b>quicksort vs mergesort</b> pada satu tabel: kasus rata-rata, terburuk, dan memori. Minta mahasiswa memilih algoritma untuk satu skenario nyata beserta alasannya.'},
+    kompleksitas:{label:'Analisis Kompleksitas · 17 mahasiswa',
+      hero:{t:'Notasi big-O sering dibaca sebagai nilai pasti.',p:'Jawaban benar menyebut O(n²), tetapi alasan belum menjelaskan sumber kuadratnya.'},
+      stats:[['17','mahasiswa dalam agregat'],['63%','rata-rata penguasaan'],['4','benar, alasan keliru']],
+      chart:[['Notasi',77],['Loop bersarang',58],['Rekursi',46,'var(--orange)'],['Agregate',39,'var(--pink)']],
+      gaps:[
+        {k:'kpl1',t:'Loop bersarang',s:'8 dari 17 perlu penguatan',pct:47,foot:['4 jawaban benar, alasan keliru','7 sesi cek ulang'],bar:'var(--pink)',
+         ex:[{q:'“Ada dua for, jadi pasti n².”',w:'Benar pada pola umum, tetapi belum memeriksa apakah loop dalam benar-benar berjalan penuh.'}]},
+        {k:'kpl2',t:'Kompleksitas rekursi',s:'7 dari 17 perlu penguatan',pct:41,foot:['3 jawaban benar, alasan keliru','6 sesi cek ulang'],bar:'var(--orange)',
+         ex:[{q:'“Rekursi pasti lebih lambat dari iterasi.”',w:'Mengaitkan gaya penulisan dengan biaya, bukan jumlah pemanggilan yang sebenarnya.'}]}
+      ],
+      insight:'Pakai satu fungsi bersarang sederhana dan hitung <b>jumlah operasi</b> untuk n = 4, 8, 16. Biarkan pola kuadrat muncul dari data sebelum menyimpulkan notasi.'}
+  },
+  materials:[
+    {ico:'📙',name:'Catatan Sorting — Web Kampus.pdf',meta:'1,2 MB · hasil scraping · 9 Nov 2026'},
+    {ico:'📝',name:'Latihan Big-O.docx',meta:'78 KB · diunggah 11 Nov 2026'}
+  ],
+  concepts:['Quicksort & kasus terburuk','Stabilitas','Big-O loop bersarang','Kompleksitas rekursi'],
+  rubrics:[
+    {id:21,name:'Kasus terburuk quicksort',criteria:'Menyebut kondisi partisi ekstrem dan konsekuensi O(n²) beserta alternatifnya.',status:'approved'},
+    {id:22,name:'Analisis loop bersarang',criteria:'Menelusuri jumlah operasi tiap level loop sebelum menyimpulkan notasi big-O.',status:'draft'}
+  ]
+}
+];
+
+let currentDosen=null,currentTopic=null;
+function renderDosenList(){
+  document.getElementById('dosenList').innerHTML=DOSEN.map(d=>`
+    <button class="dosen-card" onclick="pilihDosen('${d.id}')">
+      <span class="ava" style="background:${d.color}">${d.ava}</span>
+      <span class="dinfo"><b>${escapeHTML(d.name)}</b><small>Pengampu · ${escapeHTML(d.matkul)}</small>
+      <span class="mtags">${d.tags.map(t=>`<i>${escapeHTML(t)}</i>`).join('')}</span></span>
+      <span class="go">→</span>
+    </button>`).join('');
+}
+function pilihDosen(id){
+  currentDosen=DOSEN.find(d=>d.id===id)||null;
+  if(!currentDosen)return;
+  document.getElementById('clsName').textContent=currentDosen.name;
+  document.getElementById('clsMatkul').textContent='Ringkasan kelas · '+currentDosen.matkul;
+  document.getElementById('matMatkul').textContent=currentDosen.matkul+' · '+currentDosen.name;
+  const sel=document.getElementById('topicSelect');
+  sel.innerHTML=Object.keys(currentDosen.topics).map(k=>`<option value="${k}">${escapeHTML(currentDosen.topics[k].label)}</option>`).join('');
+  currentTopic=Object.keys(currentDosen.topics)[0];
+  loadRubrics();renderRubrics();renderMaterials();
+  renderClass();
+  showScreen('s-class');
+}
+function changeTopic(){currentTopic=document.getElementById('topicSelect').value;renderClass()}
+function renderClass(){
+  const d=currentDosen;if(!d)return;
+  const t=d.topics[currentTopic];if(!t)return;
+  const draft=!!t.draft;
+  document.getElementById('classData').style.display=draft?'none':'block';
+  document.getElementById('draftNotice').style.display=draft?'block':'none';
+  if(draft)return;
+  const gaps=t.gaps.map((g,i)=>`
+    <div class="gap-card" onclick="openEx('${d.id}','${currentTopic}',${i})">
+      <div class="gap-top"><span class="rank">${i+1}</span><div class="gap-info"><b>${escapeHTML(g.t)}</b><small>${escapeHTML(g.s)}</small></div><span class="gap-pct">${g.pct}%</span></div>
+      <div class="bar"><i style="width:${g.pct}%;background:${g.bar}"></i></div>
+      <div class="gap-foot"><span>${escapeHTML(g.foot[0])}</span><span>${escapeHTML(g.foot[1])}</span></div>
+      <button class="examples-link">Lihat contoh miskonsepsi anonim →</button>
+    </div>`).join('');
+  const chart=t.chart.map(c=>`<div class="chart-row"><label>${escapeHTML(c[0])}</label><div class="cb"><i style="width:${c[1]}%;${c[2]?'background:'+c[2]:''}"></i></div><b>${c[1]}%</b></div>`).join('');
+  const stats=t.stats.map(s=>`<div class="stat"><b>${escapeHTML(s[0])}</b><small>${escapeHTML(s[1])}</small></div>`).join('');
+  const firstGap=t.gaps.length?`openEx('${d.id}','${currentTopic}',0)`:'';
+  document.getElementById('classData').innerHTML=`
+    <div class="hero"><span class="eyebrow">YANG PERLU DIULANG DI KELAS</span><h1>${escapeHTML(t.hero.t)}</h1><p>${escapeHTML(t.hero.p)}</p></div>
+    <div class="stats">${stats}</div>
+    <div class="chart"><h3>Penguasaan agregat per konsep</h3>${chart}</div>
+    <h2 class="sec-title">Konsep paling sering salah</h2>
+    ${gaps}
+    <div class="insight"><h3>💡 Usulan untuk pertemuan berikutnya</h3><p>${t.insight}</p></div>
+    <button class="pill-btn primary" onclick="${firstGap}">Buka contoh miskonsepsi</button>
+    <button class="pill-btn secondary" onclick="openMaterials('rubrics')">Tinjau rubrik konsep</button>
+    <div class="note">Data contoh pada prototipe ini bersifat ilustratif. Di produk, agregat kecil dapat disembunyikan untuk menjaga privasi.</div>`;
+}
+function openEx(did,tkey,i){
+  const d=DOSEN.find(x=>x.id===did);if(!d)return;
+  const t=d.topics[tkey];if(!t)return;
+  const g=t.gaps[i];if(!g)return;
+  document.getElementById('sheetTitle').textContent='Miskonsepsi · '+g.t;
+  document.getElementById('sheetMeta').textContent=g.s+' · '+d.matkul;
+  document.getElementById('sheetContent').innerHTML=g.ex.map((x,n)=>`<div class="example"><span class="et">POLA ${n+1} · BUKAN IDENTITAS MAHASISWA</span><blockquote>${escapeHTML(x.q)}</blockquote><p><b>Yang terjadi:</b> ${escapeHTML(x.w)}</p></div>`).join('');
+  document.getElementById('sheet').classList.add('show');
+  document.getElementById('overlay').classList.add('show');
+}
 function closeSheet(){document.getElementById('sheet').classList.remove('show');document.getElementById('overlay').classList.remove('show')}
 
-let rubrics=[
-  {id:1,name:'Base case',criteria:'Menjelaskan bahwa kasus dasar menghentikan pemanggilan diri dan menyebut nilai kembalian yang sesuai.',status:'approved'},
-  {id:2,name:'Jejak eksekusi (call stack)',criteria:'Menelusuri urutan masuk, keadaan menunggu, dan urutan kembali dari kasus dasar.',status:'approved'},
-  {id:3,name:'Rekursi bercabang',criteria:'Menelusuri dua cabang pemanggilan tanpa menganggap salah satunya menggantikan cabang lain.',status:'draft'}
-];
-function saveRubrics(){try{localStorage.setItem('reason_lecturer_rubrics',JSON.stringify(rubrics))}catch(e){}}
-function loadRubrics(){try{const saved=JSON.parse(localStorage.getItem('reason_lecturer_rubrics')||'null');if(Array.isArray(saved)&&saved.length)rubrics=saved}catch(e){}}
+/* Materi & rubrik per dosen */
+function renderMaterials(){
+  const d=currentDosen;if(!d)return;
+  document.getElementById('fileList').innerHTML=d.materials.map(m=>`<div class="file-card"><span class="fi">${m.ico}</span><div class="ft"><b>${escapeHTML(m.name)}</b><small>${escapeHTML(m.meta)}</small></div><span class="status">Terindeks</span></div>`).join('');
+  document.getElementById('conceptList').innerHTML=d.concepts.map((c,i)=>`<div class="concept-row"><span class="ci">${i+1}</span><b>${escapeHTML(c)}</b><span class="status approved">Aktif</span></div>`).join('');
+}
+function openMaterials(tab){switchTab(tab);showScreen('s-materials')}
+function switchTab(tab){const materials=tab==='materials';document.getElementById('materialsPane').style.display=materials?'block':'none';document.getElementById('rubricsPane').style.display=materials?'none':'block';document.getElementById('tabMaterials').classList.toggle('on',materials);document.getElementById('tabRubrics').classList.toggle('on',!materials)}
+
+let rubrics=[];
+function rubricKey(){return 'reason_lecturer_rubrics_'+(currentDosen?currentDosen.id:'x')}
+function saveRubrics(){try{localStorage.setItem(rubricKey(),JSON.stringify(rubrics))}catch(e){}}
+function loadRubrics(){
+  const d=currentDosen;rubrics=d?d.rubrics.map(r=>({...r})):[];
+  try{const saved=JSON.parse(localStorage.getItem(rubricKey())||'null');if(Array.isArray(saved)&&saved.length)rubrics=saved}catch(e){}
+}
 function renderRubrics(){document.getElementById('rubricList').innerHTML=rubrics.map(r=>`<div class="rubric-card"><div class="rubric-head"><div class="rc"><b>${escapeHTML(r.name)}</b><small>Rubrik alasan · 2 miskonsepsi</small></div><span class="status ${r.status}">${r.status==='approved'?'Disetujui':'Draf'}</span></div><p>${escapeHTML(r.criteria)}</p><div class="rubric-actions"><button class="pill-btn small-btn alt" onclick="editRubric(${r.id})">Edit</button><button class="pill-btn small-btn" ${r.status==='approved'?'disabled':''} onclick="approveRubric(${r.id})">${r.status==='approved'?'✓ Disetujui':'Setujui rubrik'}</button></div></div>`).join('')}
 function approveRubric(id){const r=rubrics.find(x=>x.id===id);if(!r)return;r.status='approved';saveRubrics();renderRubrics();toast('Rubrik disetujui — dapat dipakai agen untuk menilai alasan')}
 function editRubric(id){const r=rubrics.find(x=>x.id===id);if(!r)return;document.getElementById('rubricEditor').style.display='block';document.getElementById('newConcept').value=r.name;document.getElementById('newReason').value=r.criteria;document.getElementById('newMisconception').value='Contoh miskonsepsi akan ditinjau dosen.';document.getElementById('rubricEditor').scrollIntoView({behavior:'smooth',block:'start'});toast('Ubah lalu simpan sebagai draf baru')}
 function openRubricEditor(){document.getElementById('rubricEditor').style.display=document.getElementById('rubricEditor').style.display==='none'?'block':'none'}
 function saveRubric(){const name=document.getElementById('newConcept').value.trim(),criteria=document.getElementById('newReason').value.trim();if(!name||!criteria){toast('Nama konsep dan kriteria alasan perlu diisi');return}rubrics.push({id:Date.now(),name,criteria,status:'draft'});saveRubrics();renderRubrics();document.getElementById('rubricEditor').style.display='none';document.getElementById('newConcept').value='';document.getElementById('newReason').value='';document.getElementById('newMisconception').value='';toast('Rubrik tersimpan sebagai draf')}
-function escapeHTML(value){const d=document.createElement('div');d.textContent=value;return d.innerHTML}
 function handleFile(input){const file=input.files[0];if(!file)return;if(file.size>20*1024*1024){toast('Berkas melebihi batas 20 MB');input.value='';return}const card=document.createElement('div');card.className='file-card';card.innerHTML=`<span class="fi">📄</span><div class="ft"><b>${escapeHTML(file.name)}</b><small>${Math.max(1,Math.round(file.size/1024))} KB · baru dipilih</small></div><span class="status draft">Diproses</span>`;document.getElementById('fileList').appendChild(card);toast('Berkas dipilih — simulasi indeks materi dimulai');setTimeout(()=>{const s=card.querySelector('.status');s.textContent='Terindeks';s.className='status';toast('Materi siap menjadi sumber kutipan')},1400);input.value=''}
-loadRubrics();renderRubrics();setTheme('light');
+
+renderDosenList();setTheme('light');
 </script>
 </body>
 </html>
