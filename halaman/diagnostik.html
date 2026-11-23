@@ -581,11 +581,16 @@ function pickStep(i){
   stepChoice = currentSteps[i];
   const g = document.getElementById('goBtn');
   g.disabled = false;
-  g.textContent = 'Mulai belajar →';
+  g.textContent = 'Belajar yang dipilih';
 }
 function startStep(){
   if(!stepChoice){ toast('Pilih dulu langkah yang mau kamu mulai'); return; }
-  location.href = stepChoice[2];
+  try{
+    localStorage.setItem('reason_nextstep', JSON.stringify({
+      title: stepChoice[0], sub: stepChoice[1], url: stepChoice[2], ts: Date.now()
+    }));
+  }catch(e){}
+  location.href = 'latihan.html';
 }
 
 setTheme('light');
