@@ -75,7 +75,7 @@
   .chip:active{transform:scale(.96)}
   .chip.on{background:var(--nav-dark);border-color:var(--nav-dark);color:#F6F6F9}
 
-  /* ============ FOLDER (per topik) ============ */
+  /* ============ FOLDER (per mata kuliah) ============ */
   .sec-title{font-size:16px;font-weight:700;color:var(--text);margin:20px 0 11px;display:flex;align-items:center;justify-content:space-between}
   .sec-title .hint{font-size:10.5px;font-weight:600;color:var(--muted)}
   .folder{background:var(--card);border-radius:20px;margin-bottom:12px;box-shadow:var(--shadow);overflow:hidden;border:1.5px solid var(--line);transition:border-color .2s}
@@ -100,14 +100,16 @@
   .folder-head .chev{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .28s;flex-shrink:0}
   .folder.open .chev{transform:rotate(180deg)}
   .folder-body{max-height:0;overflow:hidden;transition:max-height .38s cubic-bezier(.2,.8,.25,1)}
-  .folder.open .folder-body{max-height:1800px}
+  .folder.open .folder-body{max-height:2400px}
   .folder-inner{padding:2px 14px 16px}
 
   /* ============ KARTU MATERI ============ */
   .tgroup{margin-top:22px;position:relative}
   .tgroup:first-child{margin-top:8px}
   .tcard{
-    background:var(--card);border-radius:20px;padding:16px 15px;
+    background:var(--card);border-radius:20px;
+    /* padding-top ruang utk profil dosen di pojok kanan — judul TIDAK tertutup */
+    padding:46px 15px 16px;
     cursor:pointer;transition:transform .15s;position:relative;
     border:1.5px solid var(--line);box-shadow:var(--shadow);
   }
@@ -115,14 +117,14 @@
   .tcard .tab{
     position:absolute;top:-14px;left:15px;background:var(--tc,#D8D2F3);
     border-radius:12px 12px 0 0;padding:4px 13px 6px;
-    font-size:11.5px;font-weight:700;color:#15161C;
+    font-size:11.5px;font-weight:700;color:#15161C;z-index:3;
   }
-  /* Profil dosen di POJOK KANAN atas kartu materi */
+  /* Profil dosen di POJOK KANAN atas kartu materi (di baris atas, di atas judul) */
   .dpf{
     position:absolute;top:11px;right:11px;z-index:2;
     display:flex;align-items:center;gap:6px;
     background:var(--purple-soft);border-radius:var(--r-pill);
-    padding:4px 10px 4px 4px;max-width:62%;
+    padding:4px 10px 4px 4px;max-width:64%;
   }
   .dpf .ava{
     width:26px;height:26px;border-radius:50%;flex-shrink:0;
@@ -137,7 +139,7 @@
   .dpf.scrape .ava{background:linear-gradient(135deg,#4392F0,#2E7BD6);box-shadow:0 2px 6px rgba(46,123,214,.4)}
   .dpf.scrape span{color:#1E5FA8}
   [data-theme="dark"] .dpf.scrape span{color:#9CC4F5}
-  .tcard .body{display:flex;align-items:center;gap:13px;margin-top:10px}
+  .tcard .body{display:flex;align-items:center;gap:13px}
   .ticon{
     width:50px;height:50px;flex-shrink:0;background:#152030;
     display:flex;align-items:center;justify-content:center;
@@ -202,13 +204,13 @@
     <div class="pad">
       <div class="top-head">
         <div class="brand"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
-        <div class="ht"><b>Rak Materi</b><span>Simpan materi — unggahan dosen &amp; scraping</span></div>
+        <div class="ht"><b>Rak Materi</b><span>Per mata kuliah — unggahan dosen &amp; scraping</span></div>
       </div>
 
       <div class="stats">
-        <div class="stat"><b id="stDoc">6</b><small>dokumen</small></div>
+        <div class="stat"><b id="stDoc">8</b><small>dokumen</small></div>
         <div class="stat s-dosen"><b id="stDosen">4</b><small>dari dosen</small></div>
-        <div class="stat s-scrape"><b id="stScrape">2</b><small>dari scraping</small></div>
+        <div class="stat s-scrape"><b id="stScrape">4</b><small>dari scraping</small></div>
       </div>
 
       <!-- Cari + filter sumber -->
@@ -222,14 +224,14 @@
         <button class="chip" data-f="scrape" onclick="pickFilter(this)">🌐 Scraping</button>
       </div>
 
-      <div class="sec-title">Folder materi <span class="hint">ketuk kartu untuk baca</span></div>
+      <div class="sec-title">Materi per mata kuliah <span class="hint">ketuk kartu untuk baca</span></div>
 
-      <!-- ===== FOLDER 1: REKURSI ===== -->
-      <div class="folder open" id="f-rekursi">
-        <button class="folder-head" onclick="toggleFolder('f-rekursi')">
-          <span class="fico" style="background:var(--blue-soft)">🔁</span>
-          <div class="finfo"><b>Rekursi</b><small>Matematika Diskrit · Dr. Rina Wijaya, M.T.</small></div>
-          <div class="fmeta"><span class="fpct">4</span><span class="fcount">dokumen</span></div>
+      <!-- ===== FOLDER 1: MATEMATIKA DISKRT (6 dokumen) ===== -->
+      <div class="folder open" id="f-diskrit">
+        <button class="folder-head" onclick="toggleFolder('f-diskrit')">
+          <span class="fico" style="background:var(--blue-soft)">📐</span>
+          <div class="finfo"><b>Matematika Diskrit</b><small>Dr. Rina Wijaya, M.T. · pengampu</small></div>
+          <div class="fmeta"><span class="fpct">6</span><span class="fcount">dokumen</span></div>
           <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
         </button>
         <div class="folder-body">
@@ -262,7 +264,7 @@
                   <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
                   <div class="tinfo">
                     <h3>Catatan kuliah — Rekursi.docx</h3>
-                    <p>Situsasi utama umpan balik agen</p>
+                    <p>Sitasi utama umpan balik agen</p>
                     <div class="mrow">
                       <span class="src s-dosen">🎓 Dari Dosen</span>
                       <span class="meta">184 KB · 12 Nov</span>
@@ -293,6 +295,25 @@
             </div>
 
             <div class="tgroup">
+              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="openDoc('modul6')">
+                <div class="tab">PDF</div>
+                <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
+                <div class="body">
+                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
+                  <div class="tinfo">
+                    <h3>Modul Diskrit — Bab 6.pdf</h3>
+                    <p>Bab 6 · Induksi matematika</p>
+                    <div class="mrow">
+                      <span class="src s-dosen">🎓 Dari Dosen</span>
+                      <span class="meta">1,9 MB · 12 Nov</span>
+                      <span class="readflag">✓ dibaca</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tgroup">
               <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="openDoc('scrape-rek')">
                 <div class="tab">PDF</div>
                 <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
@@ -311,38 +332,6 @@
               </div>
             </div>
 
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== FOLDER 2: INDUKSI ===== -->
-      <div class="folder" id="f-induksi">
-        <button class="folder-head" onclick="toggleFolder('f-induksi')">
-          <span class="fico" style="background:var(--purple-soft)">🧩</span>
-          <div class="finfo"><b>Induksi Matematika</b><small>Matematika Diskrit · Dr. Rina Wijaya, M.T.</small></div>
-          <div class="fmeta"><span class="fpct">2</span><span class="fcount">dokumen</span></div>
-          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="folder-body">
-          <div class="folder-inner">
-            <div class="tgroup">
-              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="openDoc('modul6')">
-                <div class="tab">PDF</div>
-                <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
-                <div class="body">
-                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
-                  <div class="tinfo">
-                    <h3>Modul Diskrit — Bab 6.pdf</h3>
-                    <p>Bab 6 · Induksi matematika</p>
-                    <div class="mrow">
-                      <span class="src s-dosen">🎓 Dari Dosen</span>
-                      <span class="meta">1,9 MB · 12 Nov</span>
-                      <span class="readflag">✓ dibaca</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div class="tgroup">
               <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="openDoc('scrape-ind')">
                 <div class="tab">DOCX</div>
@@ -361,18 +350,73 @@
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
 
-      <!-- ===== FOLDER 3: TEORI GRAF (kosong) ===== -->
-      <div class="folder locked" id="f-graf">
-        <button class="folder-head" onclick="toast('Belum ada materi Teori Graf — menunggu unggahan dosen')">
-          <span class="fico" style="background:var(--pink-soft)">🕸️</span>
-          <div class="finfo"><b>Teori Graf Dasar</b><small>Belum ada materi · menunggu dosen</small></div>
-          <div class="fmeta"><span class="fpct" style="color:var(--muted)">0</span><span class="fcount">dokumen</span></div>
+      <!-- ===== FOLDER 2: KALKULUS (scraping) ===== -->
+      <div class="folder" id="f-kalkulus">
+        <button class="folder-head" onclick="toggleFolder('f-kalkulus')">
+          <span class="fico" style="background:var(--purple-soft)">∑</span>
+          <div class="finfo"><b>Kalkulus</b><small>Hasil scraping website kampus</small></div>
+          <div class="fmeta"><span class="fpct">1</span><span class="fcount">dokumen</span></div>
           <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
         </button>
+        <div class="folder-body">
+          <div class="folder-inner">
+            <div class="tgroup">
+              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="openDoc('kalkulus')">
+                <div class="tab">PDF</div>
+                <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
+                <div class="body">
+                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
+                  <div class="tinfo">
+                    <h3>Rangkuman Kalkulus.pdf</h3>
+                    <p>Diambil dari halaman mata kuliah</p>
+                    <div class="mrow">
+                      <span class="src s-scrape">🌐 Scraping</span>
+                      <span class="meta">1,1 MB · 18 Nov</span>
+                      <span class="readflag">✓ dibaca</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== FOLDER 3: ALGORITMA (scraping) ===== -->
+      <div class="folder" id="f-algoritma">
+        <button class="folder-head" onclick="toggleFolder('f-algoritma')">
+          <span class="fico" style="background:var(--green)">⚙️</span>
+          <div class="finfo"><b>Algoritma</b><small>Hasil scraping website kampus</small></div>
+          <div class="fmeta"><span class="fpct">1</span><span class="fcount">dokumen</span></div>
+          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="folder-body">
+          <div class="folder-inner">
+            <div class="tgroup">
+              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="openDoc('algoritma')">
+                <div class="tab">PDF</div>
+                <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
+                <div class="body">
+                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
+                  <div class="tinfo">
+                    <h3>Simulasi Algoritma.pdf</h3>
+                    <p>Diambil dari halaman mata kuliah</p>
+                    <div class="mrow">
+                      <span class="src s-scrape">🌐 Scraping</span>
+                      <span class="meta">860 KB · 17 Nov</span>
+                      <span class="readflag">✓ dibaca</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <p class="note">Materi datang dari dua sumber: unggahan langsung dosen pengampu dan hasil scraping website kampus. Semua kutipan agen hanya mengambil dari materi yang sudah terindeks di rak ini.</p>
@@ -440,7 +484,7 @@ function toggleFolder(id){
   document.getElementById(id).classList.toggle('open');
 }
 
-/* ============ DATA MATERI ============ */
+/* ============ DATA MATERI (per matkul) ============ */
 const DOSEN = 'Dr. Rina Wijaya, M.T.';
 const DOCS = {
   'modul4': {
@@ -461,22 +505,34 @@ const DOCS = {
     body:'Slide Pertemuan 5\n\n1. Rekursi vs iterasi\n2. Anatomi panggilan: pemanggil → tumpukan frame\n3. Contoh jejak eksekusi faktorial(3)\n4. Latihan: tulis jejak f(f(2))\n5. Pengumuman: baca Bab 4.2 sebelum pertemuan berikutnya',
     verified:'✓ Sumber diverifikasi dosen'
   },
-  'scrape-rek': {
-    src:'scrape', title:'Ringkasan Rekursi — Web Kampus.pdf', dosen:DOSEN,
-    meta:'Hasil scraping website kampus · ' + DOSEN + ' · diambil 9 Nov 2026',
-    body:'Ringkasan dari halaman mata kuliah\n\nRekursi adalah teknik penyelesaian masalah dengan memecah masalah menjadi submasalah sejenis yang lebih kecil, sampai menemukan kasus dasar. Materi lengkap beserta contoh soal tersedia di berkas modul yang diunggah dosen.\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
-    verified:'✓ Terindeks dari web kampus'
-  },
   'modul6': {
     src:'dosen', title:'Modul Diskrit — Bab 6.pdf', dosen:DOSEN,
     meta:DOSEN + ' · Matematika Diskrit · 1,9 MB · 12 Nov 2026',
     body:'6.1 Induksi Matematika\n\nBukti induksi bekerja dalam tiga langkah: (1) basis — buktikan untuk n = 1; (2) asumsi — anggap benar untuk n = k; (3) langkah induksi — buktikan berlaku untuk n = k + 1.\n\nJika ketiga langkah terpenuhi, maka pernyataan benar untuk semua n ≥ 1.',
     verified:'✓ Sumber diverifikasi dosen'
   },
+  'scrape-rek': {
+    src:'scrape', title:'Ringkasan Rekursi — Web Kampus.pdf', dosen:DOSEN,
+    meta:'Hasil scraping website kampus · ' + DOSEN + ' · diambil 9 Nov 2026',
+    body:'Ringkasan dari halaman mata kuliah\n\nRekursi adalah teknik penyelesaian masalah dengan memecah masalah menjadi submasalah sejenis yang lebih kecil, sampai menemukan kasus dasar. Materi lengkap beserta contoh soal tersedia di berkas modul yang diunggah dosen.\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
+    verified:'✓ Terindeks dari web kampus'
+  },
   'scrape-ind': {
     src:'scrape', title:'Bukti Induksi — Catatan Web.docx', dosen:DOSEN,
     meta:'Hasil scraping website kampus · ' + DOSEN + ' · diambil 9 Nov 2026',
     body:'Contoh soal dari halaman mata kuliah\n\nBuktikan bahwa 1 + 3 + 5 + … + (2n − 1) = n² untuk semua n ≥ 1.\n\nBasis: n = 1 → 1 = 1². Asumsi benar untuk n = k. Langkah induksi: tambahkan suku berikutnya (2k + 1) dan sederhanakan menjadi (k + 1)².\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
+    verified:'✓ Terindeks dari web kampus'
+  },
+  'kalkulus': {
+    src:'scrape', title:'Rangkuman Kalkulus.pdf', dosen:null,
+    meta:'Hasil scraping website kampus · 1,1 MB · 18 Nov 2026',
+    body:'Rangkuman Kalkulus\n\nBerkas ini diambil otomatis dari halaman mata kuliah kalkulus di website kampus.\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
+    verified:'✓ Terindeks dari web kampus'
+  },
+  'algoritma': {
+    src:'scrape', title:'Simulasi Algoritma.pdf', dosen:null,
+    meta:'Hasil scraping website kampus · 860 KB · 17 Nov 2026',
+    body:'Simulasi Algoritma\n\nBerkas ini diambil otomatis dari halaman mata kuliah algoritma di website kampus.\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
     verified:'✓ Terindeks dari web kampus'
   }
 };
@@ -501,12 +557,13 @@ function applyFilter(){
   const q = (document.getElementById('mSearch').value || '').trim().toLowerCase();
   document.querySelectorAll('.folder').forEach(folder => {
     const cards = [...folder.querySelectorAll('.tcard')];
-    if(!cards.length) return; // folder kosong (graf) selalu tampil
+    if(!cards.length) return;
     let visible = 0;
     cards.forEach(card => {
       const okSrc = activeFilter === 'all' || card.dataset.src === activeFilter;
-      const title = (card.querySelector('h3')?.textContent || '').toLowerCase();
-      const okQ = !q || title.includes(q);
+      const hay = ((card.querySelector('h3')?.textContent || '') + ' ' +
+                   (card.querySelector('p')?.textContent || '')).toLowerCase();
+      const okQ = !q || hay.includes(q);
       const show = okSrc && okQ;
       card.classList.toggle('hidden', !show);
       if(show) visible++;
@@ -532,9 +589,13 @@ function openDoc(id){
   document.getElementById('docTitle').textContent = d.title;
   document.getElementById('docMeta').textContent = d.meta;
   const line = document.getElementById('docSrcLine');
-  line.innerHTML = d.src === 'dosen'
-    ? '<span class="src s-dosen">🎓 Dari Dosen</span><span class="src" style="background:var(--purple-soft);color:#5A4BC7">' + d.dosen + '</span>'
-    : '<span class="src s-scrape">🌐 Scraping</span><span class="src" style="background:var(--purple-soft);color:#5A4BC7">Pengampu: ' + d.dosen + '</span>';
+  if(d.src === 'dosen'){
+    line.innerHTML = '<span class="src s-dosen">🎓 Dari Dosen</span><span class="src" style="background:var(--purple-soft);color:#5A4BC7">' + d.dosen + '</span>';
+  } else if(d.dosen){
+    line.innerHTML = '<span class="src s-scrape">🌐 Scraping</span><span class="src" style="background:var(--purple-soft);color:#5A4BC7">Pengampu: ' + d.dosen + '</span>';
+  } else {
+    line.innerHTML = '<span class="src s-scrape">🌐 Scraping</span><span class="src" style="background:var(--purple-soft);color:#5A4BC7">Dari website kampus</span>';
+  }
   document.getElementById('docBody').textContent = d.body;
   const v = document.getElementById('docVerified');
   v.textContent = d.verified;
