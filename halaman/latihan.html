@@ -556,6 +556,8 @@ function setTheme(mode){document.getElementById('phone').dataset.theme=mode;docu
 document.getElementById('themeBtn').addEventListener('click',()=>setTheme(document.getElementById('phone').dataset.theme==='dark'?'light':'dark'));
 let toastT;function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2600)}
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.getElementById(id).scrollTop=0}
+/* Deep-link dari diagnostik: latihan.html#hasil -> layar Hasil cek ulang */
+if(location.hash==='#hasil')showScreen('s-result');
 function escapeHTML(value){const d=document.createElement('div');d.textContent=value;return d.innerHTML}
 
 /* Beberapa latihan — tampil satu per layar di s-quiz (bukan di penjelasan) */
