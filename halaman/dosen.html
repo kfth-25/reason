@@ -275,7 +275,7 @@ function renderClassList(){
     const tag=t.draft?'<i>rubrik masih draf</i>':`<i>${t.stats[0]?escapeHTML(t.stats[0][0]):'0'} mahasiswa</i><i>${t.gaps.length} konsep rawan</i>`;
     return `<button class="dosen-card" onclick="pickKelas('${k}')">
       <span class="ava" style="background:var(--purple-soft)">📘</span>
-      <span class="dinfo"><b>${escapeHTML(parts[0])}</b><small>${escapeHTML(parts.slice(1).join(' · ')||d.matkul)}</small>
+      <span class="dinfo"><b>Kelas ${escapeHTML(parts[0])}</b><small>${escapeHTML(d.matkul)}</small>
       <span class="mtags">${tag}</span></span>
       <span class="go">→</span>
     </button>`;
