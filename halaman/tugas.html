@@ -149,7 +149,11 @@
   .tinfo{flex:1;min-width:0}
   .tinfo h3{font-size:15px;font-weight:700;color:var(--text);line-height:1.3}
   .tinfo p{font-size:11.5px;color:var(--muted);margin-top:3px}
-  .mrow{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .mrow{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;padding-right:34px}
+  .ibtn{position:absolute;right:13px;bottom:13px;width:30px;height:30px;border-radius:50%;
+    border:1.5px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;
+    cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;z-index:2}
+  .ibtn:active{transform:scale(.9)}
   .src{font-size:9.5px;font-weight:700;padding:4px 9px;border-radius:var(--r-pill)}
   .s-dosen{background:var(--green);color:#2E4A12}
   .s-scrape{background:var(--blue-soft);color:#1E5FA8}
@@ -224,7 +228,7 @@
         <button class="chip" data-f="scrape" onclick="pickFilter(this)">🌐 Scraping</button>
       </div>
 
-      <div class="sec-title">Materi per mata kuliah <span class="hint">ketuk kartu untuk baca</span></div>
+      <div class="sec-title">Materi per mata kuliah <span class="hint">ketuk kartu untuk buka file \u00b7 \u2139 detail</span></div>
 
       <!-- ===== FOLDER 1: MATEMATIKA DISKRT (6 dokumen) ===== -->
       <div class="folder open" id="f-diskrit">
@@ -238,7 +242,7 @@
           <div class="folder-inner">
 
             <div class="tgroup">
-              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="openDoc('modul4')">
+              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="cardTap('modul4')">
                 <div class="tab">PDF</div>
                 <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
                 <div class="body">
@@ -257,7 +261,7 @@
             </div>
 
             <div class="tgroup">
-              <div class="tcard" style="--tc:#BFD9FF" data-src="dosen" onclick="openDoc('catatan-rek')">
+              <div class="tcard" style="--tc:#BFD9FF" data-src="dosen" onclick="cardTap('catatan-rek')">
                 <div class="tab">DOCX</div>
                 <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
                 <div class="body">
@@ -276,7 +280,7 @@
             </div>
 
             <div class="tgroup">
-              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="openDoc('slide-rek')">
+              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="cardTap('slide-rek')">
                 <div class="tab">PDF</div>
                 <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
                 <div class="body">
@@ -295,7 +299,7 @@
             </div>
 
             <div class="tgroup">
-              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="openDoc('modul6')">
+              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="cardTap('modul6')">
                 <div class="tab">PDF</div>
                 <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
                 <div class="body">
@@ -314,7 +318,7 @@
             </div>
 
             <div class="tgroup">
-              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="openDoc('scrape-rek')">
+              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="cardTap('scrape-rek')">
                 <div class="tab">PDF</div>
                 <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
                 <div class="body">
@@ -333,7 +337,7 @@
             </div>
 
             <div class="tgroup">
-              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="openDoc('scrape-ind')">
+              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="cardTap('scrape-ind')">
                 <div class="tab">DOCX</div>
                 <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
                 <div class="body">
@@ -366,7 +370,7 @@
         <div class="folder-body">
           <div class="folder-inner">
             <div class="tgroup">
-              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="openDoc('kalkulus')">
+              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="cardTap('kalkulus')">
                 <div class="tab">PDF</div>
                 <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
                 <div class="body">
@@ -398,7 +402,7 @@
         <div class="folder-body">
           <div class="folder-inner">
             <div class="tgroup">
-              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="openDoc('algoritma')">
+              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="cardTap('algoritma')">
                 <div class="tab">PDF</div>
                 <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
                 <div class="body">
@@ -488,49 +492,49 @@ function toggleFolder(id){
 const DOSEN = 'Dr. Rina Wijaya, M.T.';
 const DOCS = {
   'modul4': {
-    src:'dosen', title:'Modul Diskrit — Bab 4.pdf', dosen:DOSEN,
+    src:'dosen', title:'Modul Diskrit — Bab 4.pdf' file:'materi/modul-diskrit-bab4.pdf',, dosen:DOSEN,
     meta:DOSEN + ' · Matematika Diskrit · 2,4 MB · 12 Nov 2026',
     body:'4.2 Rekursi\n\nSebuah fungsi disebut rekursif apabila di dalam definisinya fungsi tersebut memanggil dirinya sendiri. Rekursi selalu membutuhkan kasus dasar (base case) yang menghentikan pemanggilan diri.\n\nPada faktorial, kasus dasar n = 0 didefinisikan bernilai 1. Untuk n > 0, berlaku faktorial(n) = n × faktorial(n − 1).',
     verified:'✓ Sumber diverifikasi dosen'
   },
   'catatan-rek': {
-    src:'dosen', title:'Catatan kuliah — Rekursi.docx', dosen:DOSEN,
+    src:'dosen', title:'Catatan kuliah — Rekursi.docx' file:'materi/catatan-kuliah-rekursi.docx',, dosen:DOSEN,
     meta:DOSEN + ' · Matematika Diskrit · 184 KB · 12 Nov 2026',
     body:'Catatan pertemuan 5 — Rekursi\n\n• Definisi: fungsi yang memanggil dirinya sendiri dengan input lebih kecil.\n• Wajib ada base case supaya pemanggilan berhenti.\n• Jejak eksekusi: setiap pemanggilan menumpuk di call stack; kasus dasar baru dikembalikan ke atas.\n• Kesalahan umum: lupa base case → stack overflow.',
     verified:'✓ Sumber diverifikasi dosen'
   },
   'slide-rek': {
-    src:'dosen', title:'Slide Pertemuan 5 — Rekursi.pdf', dosen:DOSEN,
+    src:'dosen', title:'Slide Pertemuan 5 — Rekursi.pdf' file:'materi/slide-pertemuan5-rekursi.pdf',, dosen:DOSEN,
     meta:DOSEN + ' · Matematika Diskrit · 3,1 MB · 10 Nov 2026',
     body:'Slide Pertemuan 5\n\n1. Rekursi vs iterasi\n2. Anatomi panggilan: pemanggil → tumpukan frame\n3. Contoh jejak eksekusi faktorial(3)\n4. Latihan: tulis jejak f(f(2))\n5. Pengumuman: baca Bab 4.2 sebelum pertemuan berikutnya',
     verified:'✓ Sumber diverifikasi dosen'
   },
   'modul6': {
-    src:'dosen', title:'Modul Diskrit — Bab 6.pdf', dosen:DOSEN,
+    src:'dosen', title:'Modul Diskrit — Bab 6.pdf' file:'materi/modul-diskrit-bab6.pdf',, dosen:DOSEN,
     meta:DOSEN + ' · Matematika Diskrit · 1,9 MB · 12 Nov 2026',
     body:'6.1 Induksi Matematika\n\nBukti induksi bekerja dalam tiga langkah: (1) basis — buktikan untuk n = 1; (2) asumsi — anggap benar untuk n = k; (3) langkah induksi — buktikan berlaku untuk n = k + 1.\n\nJika ketiga langkah terpenuhi, maka pernyataan benar untuk semua n ≥ 1.',
     verified:'✓ Sumber diverifikasi dosen'
   },
   'scrape-rek': {
-    src:'scrape', title:'Ringkasan Rekursi — Web Kampus.pdf', dosen:DOSEN,
+    src:'scrape', title:'Ringkasan Rekursi — Web Kampus.pdf' file:'materi/ringkasan-rekursi-webkampus.pdf',, dosen:DOSEN,
     meta:'Hasil scraping website kampus · ' + DOSEN + ' · diambil 9 Nov 2026',
     body:'Ringkasan dari halaman mata kuliah\n\nRekursi adalah teknik penyelesaian masalah dengan memecah masalah menjadi submasalah sejenis yang lebih kecil, sampai menemukan kasus dasar. Materi lengkap beserta contoh soal tersedia di berkas modul yang diunggah dosen.\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
     verified:'✓ Terindeks dari web kampus'
   },
   'scrape-ind': {
-    src:'scrape', title:'Bukti Induksi — Catatan Web.docx', dosen:DOSEN,
+    src:'scrape', title:'Bukti Induksi — Catatan Web.docx' file:'materi/bukti-induksi-catatan-web.docx',, dosen:DOSEN,
     meta:'Hasil scraping website kampus · ' + DOSEN + ' · diambil 9 Nov 2026',
     body:'Contoh soal dari halaman mata kuliah\n\nBuktikan bahwa 1 + 3 + 5 + … + (2n − 1) = n² untuk semua n ≥ 1.\n\nBasis: n = 1 → 1 = 1². Asumsi benar untuk n = k. Langkah induksi: tambahkan suku berikutnya (2k + 1) dan sederhanakan menjadi (k + 1)².\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
     verified:'✓ Terindeks dari web kampus'
   },
   'kalkulus': {
-    src:'scrape', title:'Rangkuman Kalkulus.pdf', dosen:null,
+    src:'scrape', title:'Rangkuman Kalkulus.pdf' file:'materi/rangkuman-kalkulus.pdf',, dosen:null,
     meta:'Hasil scraping website kampus · 1,1 MB · 18 Nov 2026',
     body:'Rangkuman Kalkulus\n\nBerkas ini diambil otomatis dari halaman mata kuliah kalkulus di website kampus.\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
     verified:'✓ Terindeks dari web kampus'
   },
   'algoritma': {
-    src:'scrape', title:'Simulasi Algoritma.pdf', dosen:null,
+    src:'scrape', title:'Simulasi Algoritma.pdf' file:'materi/simulasi-algoritma.pdf',, dosen:null,
     meta:'Hasil scraping website kampus · 860 KB · 17 Nov 2026',
     body:'Simulasi Algoritma\n\nBerkas ini diambil otomatis dari halaman mata kuliah algoritma di website kampus.\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
     verified:'✓ Terindeks dari web kampus'
@@ -575,13 +579,28 @@ function applyFilter(){
 /* ============ BACA / TANDAI SUDAH BACA (persist) ============ */
 let readSet = new Set();
 try{ readSet = new Set(JSON.parse(localStorage.getItem('materi_read') || '[]')); }catch(e){}
-function paintRead(){
+function decorateCards(){
   document.querySelectorAll('.tcard').forEach(card => {
-    const m = (card.getAttribute('onclick') || '').match(/openDoc\('([^']+)'\)/);
-    if(m) card.classList.toggle('read', readSet.has(m[1]));
+    const m = (card.getAttribute('onclick') || '').match(/cardTap\('([^']+)'\)/);
+    if(!m) return;
+    card.classList.toggle('read', readSet.has(m[1]));
+    if(card.querySelector('.ibtn')) return;
+    const b = document.createElement('button');
+    b.className = 'ibtn';
+    b.type = 'button';
+    b.textContent = '\u2139';
+    b.title = 'Detail & sumber';
+    b.addEventListener('click', e => { e.stopPropagation(); openDoc(m[1]); });
+    card.appendChild(b);
   });
 }
 let currentDoc = null;
+/* Klik kartu = langsung masuk ke PDF / DOCX nya */
+function cardTap(id){
+  const d = DOCS[id];
+  if(!d){ toast('Materi tidak ditemukan'); return; }
+  location.href = d.file;
+}
 function openDoc(id){
   const d = DOCS[id];
   if(!d){ toast('Materi tidak ditemukan'); return; }
@@ -611,7 +630,7 @@ function markRead(){
   if(!currentDoc) return;
   readSet.add(currentDoc);
   try{ localStorage.setItem('materi_read', JSON.stringify([...readSet])); }catch(e){}
-  paintRead();
+  decorateCards();
   const btn = document.getElementById('docReadBtn');
   btn.textContent = 'Sudah dibaca ✓';
   btn.disabled = true;
@@ -624,7 +643,7 @@ function closeSheets(){
 }
 
 updateStats();
-paintRead();
+decorateCards();
 setTheme('light');
 </script>
 </body>
