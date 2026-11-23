@@ -228,6 +228,12 @@
   .cbadge.mid{background:#FDECC8;color:#8A5B00}
   [data-theme="dark"] .cbadge.need{color:#F0A8DC}
   [data-theme="dark"] .cbadge.mid{color:#F5C97B}
+  button.citem.step{width:100%;text-align:left;border:none;font-family:var(--font);cursor:pointer;-webkit-appearance:none;appearance:none}
+  button.citem.step:active{transform:scale(.98)}
+  .citem.step.on{background:linear-gradient(135deg,#8574F4,#6555E6);box-shadow:0 12px 26px rgba(105,87,235,.38)}
+  .citem.step.on b{color:#fff}
+  .citem.step.on small{color:rgba(255,255,255,.85)}
+  .citem.step.on .cbadge{background:#fff;color:#6555E6}
   .sum-actions{margin-top:20px}
   .secondary-btn{
     width:100%;padding:14px;border-radius:var(--r-pill);margin-top:10px;
@@ -348,19 +354,19 @@
       </div>
 
       <div class="concept-list">
-        <h4><span class="dot" style="background:var(--blue)"></span>Langkah berikutnya</h4>
-        <div class="citem">
+        <h4><span class="dot" style="background:var(--blue)"></span>Langkah berikutnya — pilih satu</h4>
+        <button type="button" class="citem step" id="step0" onclick="pickStep(0)">
           <div class="ci"><b id="next0">Latihan target: jejak eksekusi</b><small id="next0s">Penjelasan dari sudut berbeda</small></div>
           <span class="cbadge ok" id="next0b">→</span>
-        </div>
-        <div class="citem">
+        </button>
+        <button type="button" class="citem step" id="step1" onclick="pickStep(1)">
           <div class="ci"><b id="next1">Cek ulang konsep yang masih ragu</b><small id="next1s">Singkat, 5 menit</small></div>
           <span class="cbadge ok" id="next1b">→</span>
-        </div>
+        </button>
       </div>
 
       <div class="sum-actions">
-        <button class="pill-btn next-btn" onclick="location.href='latihan.html'">Lanjut ke latihan target</button>
+        <button class="pill-btn next-btn" id="goBtn" disabled onclick="startStep()">Pilih langkah dulu</button>
         <button class="pill-btn secondary-btn" onclick="location.href='beranda-reason.html'">Nanti dulu</button>
       </div>
     </div>
@@ -519,8 +525,8 @@ const LEVELS = {
     title: 'Kita mulai dari nol. 🌱',
     text: 'Tak apa — banyak mahasiswa mulai dari sini. Kita bangun dasarnya pelan-pelan.',
     next: [
-      ['Baca Modul Diskrit Bab 4.2', 'Definisi rekursi & base case dari dosen'],
-      ['Latihan dasar: kenali base case', '1 soal ringan untuk mulai'],
+      ['Baca Modul Diskrit Bab 4.2', 'Dari Rak Materi — buka PDF-nya langsung', 'tugas.html'],
+      ['Latihan dasar: kenali base case', '1 soal ringan untuk mulai', 'latihan.html'],
     ],
   },
   sebagian: {
@@ -528,8 +534,8 @@ const LEVELS = {
     title: 'Fondasimu setengah jalan. 🌤️',
     text: 'Bagus — sebagian konsep sudah masuk. Kita rapikan bagian yang masih ragu.',
     next: [
-      ['Latihan target: jejak eksekusi', 'Penjelasan dari sudut berbeda'],
-      ['Cek ulang konsep yang masih ragu', 'Singkat, sekitar 5 menit'],
+      ['Latihan target: jejak eksekusi', 'Penjelasan dari sudut berbeda', 'latihan.html'],
+      ['Cek ulang konsep yang masih ragu', 'Singkat, sekitar 5 menit', 'ringkasan.html'],
     ],
   },
   paham: {
@@ -537,8 +543,8 @@ const LEVELS = {
     title: 'Fondasimu kuat. 💪',
     text: 'Mantap! Kita langsung ke soal campuran agar makin tajam dan yakin 100%.',
     next: [
-      ['Latihan langsung: soal campuran', 'Uji pemahamanmu yang sudah kuat'],
-      ['Cek ulang singkat', 'Konfirmasi yakin 100% — 5 menit'],
+      ['Latihan langsung: soal campuran', 'Uji pemahamanmu yang sudah kuat', 'soal.html'],
+      ['Cek ulang singkat', 'Konfirmasi yakin 100% — 5 menit', 'ringkasan.html'],
     ],
   },
 };
@@ -558,6 +564,28 @@ function renderSummary(lv, text){
   document.getElementById('next0s').textContent = L.next[0][1];
   document.getElementById('next1').textContent = L.next[1][0];
   document.getElementById('next1s').textContent = L.next[1][1];
+  currentSteps = L.next;
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('on'));
+  stepChoice = null;
+  const gBtn = document.getElementById('goBtn');
+  gBtn.disabled = true;
+  gBtn.textContent = 'Pilih langkah dulu';
+}
+
+/* ============ PILIH LANGKAH — user klik utk tentukan mau mulai belajar apa ============ */
+let currentSteps = [], stepChoice = null;
+function pickStep(i){
+  if(!currentSteps[i]) return;
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('on'));
+  document.getElementById('step' + i).classList.add('on');
+  stepChoice = currentSteps[i];
+  const g = document.getElementById('goBtn');
+  g.disabled = false;
+  g.textContent = 'Mulai belajar →';
+}
+function startStep(){
+  if(!stepChoice){ toast('Pilih dulu langkah yang mau kamu mulai'); return; }
+  location.href = stepChoice[2];
 }
 
 setTheme('light');
