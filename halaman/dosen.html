@@ -16,7 +16,7 @@
   [data-theme="dark"]{--bg:#1A2434;--card:#152030;--text:#F2F4F8;--muted:#8B97AB;--line:#253147;--nav-dark:#0F1724;--blue-soft:#1E3A5F;--purple-soft:#2A2750;--pink-soft:#402A45;--shadow:0 8px 24px rgba(0,0,0,.28)}
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{font-family:var(--font);background:#DDE1EA;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.phone{width:390px;height:844px;max-height:100vh;background:var(--bg);border-radius:44px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35}
   @media(max-width:520px){body{padding:0}.phone{width:100%;height:100vh;border-radius:0;box-shadow:none}}.notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;background:#0B0D12;border-radius:20px;z-index:60}.statusbar{position:absolute;top:0;left:0;right:0;height:52px;z-index:55;display:flex;align-items:center;justify-content:space-between;padding:16px 28px 0;font-size:14px;font-weight:600;color:var(--text);pointer-events:none}.statusbar span:last-child{display:flex;gap:6px}.statusbar svg{width:16px;height:16px;fill:var(--text)}
-  .screen{position:absolute;inset:0;padding-top:52px;padding-bottom:116px;overflow-y:auto;opacity:0;visibility:hidden;transform:translateX(16px);transition:opacity .3s,transform .3s,visibility .3s}.screen.active{opacity:1;visibility:visible;transform:translateX(0)}.screen::-webkit-scrollbar{display:none}.pad{padding:0 20px}.nav{position:absolute;left:50%;bottom:26px;bottom:calc(26px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--nav-dark);border-radius:var(--r-pill);display:flex;gap:6px;padding:8px;z-index:50;box-shadow:0 12px 32px rgba(0,0,0,.28)}.nav button{width:58px;height:58px;border:none;border-radius:50%;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center}.nav button svg{width:23px;height:23px;stroke:#7C8496;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.nav button.on{background:#F6F6F9}.nav button.on svg{stroke:#15161C}.home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:50}.theme-fab{position:absolute;top:60px;right:16px;z-index:70;width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;background:var(--card);box-shadow:var(--shadow);font-size:16px}.pill-btn{border:none;font-family:var(--font);cursor:pointer;border-radius:var(--r-pill);font-weight:600;transition:transform .15s}.pill-btn:active{transform:scale(.96)}.toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%) translateY(20px);background:var(--nav-dark);color:#F6F6F9;font-size:12px;font-weight:600;padding:12px 20px;border-radius:var(--r-pill);z-index:85;max-width:86%;text-align:center;opacity:0;pointer-events:none;transition:all .3s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .screen{position:absolute;inset:0;padding-top:52px;padding-bottom:116px;overflow-y:auto;opacity:0;visibility:hidden;transform:translateX(16px);transition:opacity .3s,transform .3s,visibility .3s}.screen.active{opacity:1;visibility:visible;transform:translateX(0)}.screen::-webkit-scrollbar{display:none}.pad{padding:0 20px}.nav{position:absolute;left:50%;bottom:26px;bottom:calc(26px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--nav-dark);border-radius:var(--r-pill);display:flex;gap:6px;padding:8px;z-index:50;box-shadow:0 12px 32px rgba(0,0,0,.28)}.nav button{width:58px;height:58px;border:none;border-radius:50%;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center}.nav button svg{width:23px;height:23px;stroke:#7C8496;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.nav button.on{background:#F6F6F9}.nav button.on svg{stroke:#15161C}.nav-dosen{position:absolute;left:16px;right:16px;bottom:calc(26px + env(safe-area-inset-bottom,0px));background:var(--nav-dark);border-radius:22px;display:flex;gap:4px;padding:8px 6px;z-index:50;box-shadow:0 12px 32px rgba(0,0,0,.28)}.nav-dosen button{flex:1;min-width:0;border:none;border-radius:16px;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px 6px;font-family:var(--font);transition:background .15s}.nav-dosen button svg{width:21px;height:21px;stroke:#7C8496;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.nav-dosen button span{font-size:9.5px;font-weight:600;letter-spacing:.2px;color:#7C8496;white-space:nowrap}.nav-dosen button.on{background:#F6F6F9}.nav-dosen button.on svg{stroke:#15161C}.nav-dosen button.on span{color:#15161C}.home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:50}.theme-fab{position:absolute;top:60px;right:16px;z-index:70;width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;background:var(--card);box-shadow:var(--shadow);font-size:16px}.pill-btn{border:none;font-family:var(--font);cursor:pointer;border-radius:var(--r-pill);font-weight:600;transition:transform .15s}.pill-btn:active{transform:scale(.96)}.toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%) translateY(20px);background:var(--nav-dark);color:#F6F6F9;font-size:12px;font-weight:600;padding:12px 20px;border-radius:var(--r-pill);z-index:85;max-width:86%;text-align:center;opacity:0;pointer-events:none;transition:all .3s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .top-head{display:flex;align-items:center;gap:12px;padding:13px 44px 0 0}.brand{width:42px;height:42px;border-radius:14px;background:var(--nav-dark);display:flex;align-items:center;justify-content:center;flex-shrink:0}.brand svg{width:22px;height:22px;stroke:var(--blue);fill:none;stroke-width:2;stroke-linecap:round}.top-head .ht{flex:1}.top-head b{display:block;font-size:15px;color:var(--text)}.top-head span{font-size:11.5px;color:var(--muted)}
   .privacy{display:flex;align-items:center;gap:7px;margin-top:14px;font-size:10.5px;color:var(--muted);line-height:1.45}.privacy svg{width:14px;height:14px;stroke:var(--blue);fill:none;stroke-width:2;flex-shrink:0}.topic-select{width:100%;margin-top:12px;border:1.5px solid var(--line);border-radius:15px;background:var(--card);padding:13px 15px;font-family:var(--font);font-size:13px;font-weight:600;color:var(--text);outline:none}.topic-select:focus{border-color:var(--blue)}
   .hero{margin-top:14px;background:var(--purple);border-radius:26px;padding:21px 19px;color:#15161C;position:relative;overflow:hidden}.hero::after{content:"📊";position:absolute;right:13px;top:13px;font-size:26px;transform:rotate(13deg);opacity:.9;pointer-events:none}.hero h1{max-width:82%}.hero .eyebrow{font-size:10px;font-weight:700;letter-spacing:.4px}.hero h1{font-size:20px;line-height:1.3;margin-top:6px}.hero p{font-size:11.5px;font-weight:600;line-height:1.55;margin-top:6px;opacity:.8}.stats{display:flex;gap:9px;margin-top:12px}.stat{flex:1;background:var(--card);border-radius:18px;padding:13px 12px;box-shadow:var(--shadow)}.stat b{display:block;font-size:20px;color:var(--text)}.stat small{display:block;font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4}
@@ -80,6 +80,7 @@
       <div class="top-head"><div class="brand"><svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg></div><div class="ht"><b id="clsName">—</b><span id="clsMatkul">—</span></div></div>
       <button class="backlink" onclick="showScreen('s-classes')">← Pilih kelas</button>
       <div class="privacy"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>Agregat tanpa nama · detail per mahasiswa hanya terlihat oleh dosen pengampu.</div>
+      <select class="topic-select" id="topicSelect" onchange="changeTopic()" aria-label="Pilih topik"></select>
       <div class="tabs" aria-label="Cakupan data"><button id="scopeAll" class="on" onclick="setScope('all')">Semua mahasiswa</button><button id="scopeOne" onclick="setScope('one')">Per mahasiswa</button></div>
       <div id="classData"></div>
       <div id="draftNotice" style="display:none"><div class="hero"><span class="eyebrow">RUBRIK BELUM DISETUJUI</span><h1>Ringkasan kelas belum tersedia.</h1><p>Materi sudah dapat disiapkan. Penilaian alasan baru aktif setelah rubrik divalidasi dosen.</p></div><button class="pill-btn primary" onclick="openMaterials('rubrics')">Tinjau & setujui rubrik</button></div>
@@ -110,7 +111,12 @@
     </div>
   </section>
 
-  <nav class="nav"><button onclick="location.href='beranda-reason.html'" aria-label="Beranda"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg></button><button onclick="location.href='tugas.html'" aria-label="Tugas"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg></button><button onclick="location.href='peta.html'" aria-label="Peta Penguasaan"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg></button><button onclick="location.href='scraping.html'" aria-label="Scraping"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M12 11v5m0 0l-2.5-2.5M12 16l2.5-2.5"/></svg></button><button class="on" id="navDosen" onclick="navDosen()" aria-label="Tampilan Dosen"><svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg></button></nav>
+  <nav class="nav-dosen" aria-label="Navigasi dosen">
+    <button id="ndHome" onclick="location.href='beranda-reason.html'"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5"/></svg><span>Beranda</span></button>
+    <button id="ndKelas" onclick="navKelas()"><svg viewBox="0 0 24 24"><path d="M4 19V6a2 2 0 012-2h12a2 2 0 012 2v13"/><path d="M2 19h20M8 9h8M8 13h5"/></svg><span>Kelas</span></button>
+    <button id="ndRubrik" onclick="navRubrik()"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4h6M9 12l2 2 4-4"/></svg><span>Rubrik</span></button>
+    <button id="ndDosen" onclick="gantiDosen()"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-6 8-6s6.5 2 8 6"/></svg><span>Dosen</span></button>
+  </nav>
   <div class="overlay" id="overlay" onclick="closeSheet()"></div>
   <div class="sheet" id="sheet"><div class="grab"></div><h3 id="sheetTitle"></h3><div class="meta" id="sheetMeta"></div><span class="anon">🛡️ Contoh agregat & anonim</span><div id="sheetContent"></div><button class="pill-btn primary" onclick="closeSheet()">Tutup</button></div>
   <div class="home-ind"></div><div class="toast" id="toast"></div>
@@ -119,9 +125,14 @@
 function setTheme(mode){document.getElementById('phone').dataset.theme=mode;document.getElementById('themeBtn').textContent=mode==='dark'?'☀️':'🌙'}
 document.getElementById('themeBtn').addEventListener('click',()=>setTheme(document.getElementById('phone').dataset.theme==='dark'?'light':'dark'));
 let toastT;function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2600)}
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.getElementById(id).scrollTop=0}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.getElementById(id).scrollTop=0;updateNavDosen(id)}
+function updateNavDosen(id){
+  const map={'s-pick':'ndDosen','s-classes':'ndKelas','s-class':'ndKelas','s-materials':'ndRubrik'};
+  ['ndHome','ndKelas','ndRubrik','ndDosen'].forEach(n=>document.getElementById(n).classList.toggle('on',map[id]===n));
+}
+function navKelas(){if(currentDosen){renderClassList();showScreen('s-classes')}else showScreen('s-pick')}
+function navRubrik(){if(!currentDosen){toast('Pilih dosen dulu untuk membuka rubrik');showScreen('s-pick');return}openMaterials('rubrics')}
 function escapeHTML(value){const d=document.createElement('div');d.textContent=value;return d.innerHTML}
-function navDosen(){if(currentDosen){renderClassList();showScreen('s-classes')}else showScreen('s-pick')}
 function kembaliMaterials(){showScreen(currentTopic?'s-class':'s-classes')}
 function gantiDosen(){currentDosen=null;renderDosenList();showScreen('s-pick')}
 
@@ -130,7 +141,8 @@ const DOSEN=[
 {
   id:'rina',name:'Dr. Rina Wijaya, M.T.',short:'Dr. Rina W.',ava:'RW',color:'#FCE3F8',
   matkul:'Matematika Diskrit',tags:['Rekursi','Induksi','Graf'],
-  students:[{id:'r1',name:'Andi Pratama',nim:'2410511001'},{id:'r2',name:'Bella Safira',nim:'2410511002'},{id:'r3',name:'Candra Dewi',nim:'2410511003'},{id:'r4',name:'Dimas Arya',nim:'2410511004'},{id:'r5',name:'Eka Putri',nim:'2410511005'},{id:'r6',name:'Farhan Maulana',nim:'2410511006'}],
+  classes:[{id:'rrpl2c',name:'RRPL 2C'},{id:'rpl3c',name:'RPL 3C'},{id:'rpl3a',name:'RPL 3A'}],
+  students:[{id:'r1',name:'Andi Pratama',nim:'2410511001',cls:'rrpl2c'},{id:'r2',name:'Bella Safira',nim:'2410511002',cls:'rrpl2c'},{id:'r3',name:'Candra Dewi',nim:'2410511003',cls:'rrpl2c'},{id:'r4',name:'Dimas Arya',nim:'2410511004',cls:'rpl3c'},{id:'r5',name:'Eka Putri',nim:'2410511005',cls:'rpl3c'},{id:'r6',name:'Farhan Maulana',nim:'2410511006',cls:'rpl3c'},{id:'r7',name:'Yoga Pratama',nim:'2410511007',cls:'rpl3a'},{id:'r8',name:'Zahra Amelia',nim:'2410511008',cls:'rpl3a'},{id:'r9',name:'Ilham Fadlan',nim:'2410511009',cls:'rpl3a'}],
   topics:{
     rekursi:{label:'Rekursi · 24 mahasiswa',
       hero:{t:'Jejak eksekusi paling sering terlewat.',p:'Jawaban akhir sering benar, tetapi alasan belum menunjukkan urutan pemanggilan.'},
@@ -175,7 +187,8 @@ const DOSEN=[
 {
   id:'budi',name:'Dr. Budi Hartono, S.T., M.T.',short:'Dr. Budi H.',ava:'BH',color:'#D6E8FF',
   matkul:'Kalkulus',tags:['Limit','Turunan'],
-  students:[{id:'b1',name:'Gilang Ramadhan',nim:'2420512001'},{id:'b2',name:'Hana Permata',nim:'2420512002'},{id:'b3',name:'Indra Kusuma',nim:'2420512003'},{id:'b4',name:'Jihan Aulia',nim:'2420512004'},{id:'b5',name:'Kurnia Sari',nim:'2420512005'},{id:'b6',name:'Luthfi Hakim',nim:'2420512006'}],
+  classes:[{id:'rrpl2c',name:'RRPL 2C'},{id:'rpl3c',name:'RPL 3C'},{id:'rpl3a',name:'RPL 3A'}],
+  students:[{id:'b1',name:'Gilang Ramadhan',nim:'2420512001',cls:'rrpl2c'},{id:'b2',name:'Hana Permata',nim:'2420512002',cls:'rrpl2c'},{id:'b3',name:'Indra Kusuma',nim:'2420512003',cls:'rrpl2c'},{id:'b4',name:'Jihan Aulia',nim:'2420512004',cls:'rpl3c'},{id:'b5',name:'Kurnia Sari',nim:'2420512005',cls:'rpl3c'},{id:'b6',name:'Luthfi Hakim',nim:'2420512006',cls:'rpl3c'},{id:'b7',name:'Rangga Putra',nim:'2420512007',cls:'rpl3a'},{id:'b8',name:'Salsabila Nur',nim:'2420512008',cls:'rpl3a'},{id:'b9',name:'Tegar Wijaya',nim:'2420512009',cls:'rpl3a'}],
   topics:{
     limit:{label:'Limit Fungsi · 21 mahasiswa',
       hero:{t:'Konsep limit sering dijawab dengan substitusi buta.',p:'Jawaban angka benar, tetapi alasan belum membedakan pendekatan dari kiri dan kanan.'},
@@ -217,7 +230,8 @@ const DOSEN=[
 {
   id:'citra',name:'Citra Lestari, S.Kom., M.T.',short:'Citra L.',ava:'CL',color:'#FDF3E2',
   matkul:'Algoritma',tags:['Sorting','Kompleksitas'],
-  students:[{id:'c1',name:'Maya Anggraini',nim:'2430513001'},{id:'c2',name:'Nadia Zahra',nim:'2430513002'},{id:'c3',name:'Okta Riyadi',nim:'2430513003'},{id:'c4',name:'Putri Handayani',nim:'2430513004'},{id:'c5',name:'Rizky Nugraha',nim:'2430513005'},{id:'c6',name:'Sinta Dewi',nim:'2430513006'}],
+  classes:[{id:'rrpl2c',name:'RRPL 2C'},{id:'rpl3c',name:'RPL 3C'},{id:'rpl3a',name:'RPL 3A'}],
+  students:[{id:'c1',name:'Maya Anggraini',nim:'2430513001',cls:'rrpl2c'},{id:'c2',name:'Nadia Zahra',nim:'2430513002',cls:'rrpl2c'},{id:'c3',name:'Okta Riyadi',nim:'2430513003',cls:'rrpl2c'},{id:'c4',name:'Putri Handayani',nim:'2430513004',cls:'rpl3c'},{id:'c5',name:'Rizky Nugraha',nim:'2430513005',cls:'rpl3c'},{id:'c6',name:'Sinta Dewi',nim:'2430513006',cls:'rpl3c'},{id:'c7',name:'Umar Syarif',nim:'2430513007',cls:'rpl3a'},{id:'c8',name:'Vina Oktaviani',nim:'2430513008',cls:'rpl3a'},{id:'c9',name:'Wahyu Setiawan',nim:'2430513009',cls:'rpl3a'}],
   topics:{
     sorting:{label:'Algoritma Sorting · 20 mahasiswa',
       hero:{t:'Pemilihan algoritma belum berdasar kompleksitas.',p:'Jawaban benar memilih quicksort, tetapi alasan belum membandingkan kasus terburuknya.'},
@@ -256,7 +270,7 @@ const DOSEN=[
 }
 ];
 
-let currentDosen=null,currentTopic=null,scope='all',currentStudent=null;
+let currentDosen=null,currentTopic=null,scope='all',currentStudent=null,currentClass=null;
 function renderDosenList(){
   document.getElementById('dosenList').innerHTML=DOSEN.map(d=>`
     <button class="dosen-card" onclick="pilihDosen('${d.id}')">
@@ -270,13 +284,12 @@ function renderClassList(){
   const d=currentDosen;if(!d)return;
   document.getElementById('clsName2').textContent=d.name;
   document.getElementById('clsMatkul2').textContent='Pilih kelas · '+d.matkul;
-  document.getElementById('classList').innerHTML=Object.keys(d.topics).map(k=>{
-    const t=d.topics[k],parts=t.label.split(' · ');
-    const tag=t.draft?'<i>rubrik masih draf</i>':`<i>${t.stats[0]?escapeHTML(t.stats[0][0]):'0'} mahasiswa</i><i>${t.gaps.length} konsep rawan</i>`;
-    return `<button class="dosen-card" onclick="pickKelas('${k}')">
-      <span class="ava" style="background:var(--purple-soft)">📘</span>
-      <span class="dinfo"><b>Kelas ${escapeHTML(parts[0])}</b><small>${escapeHTML(d.matkul)}</small>
-      <span class="mtags">${tag}</span></span>
+  document.getElementById('classList').innerHTML=d.classes.map(c=>{
+    const n=d.students.filter(s=>s.cls===c.id).length;
+    return `<button class="dosen-card" onclick="pickKelas('${c.id}')">
+      <span class="ava" style="background:var(--purple-soft)">🏫</span>
+      <span class="dinfo"><b>Kelas ${escapeHTML(c.name)}</b><small>${escapeHTML(d.matkul)}</small>
+      <span class="mtags"><i>${n} mahasiswa</i><i>${Object.keys(d.topics).length} topik materi</i></span></span>
       <span class="go">→</span>
     </button>`;
   }).join('');
@@ -286,7 +299,7 @@ function pilihDosen(id){
   if(!currentDosen)return;
   document.getElementById('clsName').textContent=currentDosen.name;
   document.getElementById('matMatkul').textContent=currentDosen.matkul+' · '+currentDosen.name;
-  scope='all';currentStudent=null;currentTopic=null;
+  scope='all';currentStudent=null;currentTopic=null;currentClass=null;
   document.getElementById('scopeAll').classList.add('on');
   document.getElementById('scopeOne').classList.remove('on');
   document.getElementById('rubricScopeType').value='all';rubricScopeTypeChange();
@@ -294,15 +307,19 @@ function pilihDosen(id){
   renderClassList();
   showScreen('s-classes');
 }
-function pickKelas(k){
+function pickKelas(id){
   if(!currentDosen)return;
-  currentTopic=k;currentStudent=null;scope='all';
+  const c=currentDosen.classes.find(x=>x.id===id);if(!c)return;
+  currentClass=id;currentStudent=null;scope='all';
   document.getElementById('scopeAll').classList.add('on');
   document.getElementById('scopeOne').classList.remove('on');
-  const t=currentDosen.topics[k];
-  document.getElementById('clsMatkul').textContent=(t?t.label.split(' · ')[0]:'Kelas')+' · '+currentDosen.matkul;
+  document.getElementById('clsMatkul').textContent='Kelas '+c.name+' · '+currentDosen.matkul;
+  const sel=document.getElementById('topicSelect');
+  sel.innerHTML=Object.keys(currentDosen.topics).map(k=>`<option value="${k}">${escapeHTML(currentDosen.topics[k].label.split(' · ')[0])}</option>`).join('');
+  currentTopic=Object.keys(currentDosen.topics)[0];
   renderClass();showScreen('s-class');
 }
+function changeTopic(){currentTopic=document.getElementById('topicSelect').value;renderClass()}
 function hash01(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0)/4294967296}
 function setScope(s){scope=s;document.getElementById('scopeAll').classList.toggle('on',s==='all');document.getElementById('scopeOne').classList.toggle('on',s==='one');if(s!=='one')currentStudent=null;renderClass()}
 function pickStudent(id){currentStudent=currentDosen.students.find(x=>x.id===id)||null;renderClass()}
@@ -311,7 +328,9 @@ function studentPcts(st){const t=currentDosen.topics[currentTopic];return t.char
 function avgOf(st){const p=studentPcts(st);return Math.round(p.reduce((a,b)=>a+b,0)/p.length)}
 function renderStudentList(){
   const d=currentDosen,t=d.topics[currentTopic];if(!d||!t)return;
-  const cards=d.students.map(st=>{
+  const cls=d.classes.find(x=>x.id===currentClass);
+  const members=d.students.filter(s=>s.cls===currentClass);
+  const cards=members.map(st=>{
     const avg=avgOf(st);
     const weak=studentPcts(st).map((p,i)=>({p,i})).filter(x=>x.p<60).map(x=>t.chart[x.i][0]);
     return `<button class="dosen-card" onclick="pickStudent('${st.id}')">
@@ -322,8 +341,8 @@ function renderStudentList(){
     </button>`;
   }).join('');
   document.getElementById('classData').innerHTML=`
-    <div class="hero"><span class="eyebrow">PER MAHASISWA · ${escapeHTML(t.label)}</span><h1>Pilih mahasiswa.</h1><p>Klik satu nama untuk melihat detail pemahamannya: konsep yang sudah dikuasai dan yang masih perlu diperkuat.</p></div>
-    ${cards}
+    <div class="hero"><span class="eyebrow">PER MAHASISWA · KELAS ${escapeHTML(cls?cls.name:'—')}</span><h1>Pilih mahasiswa.</h1><p>Klik satu nama untuk melihat detail pemahamannya: konsep yang sudah dikuasai dan yang masih perlu diperkuat.</p></div>
+    ${cards||'<div class="note">Belum ada mahasiswa terdaftar pada kelas ini.</div>'}
     <div class="note">Nama hanya tampil di tampilan dosen pengampu. Contoh miskonsepsi tetap anonim tanpa nama.</div>`;
 }
 function renderClass(){
@@ -342,7 +361,8 @@ function renderClass(){
       <button class="examples-link">Lihat contoh miskonsepsi anonim →</button>
     </div>`).join('');
   const chart=t.chart.map(c=>`<div class="chart-row"><label>${escapeHTML(c[0])}</label><div class="cb"><i style="width:${c[1]}%;${c[2]?'background:'+c[2]:''}"></i></div><b>${c[1]}%</b></div>`).join('');
-  const stats=t.stats.map(s=>`<div class="stat"><b>${escapeHTML(s[0])}</b><small>${escapeHTML(s[1])}</small></div>`).join('');
+  const members=d.students.filter(s=>s.cls===currentClass).length;
+  const stats=t.stats.map((s,i)=>i===0?[String(members||s[0]),'mahasiswa dalam kelas ini']:s).map(s=>`<div class="stat"><b>${escapeHTML(s[0])}</b><small>${escapeHTML(s[1])}</small></div>`).join('');
   const firstGap=t.gaps.length?`openEx('${d.id}','${currentTopic}',0)`:'';
   document.getElementById('classData').innerHTML=`
     <div class="hero"><span class="eyebrow">YANG PERLU DIULANG DI KELAS</span><h1>${escapeHTML(t.hero.t)}</h1><p>${escapeHTML(t.hero.p)}</p></div>
@@ -420,7 +440,7 @@ function loadRubrics(){
 }
 function scopeLabel(sc){
   if(!sc||sc.type==='all')return 'Semua kelas';
-  if(sc.type==='classes'){const ks=sc.keys||[];return ks.length+' kelas: '+ks.map(k=>currentDosen&&currentDosen.topics[k]?currentDosen.topics[k].label.split(' · ')[0]:k).join(', ')}
+  if(sc.type==='classes'){const ks=sc.keys||[];return ks.length+' kelas: '+ks.map(k=>{const c=currentDosen&&currentDosen.classes.find(x=>x.id===k);if(c)return c.name;return currentDosen&&currentDosen.topics[k]?currentDosen.topics[k].label.split(' · ')[0]:k}).join(', ')}
   if(sc.type==='people'){const ids=sc.ids||[];return ids.length+' orang: '+ids.map(id=>{const s=currentDosen&&currentDosen.students.find(x=>x.id===id);return s?s.name.split(' ')[0]:id}).join(', ')}
   if(sc.type==='one')return 'Untuk '+sc.name;
   return 'Semua kelas';
@@ -430,7 +450,7 @@ function rubricScopeTypeChange(){
   const box=document.getElementById('rubricScopeBox');
   if(type==='all'){box.style.display='none';box.innerHTML='';return}
   box.style.display='block';
-  if(type==='classes')box.innerHTML=currentDosen?Object.keys(currentDosen.topics).map(k=>`<label><input type="checkbox" class="rsCls" value="${k}"> ${escapeHTML(currentDosen.topics[k].label)}</label>`).join(''):'';
+  if(type==='classes')box.innerHTML=currentDosen?currentDosen.classes.map(c=>`<label><input type="checkbox" class="rsCls" value="${c.id}"> Kelas ${escapeHTML(c.name)}</label>`).join(''):'';
   else box.innerHTML=currentDosen?currentDosen.students.map(s=>`<label><input type="checkbox" class="rsStu" value="${s.id}"> ${escapeHTML(s.name)} · ${s.nim}</label>`).join(''):'';
 }
 function renderRubrics(){document.getElementById('rubricList').innerHTML=rubrics.map(r=>`<div class="rubric-card"><div class="rubric-head"><div class="rc"><b>${escapeHTML(r.name)}</b><small>Rubrik alasan · ${escapeHTML(scopeLabel(r.scope))}</small></div><span class="status ${r.status}">${r.status==='approved'?'Disetujui':'Draf'}</span></div><p>${escapeHTML(r.criteria)}</p><div class="rubric-actions"><button class="pill-btn small-btn alt" onclick="editRubric(${r.id})">Edit</button><button class="pill-btn small-btn" ${r.status==='approved'?'disabled':''} onclick="approveRubric(${r.id})">${r.status==='approved'?'✓ Disetujui':'Setujui rubrik'}</button></div></div>`).join('')}
@@ -440,7 +460,7 @@ function openRubricEditor(){document.getElementById('rubricEditor').style.displa
 function saveRubric(){const name=document.getElementById('newConcept').value.trim(),criteria=document.getElementById('newReason').value.trim();if(!name||!criteria){toast('Nama konsep dan kriteria alasan perlu diisi');return}const type=document.getElementById('rubricScopeType').value;let sc={type:'all'};if(type==='classes'){const keys=Array.from(document.querySelectorAll('.rsCls:checked')).map(i=>i.value);if(!keys.length){toast('Pilih minimal satu kelas');return}sc={type:'classes',keys}}else if(type==='people'){const ids=Array.from(document.querySelectorAll('.rsStu:checked')).map(i=>i.value);if(!ids.length){toast('Pilih minimal satu mahasiswa');return}sc={type:'people',ids}}rubrics.push({id:Date.now(),name,criteria,status:'draft',scope:sc});saveRubrics();renderRubrics();document.getElementById('rubricEditor').style.display='none';document.getElementById('newConcept').value='';document.getElementById('newReason').value='';document.getElementById('newMisconception').value='';document.getElementById('rubricScopeType').value='all';rubricScopeTypeChange();toast('Rubrik tersimpan — '+scopeLabel(sc))}
 function handleFile(input){const file=input.files[0];if(!file)return;if(file.size>20*1024*1024){toast('Berkas melebihi batas 20 MB');input.value='';return}const card=document.createElement('div');card.className='file-card';card.innerHTML=`<span class="fi">📄</span><div class="ft"><b>${escapeHTML(file.name)}</b><small>${Math.max(1,Math.round(file.size/1024))} KB · baru dipilih</small></div><span class="status draft">Diproses</span>`;document.getElementById('fileList').appendChild(card);toast('Berkas dipilih — simulasi indeks materi dimulai');setTimeout(()=>{const s=card.querySelector('.status');s.textContent='Terindeks';s.className='status';toast('Materi siap menjadi sumber kutipan')},1400);input.value=''}
 
-renderDosenList();setTheme('light');
+renderDosenList();setTheme('light');updateNavDosen('s-pick');
 </script>
 </body>
 </html>
