@@ -78,6 +78,17 @@
   .dashes{position:absolute;left:-17px;top:64px;width:26px;height:46px;z-index:3;pointer-events:none}
   .dashes svg{width:100%;height:100%;display:block}
 
+  /* Kredensial (backend lokal) */
+  .cred{margin-top:20px;position:relative;z-index:2;display:flex;flex-direction:column;gap:10px}
+  .cred-in{
+    width:100%;box-sizing:border-box;border:1.5px solid var(--line);
+    background:var(--card);border-radius:14px;padding:13px 16px;
+    font-family:var(--font);font-size:14px;color:var(--text);outline:none;
+    transition:border-color .15s;
+  }
+  .cred-in::placeholder{color:var(--muted)}
+  .cred-in:focus{border-color:var(--blue)}
+
   /* Tombol */
   .actions{margin-top:26px;position:relative;z-index:2}
   .btn{
@@ -250,9 +261,15 @@
         </div>
       </div>
 
+      <!-- Kredensial mahasiswa (backend lokal :8787) -->
+      <div class="cred">
+        <input class="cred-in" id="nimIn" type="text" inputmode="numeric" placeholder="NIM (contoh: 2410511001)" autocomplete="username">
+        <input class="cred-in" id="pwIn" type="password" placeholder="Password" autocomplete="current-password">
+      </div>
+
       <!-- Aksi -->
       <div class="actions">
-        <button class="btn btn-masuk" onclick="location.href='beranda-reason.html'">
+        <button class="btn btn-masuk" onclick="doLogin()">
           Masuk
           <span class="chev"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
         </button>
@@ -307,6 +324,33 @@ function toast(msg){
   el.classList.add('show');
   clearTimeout(toastT);
   toastT = setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+/* ============ LOGIN KE BACKEND LOKAL (:8787) ============ */
+/* Lokal (localhost/127/IP LAN) → loopback :8787; host lain (GitHub Pages) →
+   API publik VPS SHIELD. Override kapan pun via localStorage.reason_api. */
+const API = (() => { try { const s=localStorage.getItem('reason_api'); if(s)return s; const h=location.hostname; return (!h||h==='localhost'||h==='127.0.0.1'||h.indexOf('192.168.')===0)?'http://127.0.0.1:8787/api':'https://shieldkartika.my.id/reason/api'; } catch(e){ return 'http://127.0.0.1:8787/api'; } })();
+async function doLogin(){
+  const nim = document.getElementById('nimIn').value.trim();
+  const pw = document.getElementById('pwIn').value;
+  if(!nim || !pw){ toast('Isi NIM dan password dulu'); return; }
+  try{
+    const r = await fetch(API + '/auth/login', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({nim, password: pw})
+    });
+    if(r.status === 401){ toast('NIM atau password salah'); return; }
+    if(!r.ok){ toast('Login gagal — coba lagi'); return; }
+    const data = await r.json();
+    try{
+      localStorage.setItem('reason_token', data.token);
+      localStorage.setItem('reason_user', JSON.stringify(data.user));
+    }catch(e){}
+    location.href = 'beranda-reason.html';
+  }catch(e){
+    toast('Backend belum nyala (port 8787)');
+  }
 }
 </script>
 

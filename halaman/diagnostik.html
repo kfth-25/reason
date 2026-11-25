@@ -54,7 +54,7 @@
   .sb-icons svg{width:16px;height:16px;fill:var(--text)}
   .screen{
     position:absolute;inset:0;padding-top:52px;overflow-y:auto;overflow-x:hidden;
-    padding-bottom:116px;-webkit-overflow-scrolling:touch;
+    padding-bottom:calc(150px + env(safe-area-inset-bottom,0px));scroll-padding-bottom:calc(150px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch;
     opacity:0;visibility:hidden;transform:translateX(18px);
     transition:opacity .3s ease,transform .3s ease,visibility .3s;
   }
@@ -290,7 +290,7 @@
       </div>
 
       <h2 class="qtext">Seberapa paham kamu materi ini?</h2>
-      <p class="qsub"><b id="topicLabel">Rekursi · Matematika Diskrit</b> — jujur saja, ini bukan nilai.</p>
+      <p class="qsub"><b id="topicLabel">Materi belum dipilih</b> — jujur saja, ini bukan nilai.</p>
 
       <!-- Level pemahaman (wajib pilih) -->
       <button class="lvl" data-level="belum" onclick="pickLevel(this)">
@@ -311,7 +311,7 @@
 
       <!-- Cerita dengan kata-kata sendiri (opsional) -->
       <div class="ask-label">Ceritakan dengan kata-katamu</div>
-      <textarea class="self-text" id="selfText" placeholder="misal: Aku paham base case, tapi masih bingung baca jejak eksekusi waktu fungsi memanggil dirinya…"></textarea>
+      <textarea class="self-text" id="selfText" placeholder="misal: Aku sudah paham bagian ini, tapi masih bingung saat menerapkannya di soal…"></textarea>
 
       <!-- …atau pakai suara -->
       <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()">
@@ -333,7 +333,7 @@
       <div class="sess-head">
         <div class="st">
           <b>Hasil diagnostik</b>
-          <span id="sumTopic">Rekursi · Matematika Diskrit</span>
+          <span id="sumTopic">Materi belum dipilih</span>
         </div>
       </div>
 
@@ -356,7 +356,7 @@
       <div class="concept-list">
         <h4><span class="dot" style="background:var(--blue)"></span>Langkah berikutnya — pilih satu</h4>
         <button type="button" class="citem step" id="step0" onclick="pickStep(0)">
-          <div class="ci"><b id="next0">Latihan target: jejak eksekusi</b><small id="next0s">Penjelasan dari sudut berbeda</small></div>
+          <div class="ci"><b id="next0">Latihan untuk topik yang dipilih</b><small id="next0s">Penjelasan dari sudut berbeda</small></div>
           <span class="cbadge ok" id="next0b">→</span>
         </button>
         <button type="button" class="citem step" id="step1" onclick="pickStep(1)">
@@ -379,7 +379,7 @@
       <div class="slot" id="agentSlot"></div>
     </div>
     <p>Agen sedang membaca ceritamu…</p>
-    <small>Biasanya 2–5 detik</small>
+    <small>Self-check ini disimpan lokal di perangkatmu.</small>
     <button class="pill-btn cancel-btn" onclick="cancelThinking()">Batal</button>
   </div>
 
@@ -413,16 +413,31 @@ function toast(msg){
   toastT = setTimeout(() => el.classList.remove('show'), 2600);
 }
 
-/* ============ TOPIK dari layar Pilih Materi (reason_goal) ============ */
+/* ============ TOPIK dari layar Pilih Materi (reason_goal = slug backend) ============ */
 const TOPIC_NAMES = {
+  'diskrit-rekursi': 'Rekursi · Matematika Diskrit',
+  'diskrit-induksi': 'Induksi · Matematika Diskrit',
+  'diskrit-graf': 'Teori Graf · Matematika Diskrit',
+  'pbo-class-object': 'Class & Object · PBO',
+  'pbo-exception': 'Exception · PBO',
+  'pbo-inheritance-polymorphism': 'Inheritance & Polymorphism · PBO',
+  // legacy keys (localStorage lama)
   rekursi: 'Rekursi · Matematika Diskrit',
   induksi: 'Induksi · Matematika Diskrit',
-  graf:    'Teori Graf · Matematika Diskrit',
+  graf: 'Teori Graf · Matematika Diskrit',
 };
-let topic = 'rekursi';
-try{ topic = localStorage.getItem('reason_goal') || 'rekursi'; }catch(e){}
-const topicName = TOPIC_NAMES[topic] || (topic + ' · Matematika Diskrit');
+let topic = '';
+let topicTitle = '';
+try{ topic = localStorage.getItem('reason_goal') || ''; }catch(e){}
+try{ topicTitle = localStorage.getItem('reason_goal_title') || ''; }catch(e){}
+const topicName = topicTitle
+  || TOPIC_NAMES[topic]
+  || (topic ? topic + ' · Materi' : 'Materi belum dipilih');
 document.getElementById('topicLabel').textContent = topicName;
+if (!topic) {
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('voiceStatus').textContent = 'Pilih materi dari beranda terlebih dahulu.';
+}
 document.getElementById('sumTopic').textContent = topicName;
 
 /* ============ SELF-CHECK: level + teks + suara (tanpa soal pilihan) ============ */
@@ -491,6 +506,7 @@ function toggleVoice(){
 
 let thinkTimer = null;
 function submitSelf(){
+  if(!topic){ toast('Pilih materi dari beranda terlebih dahulu'); return; }
   if(!level){ toast('Pilih dulu seberapa paham kamu materi ini'); return; }
   if(recActive){ try{ rec.stop(); }catch(e){} }
   const text = ta.value.trim();
@@ -523,10 +539,10 @@ const LEVELS = {
   belum: {
     label: 'Belum paham', badge: 'Dari nol', cls: 'need', ring: '🌱',
     title: 'Kita mulai dari nol. 🌱',
-    text: 'Tak apa — banyak mahasiswa mulai dari sini. Kita bangun dasarnya pelan-pelan.',
+    text: 'Tak apa — kita bangun dasar topik ini pelan-pelan.',
     next: [
-      ['Baca Modul Diskrit Bab 4.2', 'Dari Rak Materi — buka PDF-nya langsung', 'tugas.html'],
-      ['Latihan dasar: kenali base case', '1 soal ringan untuk mulai', 'latihan.html'],
+      ['Baca materi '+topicName, 'Buka materi yang dipilih dari Rak Materi', 'tugas.html'],
+      ['Latihan dasar '+topicName, 'Mulai dari satu soal ringan', 'latihan.html'],
     ],
   },
   sebagian: {
@@ -534,17 +550,17 @@ const LEVELS = {
     title: 'Fondasimu setengah jalan. 🌤️',
     text: 'Bagus — sebagian konsep sudah masuk. Kita rapikan bagian yang masih ragu.',
     next: [
-      ['Latihan target: jejak eksekusi', 'Penjelasan dari sudut berbeda', 'latihan.html'],
-      ['Cek ulang konsep yang masih ragu', 'Singkat, sekitar 5 menit', 'ringkasan.html'],
+      ['Latihan target: '+topicName, 'Penjelasan dari sudut berbeda', 'latihan.html'],
+      ['Cek ulang '+topicName, 'Tinjau bukti penguasaan yang tersimpan', 'latihan.html#hasil'],
     ],
   },
   paham: {
     label: 'Sudah paham', badge: 'Kuat', cls: 'ok', ring: '💪',
     title: 'Fondasimu kuat. 💪',
-    text: 'Mantap! Kita langsung ke soal campuran agar makin tajam dan yakin 100%.',
+    text: 'Mantap! Uji topik ini dengan latihan agar pemahamanmu makin tajam.',
     next: [
-      ['Latihan langsung: soal campuran', 'Uji pemahamanmu yang sudah kuat', 'soal.html'],
-      ['Cek ulang singkat', 'Konfirmasi yakin 100% — 5 menit', 'ringkasan.html'],
+      ['Latihan langsung: '+topicName, 'Uji pemahamanmu dengan bank soal aktif', 'soal.html'],
+      ['Cek ulang singkat '+topicName, 'Konfirmasi pemahaman lewat soal baru', 'latihan.html#hasil'],
     ],
   },
 };
@@ -585,13 +601,9 @@ function pickStep(i){
 }
 function startStep(){
   if(!stepChoice){ toast('Pilih dulu langkah yang mau kamu mulai'); return; }
-  try{
-    localStorage.setItem('reason_nextstep', JSON.stringify({
-      title: stepChoice[0], sub: stepChoice[1], url: stepChoice[2], ts: Date.now()
-    }));
-  }catch(e){}
-  // 'Cek ulang…' langsung ke layar hasil cek ulang; langkah lain ke latihan
-  location.href = /cek ulang/i.test(stepChoice[0]) ? 'latihan.html#hasil' : 'latihan.html';
+  /* URL authored pada data langkah — jangan routing lewat teks label */
+  const target = String(stepChoice[2] || 'latihan.html');
+  location.href = target;
 }
 
 setTheme('light');

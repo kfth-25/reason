@@ -40,6 +40,23 @@
     .screen,.log-screen{padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
     .theme-fab{top:calc(env(safe-area-inset-top,0px) + 10px)}
   }
+  /* Standar penilaian penalaran (rubrik) */
+  .std-card{margin-top:14px;background:var(--card);border:2px solid var(--blue);border-radius:22px;padding:15px;box-shadow:var(--shadow)}
+  .std-card .std-head{display:flex;align-items:center;gap:9px}
+  .std-card .std-head .sic{width:34px;height:34px;border-radius:11px;background:var(--blue-soft);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+  .std-card .std-head b{display:block;font-size:13px;color:var(--text);line-height:1.3}
+  .std-card .std-head small{display:block;font-size:10px;color:var(--muted);margin-top:2px}
+  .std-rows{margin-top:11px;border-top:1.5px dashed var(--line);padding-top:6px}
+  .std-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+  .std-row:last-of-type{border-bottom:0}
+  .std-w{min-width:44px;height:26px;border-radius:var(--r-pill);background:var(--nav-dark);color:#F6F6F9;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .std-row .st{flex:1}
+  .std-row .st b{display:block;font-size:12px;color:var(--text)}
+  .std-row .st small{display:block;font-size:10.5px;color:var(--muted);line-height:1.45;margin-top:2px}
+  .std-foot{margin-top:9px;background:var(--blue-soft);border-radius:12px;padding:9px 11px;font-size:10.5px;line-height:1.5;color:var(--blue-deep);font-weight:600}
+  [data-theme="dark"] .std-foot{color:#9CC4F5}
+  .rc-label{font-size:9.5px;font-weight:800;letter-spacing:.4px;color:var(--muted);text-transform:uppercase;margin-top:10px}
+  .rubric-card p{margin-top:4px}
 </style>
 </head>
 <body>
@@ -102,6 +119,16 @@
       </div>
       <div id="rubricsPane" style="display:none">
         <div class="privacy"><svg viewBox="0 0 24 24"><path d="M9 11l2.5 2.5L16 8"/><rect x="4" y="3" width="16" height="18" rx="3"/></svg>Penilaian agen hanya memakai rubrik yang sudah disetujui.</div>
+        <div class="std-card" aria-label="Standar penilaian penalaran">
+          <div class="std-head"><span class="sic">📐</span><div><b>Standar penilaian penalaran</b><small>Setiap jawaban mahasiswa dinilai dengan kriteria yang sama</small></div></div>
+          <div class="std-rows">
+            <div class="std-row"><span class="std-w">40%</span><div class="st"><b>Jawaban Akurat</b><small>Jawaban akhir benar dan sesuai konsep yang diuji.</small></div></div>
+            <div class="std-row"><span class="std-w">40%</span><div class="st"><b>Alasan Logis</b><small>Langkah penalaran runtut dan dapat ditelusuri, bukan hanya hasil akhir.</small></div></div>
+            <div class="std-row"><span class="std-w">20%</span><div class="st"><b>Referensi Konsep</b><small>Alasan menunjuk konsep materi kuliah yang tepat.</small></div></div>
+          </div>
+          <div class="std-foot">Dinilai 0 atau 1 per kriteria, lalu ditimbang menjadi Concept Progress (0–100%) yang dilihat mahasiswa.</div>
+        </div>
+        <h2 class="sec-title">Rubrik konsep per topik</h2>
         <div id="rubricList"></div>
         <button class="pill-btn secondary" onclick="openRubricEditor()">+ Buat rubrik konsep</button>
         <div class="form-card" id="rubricEditor" style="display:none"><label class="label">Nama konsep</label><input class="input" id="newConcept" placeholder="Contoh: Rekursi bercabang"><label class="label">Berlaku untuk</label><select class="input" id="rubricScopeType" onchange="rubricScopeTypeChange()"><option value="all">Semua kelas</option><option value="classes">Beberapa kelas</option><option value="people">Beberapa orang</option></select><div class="rs-box" id="rubricScopeBox" style="display:none"></div><label class="label">Alasan yang memenuhi rubrik</label><textarea class="textarea" id="newReason" placeholder="Tuliskan bukti penalaran yang perlu muncul…"></textarea><label class="label">Miskonsepsi umum</label><textarea class="textarea" id="newMisconception" placeholder="Tuliskan 2–3 miskonsepsi yang perlu dideteksi…"></textarea><button class="pill-btn primary" onclick="saveRubric()">Simpan sebagai draf</button></div>
@@ -432,11 +459,50 @@ function openMaterials(tab){switchTab(tab);showScreen('s-materials')}
 function switchTab(tab){const materials=tab==='materials';document.getElementById('materialsPane').style.display=materials?'block':'none';document.getElementById('rubricsPane').style.display=materials?'none':'block';document.getElementById('tabMaterials').classList.toggle('on',materials);document.getElementById('tabRubrics').classList.toggle('on',!materials)}
 
 let rubrics=[];
+const API=(()=>{try{const s=localStorage.getItem('reason_api');if(s)return s;const h=location.hostname;return(!h||h==='localhost'||h==='127.0.0.1'||h.indexOf('192.168.')===0)?'http://127.0.0.1:8787/api':'https://shieldkartika.my.id/reason/api'}catch(e){return 'http://127.0.0.1:8787/api'}})();
+let serverRubricNames=new Set();
+let syncPending=new Set();
 function rubricKey(){return 'reason_lecturer_rubrics_'+(currentDosen?currentDosen.id:'x')}
-function saveRubrics(){try{localStorage.setItem(rubricKey(),JSON.stringify(rubrics))}catch(e){}}
+function saveRubrics(){try{localStorage.setItem(rubricKey(),JSON.stringify(rubrics))}catch(e){}syncRubrics()}
 function loadRubrics(){
   const d=currentDosen;rubrics=d?d.rubrics.map(r=>({...r})):[];
   try{const saved=JSON.parse(localStorage.getItem(rubricKey())||'null');if(Array.isArray(saved)&&saved.length)rubrics=saved}catch(e){}
+  serverRubricNames=new Set(rubrics.map(r=>r.name));
+  if(!d)return;
+  /* merge dari backend lokal — lokal tetap menang bila konflik (offline-first) */
+  fetch(API+'/rubrics?dosen_id='+d.id)
+    .then(r=>r.ok?r.json():null)
+    .then(data=>{
+      if(!data||!currentDosen||currentDosen.id!==d.id)return;
+      let changed=false;
+      data.items.forEach(sr=>{
+        serverRubricNames.add(sr.name);
+        if(!rubrics.some(r=>r.name===sr.name)){
+          rubrics.push({id:sr.id,name:sr.name,criteria:sr.criteria,status:sr.status,scope:sr.scope});
+          changed=true;
+        }
+      });
+      if(changed){try{localStorage.setItem(rubricKey(),JSON.stringify(rubrics))}catch(e){}renderRubrics()}
+    })
+    .catch(()=>{});
+}
+function syncRubrics(){
+  /* dorong rubrik lokal yang belum ada di backend (nama = kunci identitas) */
+  if(!currentDosen||!rubrics.length)return;
+  rubrics.slice().forEach(r=>{
+    if(serverRubricNames.has(r.name)||syncPending.has(r.name))return;
+    syncPending.add(r.name);
+    fetch(API+'/rubrics',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({dosen_id:currentDosen.id,name:r.name,criteria:r.criteria,topic:r.topic||null,scope:r.scope||{type:'all'}})
+    }).then(x=>x.ok?x.json():null).then(d=>{
+      syncPending.delete(r.name);
+      if(!d||!d.rubric)return;
+      serverRubricNames.add(r.name);
+      const local=rubrics.find(x=>x.id===r.id);
+      if(local&&local.id!==d.rubric.id){local.id=d.rubric.id;try{localStorage.setItem(rubricKey(),JSON.stringify(rubrics))}catch(e){}renderRubrics()}
+    }).catch(()=>{syncPending.delete(r.name)}); /* backend mati → percobaan berikutnya */
+  });
 }
 function scopeLabel(sc){
   if(!sc||sc.type==='all')return 'Semua kelas';
@@ -453,8 +519,8 @@ function rubricScopeTypeChange(){
   if(type==='classes')box.innerHTML=currentDosen?currentDosen.classes.map(c=>`<label><input type="checkbox" class="rsCls" value="${c.id}"> Kelas ${escapeHTML(c.name)}</label>`).join(''):'';
   else box.innerHTML=currentDosen?currentDosen.students.map(s=>`<label><input type="checkbox" class="rsStu" value="${s.id}"> ${escapeHTML(s.name)} · ${s.nim}</label>`).join(''):'';
 }
-function renderRubrics(){document.getElementById('rubricList').innerHTML=rubrics.map(r=>`<div class="rubric-card"><div class="rubric-head"><div class="rc"><b>${escapeHTML(r.name)}</b><small>Rubrik alasan · ${escapeHTML(scopeLabel(r.scope))}</small></div><span class="status ${r.status}">${r.status==='approved'?'Disetujui':'Draf'}</span></div><p>${escapeHTML(r.criteria)}</p><div class="rubric-actions"><button class="pill-btn small-btn alt" onclick="editRubric(${r.id})">Edit</button><button class="pill-btn small-btn" ${r.status==='approved'?'disabled':''} onclick="approveRubric(${r.id})">${r.status==='approved'?'✓ Disetujui':'Setujui rubrik'}</button></div></div>`).join('')}
-function approveRubric(id){const r=rubrics.find(x=>x.id===id);if(!r)return;r.status='approved';saveRubrics();renderRubrics();toast('Rubrik disetujui — dapat dipakai agen untuk menilai alasan')}
+function renderRubrics(){document.getElementById('rubricList').innerHTML=rubrics.map(r=>`<div class="rubric-card"><div class="rubric-head"><div class="rc"><b>${escapeHTML(r.name)}</b><small>Berlaku untuk · ${escapeHTML(scopeLabel(r.scope))}</small></div><span class="status ${r.status}">${r.status==='approved'?'Disetujui':'Draf'}</span></div><div class="rc-label">Alasan yang memenuhi rubrik</div><p>${escapeHTML(r.criteria)}</p><div class="rubric-actions"><button class="pill-btn small-btn alt" onclick="editRubric(${r.id})">Edit</button><button class="pill-btn small-btn" ${r.status==='approved'?'disabled':''} onclick="approveRubric(${r.id})">${r.status==='approved'?'✓ Disetujui':'Setujui rubrik'}</button></div></div>`).join('')}
+function approveRubric(id){const r=rubrics.find(x=>x.id===id);if(!r)return;r.status='approved';saveRubrics();renderRubrics();fetch(API+'/rubrics/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:'approved'})}).catch(()=>{});toast('Rubrik disetujui — dapat dipakai agen untuk menilai alasan')}
 function editRubric(id){const r=rubrics.find(x=>x.id===id);if(!r)return;document.getElementById('rubricEditor').style.display='block';document.getElementById('newConcept').value=r.name;document.getElementById('newReason').value=r.criteria;document.getElementById('newMisconception').value='Contoh miskonsepsi akan ditinjau dosen.';const type=r.scope&&(r.scope.type==='classes'||r.scope.type==='people')?r.scope.type:'all';document.getElementById('rubricScopeType').value=type;rubricScopeTypeChange();if(type==='classes')(r.scope.keys||[]).forEach(k=>{const cb=document.querySelector('.rsCls[value="'+k+'"]');if(cb)cb.checked=true});if(type==='people')(r.scope.ids||[]).forEach(sid=>{const cb=document.querySelector('.rsStu[value="'+sid+'"]');if(cb)cb.checked=true});if(r.scope&&r.scope.type==='one'){const cb=document.querySelector('.rsStu[value="'+r.scope.id+'"]');if(cb)cb.checked=true}document.getElementById('rubricEditor').scrollIntoView({behavior:'smooth',block:'start'});toast('Ubah lalu simpan sebagai draf baru')}
 function openRubricEditor(){document.getElementById('rubricEditor').style.display=document.getElementById('rubricEditor').style.display==='none'?'block':'none'}
 function saveRubric(){const name=document.getElementById('newConcept').value.trim(),criteria=document.getElementById('newReason').value.trim();if(!name||!criteria){toast('Nama konsep dan kriteria alasan perlu diisi');return}const type=document.getElementById('rubricScopeType').value;let sc={type:'all'};if(type==='classes'){const keys=Array.from(document.querySelectorAll('.rsCls:checked')).map(i=>i.value);if(!keys.length){toast('Pilih minimal satu kelas');return}sc={type:'classes',keys}}else if(type==='people'){const ids=Array.from(document.querySelectorAll('.rsStu:checked')).map(i=>i.value);if(!ids.length){toast('Pilih minimal satu mahasiswa');return}sc={type:'people',ids}}rubrics.push({id:Date.now(),name,criteria,status:'draft',scope:sc});saveRubrics();renderRubrics();document.getElementById('rubricEditor').style.display='none';document.getElementById('newConcept').value='';document.getElementById('newReason').value='';document.getElementById('newMisconception').value='';document.getElementById('rubricScopeType').value='all';rubricScopeTypeChange();toast('Rubrik tersimpan — '+scopeLabel(sc))}

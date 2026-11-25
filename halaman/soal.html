@@ -44,7 +44,7 @@
   .sb-icons svg{width:16px;height:16px;fill:var(--text)}
   .screen{
     position:absolute;inset:0;padding-top:52px;overflow-y:auto;overflow-x:hidden;
-    padding-bottom:116px;-webkit-overflow-scrolling:touch;
+    padding-bottom:calc(150px + env(safe-area-inset-bottom,0px));scroll-padding-bottom:calc(150px + env(safe-area-inset-bottom,0px));-webkit-overflow-scrolling:touch;
     opacity:0;visibility:hidden;transform:translateX(18px);
     transition:opacity .3s ease,transform .3s ease,visibility .3s;
   }
@@ -259,6 +259,10 @@
   }
   [data-theme="dark"] .ana-card{background:#1E2637}
   .ana-head{display:flex;gap:10px;align-items:center}
+  .ana-head .speak-btn{margin-left:auto}
+  .speak-btn{border:none;width:32px;height:32px;border-radius:50%;background:var(--purple-soft);cursor:pointer;font-size:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0;transition:transform .15s}
+  .speak-btn:active{transform:scale(.92)}
+  .speak-btn.on{background:linear-gradient(135deg,#8574F4,#6555E6)}
   .ana-ico{
     width:30px;height:30px;border-radius:9px;background:#E4E9F6;flex-shrink:0;
     display:flex;align-items:center;justify-content:center;
@@ -390,12 +394,12 @@
       </div>
 
       <div class="qprompt">
-        <span class="qp-top">Hitung nilai dari</span>
-        <b class="qp-main">faktorial(4) !</b>
+        <span class="qp-top">Soal bebas</span>
+        <b class="qp-main">Soal akan dimuat</b>
       </div>
 
       <!-- Jawaban singkat (wajib untuk mengirim) -->
-      <textarea class="tarea ans-line" id="ansInput" placeholder="Tulis hasilnya, misal: 24"></textarea>
+      <textarea class="tarea ans-line" id="ansInput" placeholder="Tulis jawabanmu setelah soal tersedia"></textarea>
 
       <!-- PRD §6.1 langkah 5: "Mengapa?" wajib setelah setiap jawaban -->
       <h3 class="why-title">Kenapa jawabanmu begitu?</h3>
@@ -430,8 +434,8 @@
           <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
         </div>
         <div class="fb-copy">
-          <h2 id="fbTitle">Jawaban Kamu Benar!</h2>
-          <p id="fbSub">Alasanmu sudah tepat, meski masih bisa lebih lengkap.</p>
+          <h2 id="fbTitle">Umpan balik belum ada</h2>
+          <p id="fbSub">Kirim jawabanmu untuk melihat penilaian.</p>
         </div>
         <!-- Bimo menyemangati (varian "belum tepat"); SVG statis = fallback WebGL2 -->
         <div class="fb-mascot" aria-hidden="true">
@@ -471,9 +475,10 @@
         <div class="ana-head">
           <span class="ana-ico"><svg viewBox="0 0 24 24"><path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg></span>
           <b>Analisis Penalaran</b>
+          <button class="speak-btn" id="fbSpeak" onclick="speakFeedback()" aria-label="Dengarkan umpan balik" aria-pressed="false">🔊</button>
         </div>
-        <p id="anaBody">faktorial(4) menunggu faktorial(3) sampai dasar tercapai: faktorial(0) = 1, lalu hasil dikalikan balik 1 × 2 × 3 × 4 = 24. Jejak pemanggilanmu konsisten dari awal sampai kembali.</p>
-        <p class="note" id="anaNote">Konsep yang terbukti: urutan kembali adalah kebalikan urutan masuk — faktorial(0) → faktorial(1) → … → faktorial(4). Tinggal dipakai lagi di soal berikutnya.</p>
+        <p id="anaBody">Analisis penalaran akan muncul setelah jawaban dikirim.</p>
+        <p class="note" id="anaNote">Jawaban akan dibandingkan dengan rubrik untuk topik yang dipilih.</p>
       </div>
 
       <!-- PRD FR-6: kutipan sumber dari materi kuliah, ketuk untuk buka sheet -->
@@ -483,32 +488,32 @@
           <b>Kutipan Materi Kuliah</b>
           <svg class="q-open" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
         </div>
-        <p class="q-text">“Setiap pemanggilan menunggu hasil pemanggilan berikutnya hingga kasus dasar tercapai, lalu hasil dikalikan berurutan saat kembali.”</p>
-        <div class="q-src">— Modul Matematika Diskrit, Bab 4.2, hlm. 57</div>
+        <p class="q-text" id="sourceQuote">Sumber materi akan dimuat sesuai topik yang dipilih.</p>
+        <div class="q-src" id="sourceMeta">Sumber materi belum dimuat.</div>
       </button>
 
       <div class="prog-row">
         <span class="p-ico">🎯</span>
         <b>Progress Konsep</b>
-        <span class="p-badge" id="progBadge">0%</span>
+        <span class="p-badge" id="progBadge">Belum diukur</span>
       </div>
 
       <div class="rub-card">
         <h4>Penilaian Rubrik</h4>
         <div class="rub-row" id="rub1">
-          <span class="rub-ico ok"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <span class="rub-ico none"><span class="dash"></span></span>
           <b>Jawaban Akurat</b>
-          <span class="rub-score">✓ 1/1</span>
+          <span class="rub-score">Belum dinilai</span>
         </div>
         <div class="rub-row" id="rub2">
-          <span class="rub-ico warn"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+          <span class="rub-ico none"><span class="dash"></span></span>
           <b>Alasan Logis</b>
-          <span class="rub-score">✓ 1/1</span>
+          <span class="rub-score">Belum dinilai</span>
         </div>
         <div class="rub-row" id="rub3">
           <span class="rub-ico none"><span class="dash"></span></span>
           <b>Referensi Konsep</b>
-          <span class="rub-score miss">0/1</span>
+          <span class="rub-score">Belum dinilai</span>
         </div>
       </div>
 
@@ -545,14 +550,9 @@
   <div class="overlay" id="overlay" onclick="closeSource()"></div>
   <div class="sheet" id="sheet">
     <div class="grab"></div>
-    <h3>Modul Matematika Diskrit — Bab 4.2 “Rekursi”</h3>
-    <div class="meta">Catatan kuliah dari dosen pengampu · hlm. 56–58 · diunggah 12 Nov 2026</div>
-    <div class="content">4.2 Rekursi
-
-Sebuah fungsi disebut rekursif apabila di dalam definisinya fungsi tersebut memanggil dirinya sendiri. Rekursi selalu membutuhkan kasus dasar (base case) yang menghentikan pemanggilan diri. Tanpa kasus dasar, pemanggilan tidak pernah berhenti.
-
-Pada faktorial, kasus dasar n = 0 didefinisikan bernilai 1. Untuk n &gt; 0, berlaku faktorial(n) = n × faktorial(n − 1). Setiap pemanggilan menunggu hasil pemanggilan berikutnya hingga kasus dasar tercapai, lalu hasil dikalikan berurutan saat kembali.</div>
-    <span class="verified">✓ Sumber diverifikasi dosen</span>
+    <h3 id="sourceTitle">Materi kuliah</h3>
+    <div class="meta" id="sourceInfo">Sumber materi dipilih sesuai topik.</div>
+    <div class="content" id="sourceContent">Isi materi akan dimuat saat topik tersedia.</div>
   </div>
 
     <nav class="nav">
@@ -591,27 +591,38 @@ const sendBtn = document.getElementById('sendBtn');
 let warnedEmpty = false;
 let saveT;
 
-// Draf tersimpan otomatis (dipulihkan saat layar dibuka lagi)
+// Draf tersimpan otomatis per topik — jangan pulihkan draf topik lain
+function draftKey(base){
+  const slug=reasonGoalSlug();
+  return slug?base+':'+slug:base;
+}
+function readDraft(base){
+  try{
+    const scoped=localStorage.getItem(draftKey(base));
+    if(scoped!==null)return scoped;
+    // migrasi sekali dari key lama yang belum di-scope
+    return localStorage.getItem(base)||'';
+  }catch(e){ return ''; }
+}
+function writeDraft(base,value){
+  try{ localStorage.setItem(draftKey(base),value); }catch(e){}
+}
 try{
-  ansInput.value = localStorage.getItem('reason_draft_ans') || '';
-  whyInput.value = localStorage.getItem('reason_draft_why') || '';
+  ansInput.value = readDraft('reason_draft_ans');
+  whyInput.value = readDraft('reason_draft_why');
 }catch(e){}
 
 function saveDraft(){
   clearTimeout(saveT);
   saveT = setTimeout(() => {
-    try{
-      localStorage.setItem('reason_draft_ans', ansInput.value);
-      localStorage.setItem('reason_draft_why', whyInput.value);
-    }catch(e){}
+    writeDraft('reason_draft_ans', ansInput.value);
+    writeDraft('reason_draft_why', whyInput.value);
   }, 500);
 }
 function saveNow(){
   clearTimeout(saveT);
-  try{
-    localStorage.setItem('reason_draft_ans', ansInput.value);
-    localStorage.setItem('reason_draft_why', whyInput.value);
-  }catch(e){}
+  writeDraft('reason_draft_ans', ansInput.value);
+  writeDraft('reason_draft_why', whyInput.value);
   toast('Draf tersimpan di perangkat ini');
 }
 function updateSend(){
@@ -638,7 +649,190 @@ const THINK_STAGES = [
 ];
 const THINK_DONE = 2400;
 let thinkTimers = [];
+let padCancelled = false;
+let grading = false;          // cegah submit ganda selama THINK berjalan
 function clearThink(){ thinkTimers.forEach(clearTimeout); thinkTimers = []; }
+
+/* ============ PENILAI AI (PRD-AI FR-6) — backend lokal, offline-first ============ */
+const API = (() => { try { const s=localStorage.getItem('reason_api'); if(s)return s; const h=location.hostname; return (!h||h==='localhost'||h==='127.0.0.1'||h.indexOf('192.168.')===0)?'http://127.0.0.1:8787/api':'https://shieldkartika.my.id/reason/api'; } catch(e){ return 'http://127.0.0.1:8787/api'; } })();
+
+/* ============ SOAL BEBAS PER MATERI — bank /api/soal/{slug} ============ */
+let SOAL = {
+  prompt_top: 'Soal bebas',
+  prompt_main: 'Bank soal akan dimuat',
+  pertanyaan: '',
+  kunci: '',
+  hint: 'Tulis jawaban setelah soal tersedia',
+  placeholder_why: 'Tuliskan alasanmu di sini...'
+};
+let soalLoaded=false;
+function renderEmptySoal(){
+  soalLoaded=false;
+  SOAL={prompt_top:'Soal bebas',prompt_main:'Soal belum tersedia',pertanyaan:'',kunci:'',hint:'Bank soal topik ini belum tersedia.',placeholder_why:'Nyalakan backend lokal atau pilih materi lain.'};
+  const top=document.querySelector('.qp-top');
+  const main=document.querySelector('.qp-main');
+  if(top)top.textContent=SOAL.prompt_top;
+  if(main)main.textContent=SOAL.prompt_main;
+  const ans=document.getElementById('ansInput');
+  if(ans){ans.placeholder=SOAL.hint;ans.disabled=true}
+  const why=document.getElementById('whyInput');
+  if(why){why.placeholder=SOAL.placeholder_why;why.disabled=true}
+  const send=document.getElementById('sendBtn');
+  if(send)send.disabled=true;
+}
+function reasonGoalSlug(){ try { return localStorage.getItem('reason_goal') || ''; } catch(e){ return ''; } }
+let materialDoc = null;
+function materialSourceText(doc){
+  const text = String(doc && doc.content || '').replace(/^\s*#\s+[^\n]+\n?/,'').trim();
+  if (!text) return '';
+  const paragraphs = text.split(/\n\s*\n/).map(s => s.replace(/^#{1,6}\s+/gm,'').replace(/[*_`]/g,'').replace(/\s+/g,' ').trim()).filter(Boolean);
+  return paragraphs[0] || text.replace(/\s+/g,' ').trim();
+}
+function renderMaterial(doc){
+  materialDoc = doc || null;
+  const quote = document.getElementById('sourceQuote');
+  const meta = document.getElementById('sourceMeta');
+  const title = document.getElementById('sourceTitle');
+  const info = document.getElementById('sourceInfo');
+  const content = document.getElementById('sourceContent');
+  if (!doc || !doc.content) {
+    if (quote) quote.textContent = 'Sumber materi belum tersedia untuk topik ini.';
+    if (meta) meta.textContent = 'Belum terhubung ke file materi.';
+    if (title) title.textContent = 'Materi belum tersedia';
+    if (info) info.textContent = 'Pilih topik lain atau nyalakan backend lokal.';
+    if (content) content.textContent = 'Isi file materi belum dapat dibuka.';
+    return;
+  }
+  const excerpt = materialSourceText(doc);
+  if (quote) quote.textContent = excerpt ? '“' + excerpt + '”' : 'Materi tersedia, tetapi belum memiliki cuplikan.';
+  if (meta) meta.textContent = [doc.title, doc.dosen, doc.src].filter(Boolean).join(' · ');
+  if (title) title.textContent = doc.title || 'Materi kuliah';
+  if (info) info.textContent = [doc.matkul, doc.dosen, doc.src].filter(Boolean).join(' · ') || 'File materi lokal';
+  if (content) content.textContent = doc.content;
+}
+function loadMaterial(){
+  const slug = reasonGoalSlug();
+  if (!slug) { renderMaterial(null); return Promise.resolve(); }
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 8000);
+  return fetch(API + '/materi/' + encodeURIComponent(slug), {signal: ctrl.signal})
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(renderMaterial)
+    .catch(() => renderMaterial(null))
+    .finally(() => clearTimeout(timer));
+}
+function applySoalFree(d){
+  if (!d || !d.soal) { renderEmptySoal(); return; }
+  soalLoaded=true;
+  const s = d.soal;
+  if (s.prompt_top) SOAL.prompt_top = s.prompt_top;
+  if (s.prompt_main) SOAL.prompt_main = s.prompt_main;
+  if (s.pertanyaan) SOAL.pertanyaan = s.pertanyaan;
+  if (s.kunci) SOAL.kunci = s.kunci;
+  if (s.hint) SOAL.hint = s.hint;
+  if (s.placeholder_why) SOAL.placeholder_why = s.placeholder_why;
+  const top = document.querySelector('.qp-top');
+  const main = document.querySelector('.qp-main');
+  if (top) top.textContent = SOAL.prompt_top;
+  if (main) main.textContent = SOAL.prompt_main;
+  const ans = document.getElementById('ansInput');
+  if (ans) { ans.placeholder = SOAL.hint; ans.disabled = false; }
+  const why = document.getElementById('whyInput');
+  if (why) { why.placeholder = SOAL.placeholder_why; why.disabled = false; }
+  updateSend();
+}
+function loadSoalFree(){
+  const slug = reasonGoalSlug();
+  if (!slug) { renderEmptySoal(); return Promise.resolve(); }
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 8000);
+  return fetch(API + '/soal/' + encodeURIComponent(slug), { signal: ctrl.signal })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(d => { applySoalFree(d); })
+    .catch(() => { renderEmptySoal(); })
+    .finally(() => clearTimeout(timer));
+}
+
+/* ============ VOICE AI — TTS feedback via Web Speech API (tanpa key) ============ */
+let speakBtn = null;
+function speak(text, btn){
+  if (!text) return;
+  try {
+    if (!('speechSynthesis' in window)) { toast('Peramban ini belum mendukung suara'); return; }
+    let voiceOn = true;
+    try { voiceOn = localStorage.getItem('reason_voice') !== '0'; } catch(e){}
+    if (!voiceOn) { toast('Suara nonaktif — nyalakan toggle "Penjelasan dengan Suara" di layar Pilih Materi'); return; }
+    if (speechSynthesis.speaking) {
+      speechSynthesis.cancel();
+      if (btn === speakBtn) {
+        btn.classList.remove('on'); btn.setAttribute('aria-pressed','false'); speakBtn = null;
+        return;
+      }
+    }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'id-ID'; u.rate = 1;
+    try {
+      const v = (speechSynthesis.getVoices() || []).find(x => (x.lang||'').toLowerCase().startsWith('id'));
+      if (v) u.voice = v;
+    } catch(e){}
+    u.onend = u.onerror = () => {
+      btn.classList.remove('on'); btn.setAttribute('aria-pressed','false');
+      if (speakBtn === btn) speakBtn = null;
+    };
+    speakBtn = btn;
+    btn.classList.add('on'); btn.setAttribute('aria-pressed','true');
+    speechSynthesis.speak(u);
+  } catch(e) { toast('Peramban ini belum mendukung suara'); }
+}
+function speakFeedback(){
+  const t = ['fbSub','anaBody','anaNote'].map(id => { try { return document.getElementById(id).textContent.trim(); } catch(e){ return ''; } })
+    .filter(Boolean).join('. ');
+  speak(t, document.getElementById('fbSpeak'));
+}
+window.addEventListener('pagehide', () => { try { speechSynthesis.cancel(); } catch(e){} });
+
+function apiGrade(payload){
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 25000); // di atas timeout backend (20s)
+  let tok = '';
+  try { tok = localStorage.getItem('reason_token') || ''; } catch(e){}
+  const headers = {'Content-Type': 'application/json'};
+  if (tok) headers['Authorization'] = 'Bearer ' + tok;
+  return fetch(API + '/grade', {
+    method: 'POST', headers, body: JSON.stringify(payload), signal: ctrl.signal
+  }).then(r => {
+    clearTimeout(timer);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).catch(err => { clearTimeout(timer); throw err; });
+}
+
+/* Fallback lokal bila backend tak terjangkau (PRD-AI FR-4) */
+function localGrade(req){
+  const jawab = String(req.jawaban_user || '').trim().toLowerCase();
+  const kunci = String(req.kunci || '').trim().toLowerCase();
+  const alasan = String(req.alasan_user || '').trim();
+  const ok = jawab !== '' && jawab === kunci;
+  return {
+    benar: ok,
+    kriteria: (req.kriteria || []).map((k, i) => ({
+      id: k.id, label: k.label,
+      skor: (ok && i === 0) || (ok && alasan && i === 1) ? 1 : 0,
+      komentar: 'penilaian lokal (backend tidak terjangkau)'
+    })),
+    umpan_balik: ok
+      ? 'Jawabanmu sudah tepat.'
+      : 'Belum tepat — coba periksa lagi langkah dan konsepnya.',
+    analisis: 'Penilaian sementara tanpa backend: '
+      + (ok ? 'jawaban cocok dengan kunci.' : 'jawaban belum cocok dengan kunci.')
+      + ' Analisis konsep menyusul saat backend menyala.',
+    konsep: ok
+      ? 'Pastikan alasanmu menyebut langkah konsep, bukan hanya hasil akhir.'
+      : 'Tinjau kembali materi terkait sebelum mencoba lagi.',
+    progres_pct: ok ? (alasan ? 75 : 55) : (jawab ? 30 : 10),
+    sumber: 'lokal'
+  };
+}
 
 function esc(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -647,38 +841,37 @@ function esc(s){
 /* ============ ISI UMPAN BALIK per verdict (mockup pink "belum tepat" vs hijau "benar") ============ */
 const ICON_CHECK = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const ICON_DASH = '<span class="dash"></span>';
-function setRubrik(ok){
-  const rows = [['rub1', ok ? 'ok' : 'none'], ['rub2', ok ? 'warn' : 'none'], ['rub3', 'none']];
-  rows.forEach(([id, cls], i) => {
+function setRubrik(kriteria){
+  ['rub1', 'rub2', 'rub3'].forEach((id, i) => {
     const row = document.getElementById(id);
+    const k = (kriteria || [])[i] || {};
+    const pass = k.skor === 1;
     const ico = row.querySelector('.rub-ico');
-    ico.className = 'rub-ico ' + cls;
-    ico.innerHTML = cls === 'none' ? ICON_DASH : ICON_CHECK;
+    ico.className = 'rub-ico ' + (pass ? 'ok' : 'none');
+    ico.innerHTML = pass ? ICON_CHECK : ICON_DASH;
+    // komentar AI per kriteria → tooltip baris rubrik
+    if (k.komentar) row.title = k.komentar;
     const sc = row.querySelector('.rub-score');
-    const score = (ok && i < 2) ? '✓ 1/1' : '0/1';
+    const score = pass ? '✓ 1/1' : '0/1';
     sc.textContent = score;
     sc.classList.toggle('miss', score === '0/1');
   });
 }
-function fillFeedback(){
-  const ok = ansInput.value.trim() === '24';
-  const why = whyInput.value.trim();
+function fillFeedback(res){
+  const ok = !!res.benar;
   const hero = document.getElementById('fbHero');
   hero.classList.toggle('wrong', !ok);
   document.getElementById('fbTitle').textContent =
     ok ? 'Jawaban Kamu Benar!' : 'Belum tepat, dan itu petunjuk yang berguna.';
-  document.getElementById('fbSub').textContent = ok
-    ? (why ? 'Alasanmu sudah tepat, meski masih bisa lebih lengkap.'
-           : 'Alasanmu belum ada — coba lengkapi saat cek ulang.')
-    : 'Kita luruskan dulu sebelum cek ulang.';
-  document.getElementById('anaBody').textContent = ok
-    ? 'faktorial(4) menunggu faktorial(3) sampai dasar tercapai: faktorial(0) = 1, lalu hasil dikalikan balik 1 × 2 × 3 × 4 = 24. Jejak pemanggilanmu konsisten dari awal sampai kembali.'
-    : 'faktorial(1) adalah pemanggilan yang langsung meminta faktorial(0). Begitu nilai 1 tersedia, faktorial(1) dapat menyelesaikan 1 × 1 lebih dulu.';
-  document.getElementById('anaNote').textContent = ok
-    ? 'Konsep yang terbukti: urutan kembali adalah kebalikan urutan masuk — faktorial(0) → faktorial(1) → … → faktorial(4). Tinggal dipakai lagi di soal berikutnya.'
-    : 'Konsep yang perlu dipegang: urutan kembali adalah kebalikan urutan masuk — faktorial(0) → faktorial(1) → faktorial(2) → faktorial(3). Yang lain tetap menunggu sampai gilirannya.';
-  document.getElementById('progBadge').textContent = ok ? '40%' : '0%';
-  setRubrik(ok);
+  document.getElementById('fbSub').textContent =
+    res.umpan_balik || (ok ? 'Jawabanmu sudah tepat.' : 'Kita luruskan dulu sebelum cek ulang.');
+  document.getElementById('anaBody').textContent =
+    res.analisis || 'Analisis penalaran sedang disusun — coba kirim ulang.';
+  document.getElementById('anaNote').textContent =
+    res.konsep ? ('Konsep: ' + res.konsep) : '';
+  document.getElementById('progBadge').textContent =
+    Math.max(0, Math.min(100, res.progres_pct || 0)) + '%';
+  setRubrik(res.kriteria);
   // Bimo di hero hanya mount pada varian pink (hero satunya pakai lencana centang)
   if (window.__bimoFb) {
     if (!ok) window.__bimoFb.show('happy');
@@ -687,6 +880,8 @@ function fillFeedback(){
 }
 
 function sendAnswer(){
+  if (!soalLoaded || !SOAL.pertanyaan || !SOAL.kunci) { toast('Soal belum tersedia untuk topik ini'); return; }
+  if (grading) return;        // klik ganda / kirim ulang selama animasi THINK
   // Alasan kosong: ingatkan SEKALI, lalu boleh lanjut dengan catatan (PRD §6.1 langkah 5)
   if(whyInput.value.trim() === '' && !warnedEmpty){
     warnedEmpty = true;
@@ -695,17 +890,31 @@ function sendAnswer(){
     whyInput.focus();
     return;
   }
+  grading = true;
   // chip: apa yang sedang dibaca agen (jawaban, alasan, jejak penalaran)
   const why = whyInput.value.trim() || 'alasan belum ada — agen akan menandainya';
   document.getElementById('thinkChips').innerHTML =
     `<div class="t-chip"><b>Jawaban:</b> ${esc(ansInput.value.trim())}</div>` +
     `<div class="t-chip"><b>Alasan:</b> ${esc(why)}</div>` +
-    `<div class="t-chip wrap"><b>Jejak penalaran:</b> faktorial(4) → faktorial(3) → faktorial(2) → faktorial(1) → faktorial(0) → 1</div>`;
+    `<div class="t-chip wrap"><b>Jejak penalaran:</b> menyusun…</div>`;
 
-  // siapkan layar umpan balik sesuai verdict
-  fillFeedback();
+  // payload penilai AI (PRD-AI FR-6)
+  const payload = {
+    page: 'soal',
+    slug: reasonGoalSlug(),
+    pertanyaan: SOAL.pertanyaan,
+    jawaban_user: ansInput.value.trim(),
+    alasan_user: whyInput.value.trim(),
+    kunci: SOAL.kunci,
+    kriteria: [
+      { id: 'rub1', label: 'Jawaban Akurat' },
+      { id: 'rub2', label: 'Alasan Logis' },
+      { id: 'rub3', label: 'Referensi Konsep' }
+    ]
+  };
 
   // reset tahap
+  padCancelled = false;
   clearThink();
   thinkSteps.forEach(s => s.classList.remove('on', 'done'));
   thinkBar.style.width = '0%';
@@ -715,22 +924,52 @@ function sendAnswer(){
 
   THINK_STAGES.forEach((st, i) => {
     thinkTimers.push(setTimeout(() => {
+      if (padCancelled) return;
       if (i > 0) thinkSteps[i - 1].classList.replace('on', 'done');
       thinkSteps[i].classList.add('on');
       thinkTitle.textContent = st.title;
       thinkBar.style.width = st.bar + '%';
     }, st.at));
   });
-  thinkTimers.push(setTimeout(() => {
-    thinkSteps[thinkSteps.length - 1].classList.replace('on', 'done');
-    thinkEl.classList.remove('show');
-    if (window.__bimoPad) window.__bimoPad.hide();
-    document.getElementById('s-question').classList.remove('active');
-    document.getElementById('s-feedback').classList.add('active');
-    document.getElementById('s-feedback').scrollTop = 0;
-  }, THINK_DONE));
+
+  // panggil backend — THINK = loading; kegagalan → fallback lokal + toast (FR-4)
+  const t0 = Date.now();
+  const gradeP = apiGrade(payload)
+    .catch(() => localGrade(payload))
+    .then(result => {
+      if (result.sumber === 'lokal') toast('AI tidak tersedia — penilaian lokal');
+      return result;
+    });
+
+  // jejak penalaran chip diisi analisis AI begitu datang (masih di layar THINK bila cepat)
+  gradeP.then(result => {
+    if (padCancelled || !result.analisis) return;
+    const chip = document.querySelector('#thinkChips .t-chip.wrap');
+    if (chip) chip.innerHTML = `<b>Jejak penalaran:</b> ${esc(result.analisis)}`;
+  });
+
+  // berhenti setelah ANIMASI minimum DAN hasil siap (data lambat → animasi menunggu)
+  const finish = () => gradeP.then(result => {
+    if (padCancelled) return;
+    const wait = Math.max(0, THINK_DONE - (Date.now() - t0));
+    thinkTimers.push(setTimeout(() => {
+      if (padCancelled) return;
+      clearThink();
+      thinkSteps[thinkSteps.length - 1].classList.replace('on', 'done');
+      thinkEl.classList.remove('show');
+      if (window.__bimoPad) window.__bimoPad.hide();
+      fillFeedback(result);
+      document.getElementById('s-question').classList.remove('active');
+      document.getElementById('s-feedback').classList.add('active');
+      document.getElementById('s-feedback').scrollTop = 0;
+      grading = false;
+    }, wait));
+  });
+  thinkTimers.push(setTimeout(finish, THINK_DONE));
 }
 function cancelThinking(){
+  padCancelled = true;
+  grading = false;
   clearThink();
   thinkEl.classList.remove('show');
   if (window.__bimoPad) window.__bimoPad.hide();
@@ -752,7 +991,7 @@ function closeSource(){
   document.getElementById('overlay').classList.remove('show');
 }
 
-setTheme('light');
+Promise.all([loadSoalFree(), loadMaterial()]).finally(() => setTheme('light'));
 </script>
 
 <script type="module">

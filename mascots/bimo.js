@@ -126,17 +126,35 @@ export const bimo = {
 
   acting: {
     idle: { book: { rx: [0, 0.04, 0.8, 0] } },
-    thinking: { head: { rz: 0.14 }, antenna: { rz: [0, 0.2, 1.4, 0] } },
+    /* thinking: right hand up at the chin, head tilted, antenna ticking over ideas —
+       a classic ponder, not a reach (there is no shelf in this rig) */
+    thinking: {
+      body: { ry: [-0.06, 0.04, 0.5, 0], rz: [0.05, 0.03, 0.5, 0] },
+      head: { rz: 0.16, ry: [0.1, 0.05, 0.5, 0], rx: [-0.06, 0.04, 0.5, 0] },
+      antenna: { rz: [0, 0.32, 1.7, 0] },
+      shoulderR: { rz: [1, 0.06, 1.1, 0], rx: [-0.65, 0.06, 1.1, 0] },
+      shoulderL: { rz: [0.1, 0.05, 1.1, Math.PI] },
+      book: { rx: [0, 0.035, 0.9, 0] },
+    },
     listening: { head: { rz: -0.1, ry: -0.18 }, antenna: { rx: [-0.2, 0.1, 1, 0] } },
     speaking: { head: { rx: [-0.04, 0.05, 2.2, 0] }, book: { rx: [0, 0.06, 1.6, 0] } },
-    /* chin toward the pages */
-    working: { head: { rx: 0.3 }, book: { rx: -0.1 }, shoulderL: { rx: -0.12 }, shoulderR: { rx: -0.12 } },
-    sleeping: { head: { rx: 0.18, rz: 0.1 }, book: { rx: -0.18 }, shoulderL: { rx: 0.1 }, shoulderR: { rx: 0.1 } },
+    /* reading with the chin toward the pages, nodding off at a slow 2.5s rhythm */
+    working: {
+      head: { rx: [0.3, 0.09, 0.4, 0] },
+      book: { rx: [-0.1, 0.04, 0.4, 0] },
+      shoulderL: { rx: [-0.12, 0.03, 0.4, 0] }, shoulderR: { rx: [-0.12, 0.03, 0.4, 0] },
+    },
+    /* dozed off: deeper chin tuck, book sinking in the lap, slow breath sway */
+    sleeping: { head: { rx: [0.3, 0.05, 0.25, 0], rz: 0.12 }, book: { rx: -0.3 }, shoulderL: { rx: 0.14 }, shoulderR: { rx: 0.14 } },
     error: { shoulderL: { rz: [-0.28, 0.15, 11, 0] }, shoulderR: { rz: [0.28, 0.15, 11, 1] }, head: { rz: -0.08 } },
     surprised: { shoulderL: { rz: -0.55 }, shoulderR: { rz: 0.55 }, head: { rx: -0.15 }, antenna: { rx: [-0.25, 0.2, 8, 0] } },
+    /* dancing: wide hip sway + torso twist, arms pumping high out of phase, book and head bopping along */
     celebrating: {
-      shoulderL: { rz: [-0.85, 0.2, 4, 0] }, shoulderR: { rz: [0.85, 0.2, 4, Math.PI] },
-      book: { rz: [0, 0.15, 3, 0] }, antenna: { rz: [0, 0.25, 6, 0] },
+      body: { rz: [0, 0.26, 1.7, 1.57], ry: [0, 0.3, 1.15, 1.57] },
+      head: { rz: [0, 0.12, 1.7, 0] },
+      shoulderL: { rz: [-1, 0.35, 4, 0] }, shoulderR: { rz: [1, 0.35, 4, Math.PI] },
+      book: { rz: [0, 0.3, 3.2, 0], rx: [0, 0.12, 3.2, 0] },
+      antenna: { rz: [0, 0.4, 6, 0] },
     },
     sad: { head: { rx: 0.2, rz: 0.1 }, shoulderL: { rx: 0.15 }, shoulderR: { rx: 0.15 }, book: { rx: -0.25 } },
     happy: {

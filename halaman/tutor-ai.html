@@ -106,12 +106,14 @@
   .stage-circle{
     position:relative;width:232px;height:232px;border-radius:50%;
     background:radial-gradient(circle at 50% 42%,#E6E0FB 0%,#DDD6F9 100%);
+    overflow:hidden;               /* rak meluncur masuk/keluar dari tepi lingkaran */
   }
   .stage-circle .dashes{position:absolute;left:16px;top:52px;width:30px;height:54px;z-index:3;pointer-events:none}
   .stage-circle .dashes svg{width:100%;height:100%;display:block}
   .mascot{
     position:absolute;left:26px;right:26px;top:38px;bottom:44px;
     cursor:pointer;
+    transition:transform .55s cubic-bezier(.3,.7,.3,1);
   }
   .mascot>svg,.mascot>canvas{width:100%;height:100%;display:block}
   .ai-pill{
@@ -119,6 +121,66 @@
     background:#EFEBFE;border:1.5px solid #DCD4FB;border-radius:var(--r-pill);
     padding:6px 13px;font-size:12px;font-weight:800;color:var(--purple-deep);
     letter-spacing:.3px;box-shadow:0 4px 12px rgba(93,75,214,.12);
+  }
+
+  /* ============ SCENE ANIMASI: ambil buku di rak / membaca ngantuk / joget ============
+     wobnimo hanya mengenal 11 state tetap (setState melempar utk nama lain), jadi
+   koreografi scene di lapis halaman: rak 3D (mascots/rak.js — mount terpisah dari
+   Bimo) + prop SVG cadangan (rak SVG bila WebGL2 absen, buku terbang, not, zzz) +
+   pergantian state bawaan engine + transform CSS pada #bimoSlot. */
+  .shelf{
+    position:absolute;right:-2px;bottom:22px;width:62px;z-index:0;pointer-events:none;
+    transform:translateX(150%) rotate(8deg);opacity:0;
+    transition:transform .55s cubic-bezier(.2,.85,.25,1),opacity .35s;
+  }
+  .shelf.in{transform:none;opacity:1}
+  .shelf svg{width:100%;display:block;filter:drop-shadow(0 6px 14px rgba(38,35,90,.16))}
+  /* buku yang terbang dari rak ke pelukan Bimo.
+     Default = posisi buku biru pada rak SVG fallback; saat rak 3D (wobnimo) terpasang,
+     halaman menimpa --fly-* dgn koordinat buku 3D di kanvas (lihat tuneFlybook()). */
+  .flybook{
+    position:absolute;right:var(--fly-right,8px);top:var(--fly-top,126px);width:20px;z-index:5;
+    pointer-events:none;opacity:0;
+  }
+  .flybook svg{width:100%;display:block}
+  .flybook.fly{animation:flyToBimo .72s cubic-bezier(.45,.05,.55,.95) forwards}
+  @keyframes flyToBimo{
+    0%{transform:translate(0,0) scale(1) rotate(0);opacity:1}
+    70%{opacity:1}
+    100%{transform:translate(var(--fly-x,-86px),var(--fly-y,30px)) scale(.42) rotate(-18deg);opacity:0}
+  }
+  /* not musik saat joget */
+  .notes{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;transition:opacity .35s}
+  .notes.on{opacity:1}
+  .notes i{position:absolute;font-style:normal;font-weight:800;line-height:1}
+  .notes.on i{animation:noteUp 1.7s ease-out infinite}
+  .notes.on i:nth-child(1){left:14px;top:132px;font-size:19px;color:#7C6BF0}
+  .notes.on i:nth-child(2){right:16px;top:96px;font-size:23px;color:#4392F0;animation-delay:.85s}
+  .notes.on i:nth-child(3){left:52px;top:56px;font-size:15px;color:#F5A93F;animation-delay:1.35s}
+  @keyframes noteUp{
+    0%{transform:translateY(10px) rotate(-10deg);opacity:0}
+    22%{opacity:1}
+    100%{transform:translateY(-38px) rotate(12deg);opacity:0}
+  }
+  /* zzz versi DOM — hanya dipakai saat canvas 3D absen (engine punya zzz sendiri) */
+  .zpop{position:absolute;right:34px;top:8px;width:60px;height:56px;z-index:5;pointer-events:none;opacity:0;transition:opacity .3s}
+  .zpop.on{opacity:1}
+  .zpop i{position:absolute;font-style:normal;font-weight:800;line-height:1;color:#7C6BF0}
+  .zpop.on i{animation:zFloat 1.9s ease-out infinite}
+  .zpop.on i:nth-child(1){right:4px;bottom:0;font-size:14px}
+  .zpop.on i:nth-child(2){right:20px;bottom:14px;font-size:19px;animation-delay:.6s}
+  .zpop.on i:nth-child(3){right:38px;bottom:30px;font-size:24px;animation-delay:1.2s}
+  @keyframes zFloat{0%{transform:translateY(6px);opacity:0}30%{opacity:1}100%{transform:translateY(-16px);opacity:0}}
+  /* gerak container maskot per scene */
+  .mascot.nudge{transform:translateX(15px)}          /* condong ke rak */
+  .mascot.nod{transition:none;animation:nodDoze 1.7s ease-in-out infinite}   /* kantuk menurun */
+  @keyframes nodDoze{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(3.2deg) translateY(3px)}}
+  .mascot.sway{transition:none;animation:danceSway .58s ease-in-out infinite alternate}  /* joget */
+  @keyframes danceSway{from{transform:translateX(-5px) rotate(-5deg)}to{transform:translateX(5px) rotate(5deg)}}
+  .stage-circle.showtime{animation:ringPulse 1.15s ease-in-out infinite}
+  @keyframes ringPulse{0%,100%{box-shadow:0 0 0 0 rgba(124,107,240,0)}50%{box-shadow:0 0 0 9px rgba(124,107,240,.16)}}
+  @media (prefers-reduced-motion:reduce){
+    .mascot.nod,.mascot.sway,.notes.on i,.zpop.on i,.stage-circle.showtime{animation:none}
   }
 
   /* Pill status mic */
@@ -286,7 +348,7 @@
         </span>
         <div class="tt">
           <b>Tutor AI</b>
-          <span>Belajar lebih mudah dengan suara</span>
+          <span>Belajar lebih mudah dengan suara · Prototipe — chat belum aktif</span>
         </div>
         <button class="gear" onclick="toast('Pengaturan Tutor AI akan segera hadir.')" aria-label="Pengaturan Tutor AI">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
@@ -296,6 +358,19 @@
       <!-- Panggung maskot Bimo (menggantikan kelinci pada mockup) -->
       <div class="stage">
         <div class="stage-circle">
+          <!-- Rak buku: meluncur masuk pada scene "ambil buku" (di belakang Bimo) -->
+          <span class="shelf" id="shelf" aria-hidden="true">
+            <svg viewBox="0 0 64 104">
+              <rect x="4" y="4" width="56" height="96" rx="8" fill="#FFFFFF" stroke="#E4E1F7" stroke-width="3"/>
+              <path d="M8 52h48" stroke="#E4E1F7" stroke-width="3" stroke-linecap="round"/>
+              <rect x="12" y="14" width="9" height="34" rx="2.5" fill="#7C6BF0"/>
+              <rect x="24" y="20" width="9" height="28" rx="2.5" fill="#F5A93F"/>
+              <rect x="36" y="17" width="9" height="31" rx="2.5" fill="#4392F0" id="srcBook"/>
+              <rect x="13" y="62" width="9" height="34" rx="2.5" fill="#F9A9E8"/>
+              <rect x="25" y="66" width="9" height="30" rx="2.5" fill="#C5EE93"/>
+              <rect x="37" y="63" width="9" height="33" rx="2.5" fill="#5D4BD6"/>
+            </svg>
+          </span>
           <span class="dashes" aria-hidden="true">
             <svg viewBox="0 0 30 54" fill="none" stroke="#9C8CF5" stroke-width="3" stroke-linecap="round">
               <line x1="9" y1="8" x2="21" y2="14"/>
@@ -303,9 +378,13 @@
               <line x1="9" y1="45" x2="22" y2="42"/>
             </svg>
           </span>
-          <!-- Maskot REASON — Bimo (wobnimo); SVG ini tetap dipakai sbg fallback bila WebGL2 absen -->
-          <div class="mascot" id="bimoSlot" aria-hidden="true">
-            <svg viewBox="0 0 260 190">
+          <!-- Maskot REASON — Bimo (wobnimo); SVG ini tetap dipakai sbg fallback bila WebGL2 absen.
+               Klik = putar scene animasi (ambil buku → membaca → joget); ketuk lagi = lompat. -->
+          <div class="mascot" id="bimoSlot" role="button" tabindex="0"
+               aria-label="Putar animasi Bimo: ambil buku, membaca, joget"
+               onclick="window.__bimoShow&&__bimoShow.play()"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.__bimoShow&&__bimoShow.play()}">
+            <svg viewBox="0 0 260 190" aria-hidden="true">
               <!-- daun dekor -->
               <path d="M36 118c14-30 6-52-12-64 24 4 42 24 40 52-1 12-12 18-28 12z" fill="#E7E3FB"/>
               <path d="M222 66c-12-24-4-44 12-54-20 6-34 24-32 48 1 10 10 14 20 6z" fill="#E7E3FB"/>
@@ -351,7 +430,19 @@
               <path d="M110 154l14-3M110 161l14-3M146 154l-14-3M146 161l-14-3" stroke="#DCEEFF" stroke-width="2" stroke-linecap="round"/>
             </svg>
           </div>
-          <span class="ai-pill">AI REASON</span>
+          <!-- Buku terbang dari rak ke pelukan Bimo (scene 1) -->
+          <span class="flybook" id="flybook" aria-hidden="true">
+            <svg viewBox="0 0 20 24">
+              <rect x="3" y="2" width="14" height="20" rx="3" fill="#4392F0"/>
+              <rect x="3" y="2" width="5" height="20" rx="3" fill="#2E7BD6"/>
+              <path d="M9 7h6M9 11h6M9 15h4.5" stroke="#DCEEFF" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <!-- Not musik (scene joget) -->
+          <span class="notes" id="notes" aria-hidden="true"><i>♪</i><i>♫</i><i>♩</i></span>
+          <!-- zzz DOM — hanya tampil saat WebGL2 absen (engine 3D sudah punya zzz) -->
+          <span class="zpop" id="zpop" aria-hidden="true"><i>z</i><i>z</i><i>z</i></span>
+          <span class="ai-pill" id="aiPill" aria-live="polite">AI REASON</span>
         </div>
       </div>
 
@@ -445,6 +536,7 @@ function toast(msg){
 /* Bimo 3D (wobnimo) — mount menggantikan SVG statis; fallback SVG bila WebGL2 absen */
 import { mount } from '../vendor/wobnimo.js';
 import { bimo } from '../mascots/bimo.js';
+import { rak } from '../mascots/rak.js';
 
 /* Profil ringan utk HP (layar high-DPR / RAM kecil): pixel ratio 1 & tanpa
    interaksi pointer — beban GPU & baterai jauh lebih rendah. */
@@ -453,12 +545,38 @@ const M_OPTS = LIGHT ? { maxPixelRatio: 1, interactive: false } : {};
 window.__bimoLight = LIGHT;
 
 const slot = document.getElementById('bimoSlot');
+const shelf = document.getElementById('shelf');
 let mascot = null;
+let rakM = null;                 /* rak 3D — mount terpisah, state sendiri */
 let currentState = 'happy';
 
 function setState(s){
   currentState = s;
-  if (mascot) { try { mascot.setState(s); } catch (e) { console.warn('[bimo] setState', e); } }
+  if (!mascot) return;
+  try {
+    /* wobnimo hanya menerima 10 nama di Mascot.setState(); 'happy' ada di tabel
+       acting/fx spec tapi dicegah pintu depan (jalur reaksi internal vendor
+       pakai brain.setState langsung) → lewat brain supaya pose happy +
+       fx enter:happy kepakai, bukan cuma lempar Error di console */
+    if (s === 'happy') mascot.brain.setState('happy');
+    else mascot.setState(s);
+  } catch (e) { console.warn('[bimo] setState', e); }
+}
+/* Rak 3D: 11 state wobnimo sama dgn Bimo, tapi rig & acting terpisah (bukan maskot) */
+function setRak(s){
+  if (!rakM) return;
+  try { rakM.setState(s); } catch (e) { console.warn('[rak] setState', e); }
+}
+/* Titik awal flybook dipatok ke buku biru di kanvas rak 3D. wobnimo ortho
+   (frame target 0.36, radius 0.5): span y [-0.14, 0.86], lebar = tinggi × aspect
+   kanvas 62×101 → buku (x −0.15, y 0.495) jatuh di right 34px / top 134px. */
+function tuneFlybook(){
+  const fb = document.getElementById('flybook');
+  if (!fb) return;
+  fb.style.setProperty('--fly-right', '34px');
+  fb.style.setProperty('--fly-top', '134px');
+  fb.style.setProperty('--fly-x', '-60px');
+  fb.style.setProperty('--fly-y', '22px');
 }
 
 /* Gate fallback: SVG statis TIDAK dihapus saat mount. Canvas menumpuk di atasnya
@@ -500,14 +618,35 @@ function gateSlot(host,m,tag){
 
 function boot(){
   if (!slot) return;
+  let webgl = false;
   try {
     if (!document.createElement('canvas').getContext('webgl2')) throw new Error('WebGL2 is not available');
+    webgl = true;
     mascot = mount(slot, bimo, { state: currentState, ...M_OPTS });
     gateSlot(slot, mascot, 'bimo');
   } catch (err) {
     console.warn('[bimo] WebGL2 absen — pakai SVG statis:', err && err.message);
     const c = slot.querySelector('canvas');   // buang canvas parsial; SVG tak pernah disentuh
     if (c && c.parentNode) c.parentNode.removeChild(c);
+  }
+  /* Rak 3D — kanvas kedua pada #shelf (spec terpisah, tak mengotori 11 state Bimo).
+     Paused sejak awal: shelf tersembunyi sampai scene 1 → hemat GPU (2 konteks). */
+  if (webgl && shelf) {
+    try {
+      /* mount bisa telat (idle callback di HP) saat scene sudah jalan →
+         sinkron dgn state: buku sudah "terambil"? shelf sudah masuk? */
+      const taken = document.getElementById('srcBook')?.style?.opacity === '0';
+      rakM = mount(shelf, rak, { state: taken ? 'sad' : 'idle', ...M_OPTS });
+      gateSlot(shelf, rakM, 'rak');
+      rakM.pause();
+      if (shelf.classList.contains('in')) rakM.play();
+      tuneFlybook();
+    } catch (err) {
+      console.warn('[rak] mount gagal — pakai SVG rak:', err && err.message);
+      const c = shelf.querySelector('canvas');
+      if (c && c.parentNode) c.parentNode.removeChild(c);
+      rakM = null;
+    }
   }
 }
 /* HP: mount saat browser longgar supaya kompilasi shader tak menahan load awal
@@ -517,9 +656,147 @@ else boot();
 
 window.__bimo = {
   get mounted(){ return !!mascot; },
+  get rakMounted(){ return !!rakM; },
   get state(){ return currentState; },
-  setState
+  setState,
+  setRak
 };
+
+/* ============ SCENE PANGGUNG: ambil buku di rak → membaca sampai ngantuk → joget ============
+   wobnimo hanya punya 11 state tetap (setState melempar utk nama lain), jadi scene disusun
+   dari: pergantian state bawaan engine (thinking/surprised/working/sleeping/celebrating)
+   + rak 3D (rakM — mount terpisah) + prop halaman (buku terbang, not, zzz) +
+   transform CSS pada #bimoSlot. */
+const circle = document.querySelector('.stage-circle');
+const srcBook = document.getElementById('srcBook');
+const flybook = document.getElementById('flybook');
+const notes = document.getElementById('notes');
+const zpop = document.getElementById('zpop');
+const pill = document.getElementById('aiPill');
+
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+let playing = false, sceneToken = 0, sceneName = '', hintShown = false;
+
+function setPill(t){ if (pill) pill.textContent = t; }
+/* Reset prop per scene — TANPA shelf & buku: rak harus tetap ada dari scene
+   "Ambil" → "Baca" → "Joget" (restore total di endShow() setelah loop). */
+function resetProps(){
+  flybook.classList.remove('fly');
+  notes.classList.remove('on');
+  zpop.classList.remove('on');
+  slot.classList.remove('nudge','nod','sway');
+  circle.classList.remove('showtime');
+}
+
+/* Tutup show: rak meluncur keluar, buku kembali utk putaran berikutnya */
+function endShow(){
+  shelf.classList.remove('in');
+  srcBook.style.opacity = '';
+  setRak('idle');
+  if (rakM) rakM.pause();
+}
+
+/* step(ms) = tidur lalu lempar 'skip' bila user mengetuk maskot utk lompat scene */
+const SCENES = [
+  {
+    label: 'Ambil Buku',
+    async run(step){
+      shelf.classList.add('in');          // rak meluncur masuk dari tepi
+      if (rakM) rakM.play();              // 3D: mulai render (sudah pause sejak boot)
+      await step(600);
+      slot.classList.add('nudge');        // Bimo mendekat ke rak
+      setState('thinking');               // memilih buku
+      await step(950);
+      flybook.classList.add('fly');       // buku terbang ke pelukan Bimo
+      srcBook.style.opacity = '0';        // buku asli di rak ikut "terambil"
+      setRak('sad');                      // 3D: buku miring ke belakang papan
+      setState('surprised');
+      await step(520);
+      setState('happy');
+      await step(750);
+      slot.classList.remove('nudge');     // rak TIDAK ditarik keluar — tetap ada utk scene "Baca"
+      await step(560);
+    },
+  },
+  {
+    label: 'Baca Sampai Ngantuk',
+    async run(step){
+      /* force-take idempoten: bila scene "Ambil" di-skip sebelum momen ambil */
+      srcBook.style.opacity = '0';
+      setRak('sad');
+      setState('working');                // pose baca: dagu ke halaman
+      slot.classList.add('nod');          // kantuk mulai menurun...
+      await step(3400);
+      setState('sleeping');               // engine: zzz + napas pelan
+      slot.classList.remove('nod');
+      if (!mascot) zpop.classList.add('on');   // fallback tanpa WebGL: zzz DOM
+      await step(2700);
+      zpop.classList.remove('on');
+      setState('surprised');              // terjaga!
+      await step(650);
+      setState('happy');
+      await step(550);
+    },
+  },
+  {
+    label: 'Joget ♪',
+    async run(step){
+      setState('celebrating');            // engine: lompat + putar + konfeti/bintang
+      setRak('celebrating');              // rak ikut goyang, buku tetap miring
+      slot.classList.add('sway');
+      notes.classList.add('on');
+      circle.classList.add('showtime');
+      await step(4200);
+      notes.classList.remove('on');
+      slot.classList.remove('sway');
+      circle.classList.remove('showtime');
+      setState('happy');
+      await step(700);
+    },
+  },
+];
+
+async function playShow(auto){
+  if (playing){ sceneToken++; return; }   // ketuk saat tampil → lompat scene sekarang
+  playing = true;
+  for (const sc of SCENES){
+    const my = ++sceneToken;
+    sceneName = sc.label;
+    setPill(sc.label);
+    /* step(ms): tidur per-120ms agar ketuk "lompat" merespons cepat (bukan nunggu
+       tidur panjang scene selesai); lempar 'skip' saat user mengetuk maskot */
+    const step = async (ms) => {
+      for (let left = ms; left > 0; left -= 120) {
+        if (my !== sceneToken) throw 'skip';
+        await sleep(Math.min(120, left));
+      }
+      if (my !== sceneToken) throw 'skip';
+    };
+    try { await sc.run(step); } catch (e) { if (e !== 'skip') console.warn('[scene]', e); }
+    resetProps();
+  }
+  sceneName = '';
+  setPill('AI REASON');
+  setState('idle');
+  resetProps();
+  endShow();                             // rak keluar + buku kembali + rak pause
+  playing = false;
+  if (auto && !hintShown){
+    hintShown = true;
+    toast('Ketuk Bimo untuk putar lagi animasinya');
+  }
+}
+
+window.__bimoShow = {
+  play: () => playShow(false),
+  get playing(){ return playing; },
+  get scene(){ return sceneName; },
+};
+
+/* Putar sekali saat halaman dibuka (hormati preferensi kurangi gerak) */
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches){
+  setTimeout(() => { if (!playing) playShow(true); }, 1100);
+}
 </script>
 
 </body>

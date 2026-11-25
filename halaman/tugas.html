@@ -423,6 +423,19 @@
         </div>
       </div>
 
+      <!-- ===== FOLDER 4: PEMROGRAMAN BERORIENTASI OBJEK (dari backend lokal) ===== -->
+      <div class="folder" id="f-pbo">
+        <button class="folder-head" onclick="toggleFolder('f-pbo')">
+          <span class="fico" style="background:#FFE8CC">🧩</span>
+          <div class="finfo"><b>Pemrograman Berorientasi Objek</b><small>Backend lokal REASON · dokumen API</small></div>
+          <div class="fmeta"><span class="fpct">0</span><span class="fcount">dokumen</span></div>
+          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="folder-body">
+          <div class="folder-inner" id="f-pbo-inner"></div>
+        </div>
+      </div>
+
       <p class="note">Materi datang dari dua sumber: unggahan langsung dosen pengampu dan hasil scraping website kampus. Semua kutipan agen hanya mengambil dari materi yang sudah terindeks di rak ini.</p>
     </div>
   </section>
@@ -581,7 +594,7 @@ let readSet = new Set();
 try{ readSet = new Set(JSON.parse(localStorage.getItem('materi_read') || '[]')); }catch(e){}
 function decorateCards(){
   document.querySelectorAll('.tcard').forEach(card => {
-    const m = (card.getAttribute('onclick') || '').match(/cardTap\('([^']+)'\)/);
+    const m = (card.getAttribute('onclick') || '').match(/cardTap(?:Api)?\('([^']+)'\)/);
     if(!m) return;
     card.classList.toggle('read', readSet.has(m[1]));
     if(card.querySelector('.ibtn')) return;
@@ -590,7 +603,7 @@ function decorateCards(){
     b.type = 'button';
     b.textContent = '\u2139';
     b.title = 'Detail & sumber';
-    b.addEventListener('click', e => { e.stopPropagation(); openDoc(m[1]); });
+    b.addEventListener('click', e => { e.stopPropagation(); openAny(m[1]); });
     card.appendChild(b);
   });
 }
@@ -620,7 +633,7 @@ function openDoc(id){
   v.textContent = d.verified;
   v.classList.toggle('scrape', d.src === 'scrape');
   const btn = document.getElementById('docReadBtn');
-  const sudah = readSet.has(id);
+  const sudah = readSet.has(id) || (id.startsWith('api:') && readSet.has(id.slice(4)));
   btn.textContent = sudah ? 'Sudah dibaca ✓' : 'Tandai sudah baca';
   btn.disabled = sudah;
   document.getElementById('sheetDoc').classList.add('show');
@@ -628,8 +641,17 @@ function openDoc(id){
 }
 function markRead(){
   if(!currentDoc) return;
-  readSet.add(currentDoc);
+  const key = currentDoc.startsWith('api:') ? currentDoc.slice(4) : currentDoc;
+  readSet.add(key);
   try{ localStorage.setItem('materi_read', JSON.stringify([...readSet])); }catch(e){}
+  if(currentDoc.startsWith('api:')){
+    const token = localStorage.getItem('reason_token') || '';
+    if(token){
+      fetch(API + '/materi/' + key + '/read', {
+        method:'POST', headers:{'Authorization':'Bearer ' + token}
+      }).catch(()=>{});
+    }
+  }
   decorateCards();
   const btn = document.getElementById('docReadBtn');
   btn.textContent = 'Sudah dibaca ✓';
@@ -642,9 +664,78 @@ function closeSheets(){
   currentDoc = null;
 }
 
+/* ============ BACKEND LOKAL (materi Diskrit & PBO) ============ */
+const API = (() => { try { const s=localStorage.getItem('reason_api'); if(s)return s; const h=location.hostname; return (!h||h==='localhost'||h==='127.0.0.1'||h.indexOf('192.168.')===0)?'http://127.0.0.1:8787/api':'https://shieldkartika.my.id/reason/api'; } catch(e){ return 'http://127.0.0.1:8787/api'; } })();
+function apiToken(){ return localStorage.getItem('reason_token') || ''; }
+function openAny(id){ if(DOCS[id]) openDoc(id); else openApiDoc(id); }
+function cardTapApi(slug){ openApiDoc(slug); }
+
+async function openApiDoc(slug){
+  try{
+    const r = await fetch(API + '/materi/' + slug);
+    if(!r.ok){ toast('Materi tidak ditemukan di backend'); return; }
+    const d = await r.json();
+    DOCS['api:' + slug] = {
+      src:'dosen', title: d.title + '.md', dosen: d.dosen,
+      meta: d.dosen + ' · ' + d.matkul + ' · dokumen backend lokal',
+      body: d.content,
+      verified: '✓ Diverifikasi dosen · disimpan di backend lokal'
+    };
+    openDoc('api:' + slug);
+  }catch(e){
+    toast('Backend belum nyala (port 8787)');
+  }
+}
+
+async function loadBackendMateri(){
+  try{
+    const headers = apiToken() ? {'Authorization':'Bearer ' + apiToken()} : {};
+    const r = await fetch(API + '/materi', {headers});
+    if(!r.ok) return;
+    const data = await r.json();
+    const added = {};
+    data.items.forEach(it => {
+      if(it.read) readSet.add(it.slug);
+      const fid = it.matkul === 'Matematika Diskrit' ? 'f-diskrit' : 'f-pbo';
+      const inner = document.getElementById(fid) && document.getElementById(fid).querySelector('.folder-inner');
+      if(!inner) return;
+      if(inner.querySelector('[data-api-slug="' + it.slug + '"]')) return;
+      const g = document.createElement('div');
+      g.className = 'tgroup';
+      const dosenShort = (it.dosen || 'Dosen').replace('Dr. ', '').split(',')[0];
+      const inisial = (dosenShort.split(' ').map(w => w[0]).join('')).slice(0,2).toUpperCase();
+      g.innerHTML =
+        '<div class="tcard" style="--tc:#E7DDFF" data-src="dosen" data-api-slug="' + it.slug + '" onclick="cardTapApi(\'' + it.slug + '\')">' +
+          '<div class="tab">MD</div>' +
+          '<div class="dpf"><i class="ava">' + inisial + '</i><span>' + dosenShort + '</span></div>' +
+          '<div class="body">' +
+            '<div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>' +
+            '<div class="tinfo">' +
+              '<h3>' + it.title + '.md</h3>' +
+              '<p>' + it.matkul + ' · dokumen backend</p>' +
+              '<div class="mrow">' +
+                '<span class="src s-dosen">🎓 Dari Dosen</span>' +
+                '<span class="meta">backend · lokal</span>' +
+                '<span class="readflag">✓ dibaca</span>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      inner.appendChild(g);
+      added[fid] = (added[fid] || 0) + 1;
+    });
+    Object.keys(added).forEach(fid => {
+      const pct = document.querySelector('#' + fid + ' .fpct');
+      if(pct) pct.textContent = String((parseInt(pct.textContent, 10) || 0) + added[fid]);
+    });
+    decorateCards();
+  }catch(e){ /* backend mati — rak tetap jalan dengan data lokal */ }
+}
+
 updateStats();
 decorateCards();
 setTheme('light');
+loadBackendMateri();
 </script>
 </body>
 </html>

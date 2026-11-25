@@ -24,7 +24,7 @@
   .phone{width:390px;height:844px;max-height:100vh;background:var(--bg);border-radius:44px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35}
   @media(max-width:520px){body{padding:0}.phone{width:100%;height:100vh;border-radius:0;box-shadow:none}}
   .notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;background:#0B0D12;border-radius:20px;z-index:60}.statusbar{position:absolute;top:0;left:0;right:0;height:52px;z-index:55;display:flex;align-items:center;justify-content:space-between;padding:16px 28px 0;font-size:14px;font-weight:600;color:var(--text);pointer-events:none}.statusbar span:last-child{display:flex;gap:6px}.statusbar svg{width:16px;height:16px;fill:var(--text)}
-  .screen{position:absolute;inset:0;padding-top:52px;padding-bottom:116px;overflow-y:auto;opacity:0;visibility:hidden;transform:translateX(16px);transition:opacity .3s,transform .3s,visibility .3s}.screen.active{opacity:1;visibility:visible;transform:translateX(0)}.screen::-webkit-scrollbar{display:none}.pad{padding:0 20px}
+  .screen{position:absolute;inset:0;padding-top:52px;padding-bottom:calc(150px + env(safe-area-inset-bottom,0px));scroll-padding-bottom:calc(150px + env(safe-area-inset-bottom,0px));overflow-y:auto;opacity:0;visibility:hidden;transform:translateX(16px);transition:opacity .3s,transform .3s,visibility .3s}.screen.active{opacity:1;visibility:visible;transform:translateX(0)}.screen::-webkit-scrollbar{display:none}.pad{padding:0 20px}
   .nav{position:absolute;left:50%;bottom:26px;bottom:calc(26px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--nav-dark);border-radius:var(--r-pill);display:flex;gap:6px;padding:8px;z-index:50;box-shadow:0 12px 32px rgba(0,0,0,.28)}.nav button{width:58px;height:58px;border:none;border-radius:50%;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .25s}.nav button svg{width:23px;height:23px;stroke:#7C8496;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.nav button.on{background:#F6F6F9}.nav button.on svg{stroke:#15161C}
   .home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:50}.theme-fab{position:absolute;top:60px;right:16px;z-index:70;width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;background:var(--card);box-shadow:var(--shadow);font-size:16px}
   .pill-btn{border:none;font-family:var(--font);cursor:pointer;border-radius:var(--r-pill);font-weight:600;transition:transform .15s}.pill-btn:active{transform:scale(.96)}.toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%) translateY(20px);background:var(--nav-dark);color:#F6F6F9;font-size:12.5px;font-weight:600;padding:12px 20px;border-radius:var(--r-pill);z-index:80;max-width:86%;text-align:center;opacity:0;pointer-events:none;transition:all .3s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -42,10 +42,10 @@
   .big-ring{
     width:134px;height:134px;border-radius:50%;flex-shrink:0;position:relative;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:conic-gradient(#4CAF2E 0 var(--p,61%),#BFE3F5 var(--p,61%) 100%);
+    background:conic-gradient(#4CAF2E 0 var(--p,0%),#BFE3F5 var(--p,0%) 100%);
   }
   .big-ring::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--bg)}
-  .big-ring b{z-index:1;font-size:27px;font-weight:700;color:var(--text);line-height:1}
+  .big-ring b{z-index:1;font-size:27px;font-weight:700;color:var(--text);line-height:1}.big-ring.unmeasured b{font-size:16px;text-align:center;max-width:82px}
   .big-ring span{z-index:1;font-size:11px;font-weight:600;color:#4A4B5C;text-align:center;line-height:1.3;margin-top:5px;max-width:74px}
   [data-theme="dark"] .big-ring span{color:#B9C0CF}
   .leg{flex:1;display:flex;flex-direction:column;gap:15px}
@@ -136,15 +136,16 @@
         </svg>
       </div>
 
-      <h1 class="bagus">Bagus! 🎉</h1>
-      <p class="done-text">Kamu telah menyelesaikan sesi Rekursi dengan baik.</p>
+      <h1 class="bagus" id="sessionTitle">Ringkasan penguasaan</h1>
+      <p class="done-text" id="doneText">Belum ada hasil penilaian untuk topik ini.</p>
 
       <div class="score-row">
-        <div class="big-ring" id="sessionRing"><b id="sessionScore">61%</b><span>Penguasaan Topik</span></div>
+        <div class="big-ring unmeasured" id="sessionRing"><b id="sessionScore">Belum diukur</b><span>Penguasaan Topik</span></div>
         <div class="leg">
-          <div class="leg-row"><span class="ldot" style="background:#4CAF2E"></span>Stabil<b id="stableCount">2</b></div>
-          <div class="leg-row"><span class="ldot" style="background:#F5B81E"></span>Goyah<b id="shakyCount">2</b></div>
-          <div class="leg-row"><span class="ldot" style="background:#F57A3C"></span>Perlu Latihan<b id="needCount">2</b></div>
+          <div class="leg-row"><span class="ldot" style="background:#4CAF2E"></span>Stabil<b id="stableCount">0</b></div>
+          <div class="leg-row"><span class="ldot" style="background:#F5B81E"></span>Goyah<b id="shakyCount">0</b></div>
+          <div class="leg-row"><span class="ldot" style="background:#F57A3C"></span>Perlu Latihan<b id="needCount">0</b></div>
+          <div class="leg-row"><span class="ldot" style="background:#C9C4E8"></span>Belum diukur<b id="unmeasuredCount">0</b></div>
         </div>
       </div>
 
@@ -166,11 +167,11 @@
   <!-- PETA PENGUASAAN ANTAR-SESI -->
   <section class="screen" id="s-map">
     <div class="pad">
-      <div class="top-head"><button class="back" onclick="showScreen('s-session')" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button><div class="ht"><b>Peta penguasaan</b><span>Rekursi · tersimpan antar-sesi</span></div></div>
-      <div class="map-card"><div class="map-head"><h3>Gambaran saat ini</h3><span id="updatedText">Baru diperbarui</span></div><div class="overall"><div class="ring" id="overallRing"><b id="overallScore">62%</b></div><div class="ot"><b id="overallLabel">Fondasi mulai terbentuk</b><p>Bukan nilai ujian. Ringkasan ini berubah saat bukti penguasaanmu berubah.</p></div></div><div class="legend"><span><i style="background:var(--green)"></i>Stabil</span><span><i style="background:var(--orange)"></i>Goyah</span><span><i style="background:var(--pink)"></i>Dibangun</span></div></div>
+      <div class="top-head"><button class="back" onclick="showScreen('s-session')" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button><div class="ht"><b>Peta penguasaan</b><span id="mapTopic">tersimpan antar-sesi</span></div></div>
+      <div class="map-card"><div class="map-head"><h3>Gambaran saat ini</h3><span id="updatedText">Belum ada penilaian tersimpan</span></div><div class="overall"><div class="ring" id="overallRing"><b id="overallScore">Belum diukur</b></div><div class="ot"><b id="overallLabel">Belum ada bukti penilaian</b><p>Bukan nilai ujian. Ringkasan ini berubah saat bukti penguasaanmu berubah.</p></div></div><div class="legend"><span><i style="background:var(--green)"></i>Stabil</span><span><i style="background:var(--orange)"></i>Goyah</span><span><i style="background:var(--pink)"></i>Belum diukur</span></div></div>
       <h2 class="sec-title">Konsep di topik ini</h2><div id="mapList"></div>
       <div class="map-note">Status mempertimbangkan jawaban, alasan, dan keyakinan — bukan hanya jumlah benar. Ketuk konsep untuk melihat buktinya.</div>
-      <div class="history"><span class="hi">🔁</span><div><b>Sesi hari ini · Rekursi</b><p id="historyText">Diagnostik → soal + alasan → latihan target → cek ulang</p></div></div>
+      <div class="history"><span class="hi">🔁</span><div><b id="historyTitle">Sesi hari ini</b><p id="historyText">Diagnostik → soal + alasan → latihan target → cek ulang</p></div></div>
       <button class="pill-btn primary" onclick="showScreen('s-session')">Kembali ke ringkasan sesi</button>
     </div>
   </section>
@@ -187,52 +188,142 @@ let toastT;function toast(msg){const el=document.getElementById('toast');el.text
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.getElementById(id).scrollTop=0}
 function openMap(){renderMap();showScreen('s-map')}
 
-const BASE_CONCEPTS=[
-  {id:'function',name:'Fungsi & pemanggilan',icon:'ƒ',status:'stabil',score:92,source:'Diagnostik: jawaban benar, yakin.'},
-  {id:'notation',name:'Membaca notasi',icon:'≠',status:'stabil',score:88,source:'Diagnostik: jawaban benar, yakin.'},
-  {id:'baseCase',name:'Base case',icon:'⏹',status:'goyah',score:58,source:'Diagnostik: jawaban keliru, agak yakin.'},
-  {id:'callStack',name:'Jejak eksekusi (call stack)',icon:'↕',status:'goyah',score:55,source:'Soal utama: jawaban benar, alasan sebagian.'},
-  {id:'trace',name:'Menelusuri nilai kembali',icon:'↩',status:'building',score:36,source:'Belum cukup bukti dari latihan.'},
-  {id:'branch',name:'Rekursi bercabang',icon:'⑂',status:'building',score:12,source:'Belum diuji pada sesi ini.'}
-];
-let concepts=[];
-function loadState(){
-  let recheck=null,mastery={};try{recheck=JSON.parse(localStorage.getItem('reason_recheck')||'null');mastery=JSON.parse(localStorage.getItem('reason_mastery')||'{}')}catch(e){}
-  concepts=BASE_CONCEPTS.map(c=>({...c}));
-  const call=concepts.find(c=>c.id==='callStack');
-  if(mastery.callStack){call.status=mastery.callStack.status==='stabil'?'stabil':'goyah';call.score=mastery.callStack.score}
-  if(recheck)call.source=`Cek ulang: jawaban ${recheck.correct?'benar':'keliru'}, alasan ${recheck.reasonOK?'sesuai rubrik':'belum lengkap'}.`;
-  else if(mastery.callStack)call.source=mastery.callStack.status==='stabil'?'Cek ulang: konsep sesuai rubrik.':'Cek ulang: masih perlu ditinjau.';
+/* ============ TOPIK dari reason_goal (sinkron diagnostik/latihan) ============ */
+const TOPIC_NAMES = {
+  'diskrit-rekursi': 'Rekursi · Matematika Diskrit',
+  'diskrit-induksi': 'Induksi · Matematika Diskrit',
+  'diskrit-graf': 'Teori Graf · Matematika Diskrit',
+  'pbo-class-object': 'Class & Object · PBO',
+  'pbo-exception': 'Exception · PBO',
+  'pbo-inheritance-polymorphism': 'Inheritance & Polimorfisme · PBO',
+  rekursi: 'Rekursi · Matematika Diskrit',
+  induksi: 'Induksi · Matematika Diskrit',
+  graf: 'Teori Graf · Matematika Diskrit',
+};
+function reasonGoalSlug(){ try { return localStorage.getItem('reason_goal') || ''; } catch(e){ return ''; } }
+function reasonGoalTitle(){
+  let t=''; try{ t=localStorage.getItem('reason_goal_title')||''; }catch(e){}
+  const slug=reasonGoalSlug();
+  return t || TOPIC_NAMES[slug] || (slug ? slug + ' · Materi' : 'Materi belum dipilih');
 }
-function badge(status){return status==='stabil'?'<span class="badge stable">Stabil</span>':status==='goyah'?'<span class="badge shaky">Goyah</span>':'<span class="badge building">Dibangun</span>'}
-function conceptCard(c){return `<div class="concept" onclick="openEvidence('${c.id}')"><div class="ctop"><span class="ci" style="background:${c.status==='stabil'?'var(--blue-soft)':c.status==='goyah'?'#FDF3E2':'var(--pink-soft)'}">${c.icon}</span><div class="ct"><b>${c.name}</b><small>${c.source}</small></div>${badge(c.status)}</div><div class="bar"><i style="width:${c.score}%;background:${c.status==='stabil'?'var(--blue)':c.status==='goyah'?'var(--orange)':'var(--pink)'}"></i></div></div>`}
+function topicShort(){
+  const full=reasonGoalTitle();
+  return full.split(' · ')[0] || full;
+}
+
+/* Daftar konsep authored; skor hanya muncul setelah ada bukti grade/recheck. */
+function baseConcepts(slug){
+  const B=(id,name,icon)=>({id,name,icon,status:'unmeasured',score:null,source:'Belum ada bukti penilaian.'});
+  if(slug==='diskrit-rekursi'||slug==='rekursi')return[
+    B('function','Fungsi & pemanggilan','ƒ'),B('notation','Membaca notasi','≠'),B('baseCase','Base case','⏹'),
+    B('callStack','Jejak eksekusi (call stack)','↕'),B('trace','Menelusuri nilai kembali','↩'),B('branch','Rekursi bercabang','⑂')
+  ];
+  if(slug==='diskrit-induksi'||slug==='induksi')return[
+    B('basis','Basis (n = 0 / 1)','①'),B('asumsi','Asumsi induktif','∴'),B('langkah','Langkah induktif (k → k+1)','→'),
+    B('rumus','Membaca rumus Σ','Σ'),B('pola','Pola & hipotesis','∴'),B('bukti','Menulis bukti lengkap','✓')
+  ];
+  if(slug==='diskrit-graf'||slug==='graf')return[
+    B('derajat','Derajat simpul','●'),B('jalur','Jalur & lintasan','↗'),B('siklus','Siklus','⟳'),
+    B('adj','Matriks adjasensi','▦'),B('traverse','DFS / BFS','⇅'),B('bobot','Graf berbobot','⚖')
+  ];
+  if(slug==='pbo-class-object')return[
+    B('class','Class blueprint','▣'),B('object','Object / instance','◉'),B('attr','Atribut & field','⊞'),
+    B('method','Method & behavior','ƒ'),B('encap','Enkapsulasi','🔐'),B('abstract','Abstraksi data','◈')
+  ];
+  if(slug==='pbo-exception')return[
+    B('trycatch','try – catch','⚡'),B('finally','finally','⏷'),B('throw','throw / throws','throw'),
+    B('types','Jenis exception','⚠'),B('cleanup','Resource cleanup','🧹'),B('custom','Custom exception','✎')
+  ];
+  if(slug==='pbo-inheritance-polymorphism')return[
+    B('inherit','Inheritance','⇈'),B('override','Override method','✎'),B('poly','Polimorfisme','◈'),
+    B('super','super / this','⬆'),B('abstract','Abstract class','_abstract'),B('iface','Interface','interface')
+  ];
+  /* tanpa topik aktif: jangan menampilkan daftar konsep seolah ada materi */
+  return[];
+}
+
+let concepts=[];
+let topicSlug='';
+let topicName='';
+function loadState(){
+  topicSlug=reasonGoalSlug();
+  topicName=reasonGoalTitle();
+  let recheck=null,mastery={};
+  try{recheck=JSON.parse(localStorage.getItem('reason_recheck')||'null');mastery=JSON.parse(localStorage.getItem('reason_mastery')||'{}')}catch(e){}
+  concepts=baseConcepts(topicSlug);
+  const m=(topicSlug&&mastery[topicSlug])||null;
+  const matchingRecheck=recheck&&recheck.slug===topicSlug?recheck:null;
+  const primary=concepts[0];
+  if(m && primary){primary.status=m.status==='stabil'?'stabil':'goyah';primary.score=Number.isFinite(m.score)?m.score:null;primary.source='Bukti cek ulang tersimpan untuk topik ini.'}
+  if(matchingRecheck){
+    primary.source=`Cek ulang: ${matchingRecheck.correct?'jawaban benar':'jawaban belum seluruhnya benar'}, alasan ${matchingRecheck.reasonOK?'memenuhi kriteria':'masih perlu dilengkapi'}.`;
+  }
+  const done=document.getElementById('doneText');
+  const title=document.getElementById('sessionTitle');
+  if(title)title.textContent=matchingRecheck?'Hasil cek ulang':'Ringkasan penguasaan';
+  if(done)done.textContent=matchingRecheck?`Kamu telah menyelesaikan sesi ${topicShort()} dengan baik.`:`Belum ada hasil sesi untuk ${topicShort()}.`;
+  const mapT=document.getElementById('mapTopic');
+  if(mapT)mapT.textContent=`${topicName} · tersimpan antar-sesi`;
+  const hist=document.getElementById('historyTitle');
+  if(hist)hist.textContent=matchingRecheck?`Sesi terakhir · ${topicShort()}`:`Belum ada sesi · ${topicShort()}`;
+}
+function badge(status){return status==='stabil'?'<span class="badge stable">Stabil</span>':status==='goyah'?'<span class="badge shaky">Goyah</span>':'<span class="badge building">Belum diukur</span>'}
+function conceptCard(c){
+  const measured=Number.isFinite(c.score);
+  const width=measured?Math.max(0,Math.min(100,c.score)):0;
+  const fill=c.status==='stabil'?'var(--blue)':c.status==='goyah'?'var(--orange)':'var(--line)';
+  return `<div class="concept" onclick="openEvidence('${c.id}')"><div class="ctop"><span class="ci" style="background:${c.status==='stabil'?'var(--blue-soft)':c.status==='goyah'?'#FDF3E2':'var(--pink-soft)'}">${c.icon}</span><div class="ct"><b>${c.name}</b><small>${c.source}</small></div>${badge(c.status)}</div><div class="bar"><i style="width:${width}%;background:${fill}"></i></div></div>`
+}
+function weakestConcept(){
+  return concepts.filter(c=>Number.isFinite(c.score)).reduce((a,b)=>!a||b.score<a.score?b:a,null);
+}
 function renderSummary(){
-  const stable=concepts.filter(c=>c.status==='stabil');
-  const shaky=concepts.filter(c=>c.status==='goyah');
-  const need=concepts.filter(c=>c.status==='building');
+  const measured=concepts.filter(c=>Number.isFinite(c.score));
+  /* status stabil/goyah hanya dihitung dari konsep yang benar-benar punya skor */
+  const stable=measured.filter(c=>c.status==='stabil');
+  const shaky=measured.filter(c=>c.status==='goyah');
+  const need=measured.filter(c=>c.status!=='stabil');
   document.getElementById('stableCount').textContent=stable.length;
   document.getElementById('shakyCount').textContent=shaky.length;
   document.getElementById('needCount').textContent=need.length;
-  const avg=Math.round(concepts.reduce((sum,c)=>sum+c.score,0)/concepts.length);
-  document.getElementById('sessionScore').textContent=avg+'%';
-  document.getElementById('sessionRing').style.setProperty('--p',avg+'%');
-  const callStable=concepts.find(c=>c.id==='callStack').status==='stabil';
-  document.getElementById('reviewText').textContent=callStable
-    ?'Latih kembali konsep “Rekursi bercabang”.'
-    :'Latih kembali konsep “Jejak eksekusi”.';
+  document.getElementById('unmeasuredCount').textContent=concepts.length-measured.length;
+  const avg=measured.length?Math.round(measured.reduce((sum,c)=>sum+c.score,0)/measured.length):null;
+  const ring=document.getElementById('sessionRing');
+  ring.classList.toggle('unmeasured',avg===null);
+  document.getElementById('sessionScore').textContent=avg===null?'Belum diukur':avg+'%';
+  ring.style.setProperty('--p',(avg===null?0:avg)+'%');
+  const weak=weakestConcept();
+  const strong=measured.length>0&&measured.every(c=>c.status==='stabil');
+  document.getElementById('reviewText').textContent=!topicSlug
+    ?'Pilih materi dulu di Beranda untuk memulai sesi.'
+    :strong
+      ?`Seluruh bukti yang ada stabil — coba latihan bebas di ${topicShort()}.`
+      :weak?`Latih kembali konsep “${weak.name}”.`:`Mulai satu latihan di ${topicShort()} untuk membangun bukti pertama.`;
 }
 function renderMap(){
-  const avg=Math.round(concepts.reduce((sum,c)=>sum+c.score,0)/concepts.length);
-  document.getElementById('overallScore').textContent=avg+'%';document.getElementById('overallRing').style.setProperty('--score',avg+'%');
-  document.getElementById('overallLabel').textContent=avg>=70?'Makin kokoh':'Fondasi mulai terbentuk';
+  const measured=concepts.filter(c=>Number.isFinite(c.score));
+  const avg=measured.length?Math.round(measured.reduce((sum,c)=>sum+c.score,0)/measured.length):null;
+  document.getElementById('overallScore').textContent=avg===null?'Belum diukur':avg+'%';
+  document.getElementById('overallRing').style.setProperty('--score',(avg===null?0:avg)+'%');
+  document.getElementById('overallLabel').textContent=avg===null?'Belum ada bukti penilaian':avg>=70?'Makin kokoh':'Fondasi mulai terbentuk';
+  document.getElementById('updatedText').textContent=measured.length?'Diperbarui dari hasil penilaian':'Belum ada penilaian tersimpan';
   document.getElementById('mapList').innerHTML=concepts.map(conceptCard).join('');
   let recheck=null;try{recheck=JSON.parse(localStorage.getItem('reason_recheck')||'null')}catch(e){}
-  if(recheck){const date=new Date(recheck.updatedAt);document.getElementById('updatedText').textContent='Diperbarui '+date.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});document.getElementById('historyText').textContent='Cek ulang tersimpan · jejak eksekusi '+(recheck.stable?'stabil':'masih goyah')}
+  const active=recheck&&recheck.slug===topicSlug?recheck:null;
+  if(active){const date=new Date(active.updatedAt);document.getElementById('updatedText').textContent='Diperbarui '+date.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});document.getElementById('historyText').textContent='Cek ulang tersimpan · '+topicShort().toLowerCase()+' '+(active.stable?'stabil':'masih goyah')}
+  else document.getElementById('historyText').textContent='Belum ada bukti cek ulang untuk topik ini.';
 }
 function openEvidence(id){
-  const c=concepts.find(x=>x.id===id);document.getElementById('evidenceTitle').textContent=c.name;document.getElementById('evidenceMeta').textContent='Rekursi · Matematika Diskrit';
-  document.getElementById('evidenceBody').textContent=c.source;document.getElementById('evidenceLabel').textContent=c.status==='stabil'?'Cukup bukti untuk saat ini':c.status==='goyah'?'Perlu satu cek ulang lagi':'Belum cukup bukti';
-  document.getElementById('evidenceNext').textContent=c.status==='stabil'?'Jaga dengan latihan singkat beberapa hari lagi. Tidak perlu mengulang seluruh materi.':c.id==='callStack'?'Buka latihan target dan jelaskan apa yang terjadi saat fungsi menunggu serta saat kembali.':'Mulai dari contoh kecil, tulis langkahnya, lalu jelaskan alasanmu sendiri.';
+  const c=concepts.find(x=>x.id===id);
+  document.getElementById('evidenceTitle').textContent=c.name;
+  document.getElementById('evidenceMeta').textContent=topicName;
+  document.getElementById('evidenceBody').textContent=c.source;
+  document.getElementById('evidenceLabel').textContent=c.status==='stabil'?'Cukup bukti untuk saat ini':c.status==='goyah'?'Perlu satu cek ulang lagi':'Belum ada bukti';
+  document.getElementById('evidenceNext').textContent=c.status==='stabil'
+    ?'Jaga dengan latihan singkat beberapa hari lagi. Tidak perlu mengulang seluruh materi.'
+    :c.status==='goyah'
+      ?'Mulai dari contoh kecil, tulis langkahnya, lalu jelaskan alasanmu sendiri.'
+      :'Selesaikan latihan atau cek ulang untuk membuat bukti penguasaan pertama.';
   document.getElementById('sheet').classList.add('show');document.getElementById('overlay').classList.add('show');
 }
 function closeEvidence(){document.getElementById('sheet').classList.remove('show');document.getElementById('overlay').classList.remove('show')}

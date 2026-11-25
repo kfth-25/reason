@@ -142,10 +142,18 @@
 
   /* ============ PILIH TOPIK ============ */
   .sec-title{font-size:18px;font-weight:700;color:var(--text);margin:22px 0 13px}
-  .topic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  /* Geser kanan-kiri (carousel) — 6 materi tidak numpuk ke bawah */
+  .topic-grid{
+    display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+    padding:4px 2px 10px;margin:0 -2px;
+    scrollbar-width:none;align-items:flex-start;
+  }
+  .topic-grid::-webkit-scrollbar{display:none}
   .ttile{
     border:none;cursor:pointer;font-family:var(--font);text-align:center;
-    border-radius:18px;padding:15px 6px 15px;position:relative;
+    border-radius:18px;padding:15px 10px;position:relative;flex:0 0 auto;
+    min-width:108px;width:108px;scroll-snap-align:start;
     display:flex;flex-direction:column;align-items:center;gap:9px;
     transition:transform .15s,box-shadow .2s;
   }
@@ -243,6 +251,25 @@
   .mico.k-rec{background:linear-gradient(135deg,#8574F4,#6555E6)}
   .mico.k-ind{background:linear-gradient(135deg,#5AB2F5,#3D8BE8)}
   .mico.k-graf{background:linear-gradient(135deg,#5FC98A,#3DAE6A)}
+  .mico.k-pbo{background:linear-gradient(135deg,#F5A93F,#E08A1E)}
+  .mico.k-obj{background:linear-gradient(135deg,#F9A9E8,#E07BC8)}
+  .mico.k-exc{background:linear-gradient(135deg,#FF7B72,#E04840)}
+  .tload{text-align:center;font-size:12.5px;color:var(--muted);padding:18px 8px}
+  .topic-grid .tload{flex:1 0 100%;min-width:100%}
+  /* Daftar materi (mcard) juga geser kanan-kiri — tidak numpuk ke bawah */
+  #goalList{
+    display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+    padding:4px 2px 10px;margin:0 -2px;scrollbar-width:none;
+    align-items:flex-start;
+  }
+  #goalList::-webkit-scrollbar{display:none}
+  #goalList .mcard{
+    width:auto;flex:0 0 auto;margin-top:0;
+    min-width:248px;width:248px;scroll-snap-align:start;
+    align-self:flex-start;
+  }
+  #goalList .tload{flex:1 0 100%;min-width:100%;margin-top:0}
   .m-main{flex:1;min-width:0}
   .m-main b{display:block;font-size:16px;font-weight:700;color:var(--text)}
   .mbadge{
@@ -383,36 +410,22 @@
         </svg>
       </div>
 
-      <!-- Sesi berjalan -->
-      <button class="resume" onclick="location.href='latihan.html'">
+      <!-- Sesi berjalan — label diisi dari reason_goal* saat load -->
+      <button class="resume" id="resumeCard" onclick="location.href='latihan.html'" hidden>
         <span class="r-ico">
           <svg viewBox="0 0 24 24"><path d="M12 2.5c-3.9 0-7 3.1-7 7 0 2.4 1.2 4.2 2.6 5.5.9.9 1.4 1.8 1.4 3h6c0-1.2.5-2.1 1.4-3 1.4-1.3 2.6-3.1 2.6-5.5 0-3.9-3.1-7-7-7z"/><rect x="9" y="19.2" width="6" height="2.4" rx="1.2"/></svg>
         </span>
         <span class="r-info">
           <small>Sesi Berjalan</small>
-          <b>Matematika Diskrit — Rekursi</b>
+          <b id="resumeTitle">—</b>
         </span>
         <span class="r-go"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></span>
       </button>
 
-      <!-- Pilih topik -->
+      <!-- Pilih topik — diisi dari GET /api/materi (backend lokal) -->
       <h2 class="sec-title">Pilih Topik Belajar</h2>
       <div class="topic-grid" id="topicGrid">
-        <button class="ttile t-blue on" data-topic="rekursi" onclick="pickTopic(this)">
-          <span class="tico"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0113.7-5.7L20 8M20 4v4h-4"/><path d="M20 12a8 8 0 01-13.7 5.7L4 16M4 20v-4h4"/></svg></span>
-          <b>Rekursi</b>
-          <small>4 tugas</small>
-        </button>
-        <button class="ttile t-purple" data-topic="induksi" onclick="pickTopic(this)">
-          <span class="tico"><span class="sigma">Σ</span></span>
-          <b>Induksi</b>
-          <small>2 tugas</small>
-        </button>
-        <button class="ttile t-grey" data-topic="graf" onclick="pickTopic(this)">
-          <span class="tico"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg></span>
-          <b>Teori Graf</b>
-          <small>(draf)</small>
-        </button>
+        <div class="tload">Memuat materi…</div>
       </div>
 
       <!-- SATU tombol utama -->
@@ -502,35 +515,9 @@
         Daftar Materi
       </div>
 
-      <button class="mcard on" data-topic="rekursi" onclick="pilihMateri(this)">
-        <span class="mico k-rec"><svg viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="5" rx="1.5"/><rect x="2.5" y="16.5" width="6" height="5" rx="1.5"/><rect x="15.5" y="16.5" width="6" height="5" rx="1.5"/><path d="M12 7.5v3M5.5 16.5v-3a1 1 0 011-1h11a1 1 0 011 1v3"/></svg></span>
-        <span class="m-main">
-          <b>Rekursi</b>
-          <span class="mbadge">Matematika Diskrit</span>
-          <small>Fungsi yang memanggil dirinya sendiri</small>
-        </span>
-        <span class="mradio"></span>
-      </button>
-
-      <button class="mcard" data-topic="induksi" onclick="pilihMateri(this)">
-        <span class="mico k-ind"><span class="sigma">∞</span></span>
-        <span class="m-main">
-          <b>Induksi</b>
-          <span class="mbadge">Matematika Diskrit</span>
-          <small>Bukti matematika: dasar &amp; langkah induktif</small>
-        </span>
-        <span class="mradio"></span>
-      </button>
-
-      <button class="mcard" data-topic="graf" onclick="pilihMateri(this)">
-        <span class="mico k-graf"><svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg></span>
-        <span class="m-main">
-          <b>Teori Graf</b>
-          <span class="mbadge">Matematika Diskrit</span>
-          <small>Simpul, sisi, dan jalur — masih draf</small>
-        </span>
-        <span class="mradio"></span>
-      </button>
+      <div id="goalList">
+        <div class="tload">Memuat materi…</div>
+      </div>
 
       <div class="voice-card">
         <span class="vico"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg></span>
@@ -601,35 +588,71 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
   const sc = document.getElementById(id); if (sc) sc.scrollTop = 0;
 }
-let topic = 'rekursi';
+
+/* API base — sama dengan halaman lain (localStorage.reason_api override) */
+const API = (() => { try { const s=localStorage.getItem('reason_api'); if(s)return s; const h=location.hostname; return (!h||h==='localhost'||h==='127.0.0.1'||h.indexOf('192.168.')===0)?'http://127.0.0.1:8787/api':'https://shieldkartika.my.id/reason/api'; } catch(e){ return 'http://127.0.0.1:8787/api'; } })();
+
+/* ---- Materi nyata dari backend (/api/materi) ---- */
+const ICON_SVG = {
+  rekursi: '<svg viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="5" rx="1.5"/><rect x="2.5" y="16.5" width="6" height="5" rx="1.5"/><rect x="15.5" y="16.5" width="6" height="5" rx="1.5"/><path d="M12 7.5v3M5.5 16.5v-3a1 1 0 011-1h11a1 1 0 011 1v3"/></svg>',
+  induksi: '<span class="sigma">∞</span>',
+  graf: '<svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg>',
+  class: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>',
+  exception: '<svg viewBox="0 0 24 24"><path d="M12 3l9 16H3L12 3z"/><path d="M12 10v4M12 16.5v.01"/></svg>',
+  inheritance: '<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="5" rx="1.5"/><rect x="3" y="16" width="6" height="5" rx="1.5"/><rect x="15" y="16" width="6" height="5" rx="1.5"/><path d="M12 8v4M6 16v-2h12v2"/></svg>',
+};
+function iconKey(slug){
+  if (slug.includes('rekursi')) return 'rekursi';
+  if (slug.includes('induksi')) return 'induksi';
+  if (slug.includes('graf')) return 'graf';
+  if (slug.includes('exception')) return 'exception';
+  if (slug.includes('inheritance') || slug.includes('polymorphism')) return 'inheritance';
+  return 'class';
+}
+function icoClass(slug){
+  if (slug.includes('rekursi')) return 'k-rec';
+  if (slug.includes('induksi')) return 'k-ind';
+  if (slug.includes('graf')) return 'k-graf';
+  if (slug.includes('exception')) return 'k-exc';
+  if (slug.includes('class') || slug.includes('object')) return 'k-obj';
+  return 'k-pbo';
+}
+function tileClass(slug, i){
+  return ['t-blue','t-purple','t-grey'][i % 3];
+}
+function shortTitle(t){
+  return String(t || '').split('—')[0].split('–')[0].trim();
+}
+function matkulShort(m){
+  return m === 'Matematika Diskrit' ? 'Diskrit' : 'PBO';
+}
+
+let MATERI = [];
+let topic = '';          // slug asli backend, mis. diskrit-rekursi
+let topicTitle = '';
+
 function pickTopic(el){
   document.querySelectorAll('.ttile').forEach(t => t.classList.remove('on'));
   el.classList.add('on');
   topic = el.dataset.topic;
-  if(topic === 'graf'){
-    toast('Rubrik topik ini masih draf — menunggu persetujuan dosen');
-  }
+  topicTitle = el.dataset.title || '';
 }
 function startSession(){
-  if(topic === 'graf'){
-    toast('Rubrik topik ini masih draf — menunggu persetujuan dosen');
-    return;
-  }
+  if(!MATERI.length){ toast('Materi belum termuat — nyalakan backend lalu muat ulang'); return; }
+  if(!topic) toast('Pilih dulu topik belajarnya');
   showScreen('s-goal');
   syncMateri();
   try{ window.__bimo?.mountGoal?.(); }catch(e){}   // mount maskot ke-2 (sekali saja)
 }
-/* ---- Layar Pilih Materi (sebelum diagnostik) ---- */
 function syncMateri(){
   const el = document.querySelector('#s-goal .mcard[data-topic="'+topic+'"]');
   if(el) pilihMateri(el);
 }
 function pilihMateri(el){
-  const t = el.dataset.topic;
-  if(t === 'graf'){ toast('Rubrik Teori Graf masih draf — menunggu persetujuan dosen'); return; }
   document.querySelectorAll('#s-goal .mcard').forEach(c => c.classList.remove('on'));
   el.classList.add('on');
-  topic = t;
+  topic = el.dataset.topic;
+  topicTitle = el.dataset.title || '';
 }
 function toggleVoice(el){
   const on = el.classList.toggle('on');
@@ -638,12 +661,105 @@ function toggleVoice(el){
   toast(on ? 'Penjelasan dengan suara aktif' : 'Penjelasan dengan suara nonaktif');
 }
 function startGoal(){
-  if(topic === 'graf'){
-    toast('Rubrik Teori Graf masih draf — menunggu persetujuan dosen');
-    return;
-  }
-  try{ localStorage.setItem('reason_goal', topic); }catch(e){}
+  if(!topic){ toast('Pilih dulu materinya'); return; }
+  try{
+    const it = MATERI.find(m => m.slug === topic);
+    const short = topicTitle || (it ? (shortTitle(it.title) || topic) : topic);
+    const matkul = it && it.matkul ? it.matkul : '';
+    localStorage.setItem('reason_goal', topic);
+    localStorage.setItem('reason_goal_title', short);
+    localStorage.setItem('reason_goal_display', matkul ? (matkul + ' — ' + short) : short);
+  }catch(e){}
   location.href = 'diagnostik.html';
+}
+
+/* Kartu Sesi Berjalan: label dari sesi terakhir (bukan hardcode Rekursi) */
+function updateResumeCard(){
+  const card = document.getElementById('resumeCard');
+  if(!card) return;
+  let goal = '', title = '', display = '';
+  try{
+    goal = localStorage.getItem('reason_goal') || '';
+    title = localStorage.getItem('reason_goal_title') || '';
+    display = localStorage.getItem('reason_goal_display') || '';
+  }catch(e){}
+  if(!goal && !title){ card.hidden = true; return; }
+  const b = card.querySelector('#resumeTitle');
+  if(!display){
+    const matkul = goal.startsWith('pbo') ? 'PBO' : 'Matematika Diskrit';
+    display = title ? (matkul + ' — ' + title) : (goal || matkul);
+  }
+  if(b) b.textContent = display;
+  card.hidden = false;
+}
+
+function renderMateri(){
+  const grid = document.getElementById('topicGrid');
+  const list = document.getElementById('goalList');
+  if(!grid || !list) return;
+  grid.innerHTML = '';
+  list.innerHTML = '';
+  MATERI.forEach((it, i) => {
+    const slug = it.slug;
+    const short = shortTitle(it.title) || slug;
+    const desc = String(it.title).includes('—')
+      ? String(it.title).split('—').slice(1).join('—').trim()
+      : (it.dosen || '');
+    const key = iconKey(slug);
+
+    const tile = document.createElement('button');
+    tile.className = 'ttile ' + tileClass(slug, i) + (i === 0 ? ' on' : '');
+    tile.dataset.topic = slug;
+    tile.dataset.title = short;
+    tile.setAttribute('onclick', 'pickTopic(this)');
+    tile.innerHTML =
+      '<span class="tico">' + (ICON_SVG[key] || ICON_SVG.class) + '</span>' +
+      '<b>' + esc(short) + '</b>' +
+      '<small>' + matkulShort(it.matkul) + '</small>';
+    grid.appendChild(tile);
+
+    const card = document.createElement('button');
+    card.className = 'mcard' + (i === 0 ? ' on' : '');
+    card.dataset.topic = slug;
+    card.dataset.title = short;
+    card.setAttribute('onclick', 'pilihMateri(this)');
+    card.innerHTML =
+      '<span class="mico ' + icoClass(slug) + '">' + (ICON_SVG[key] || ICON_SVG.class) + '</span>' +
+      '<span class="m-main">' +
+        '<b>' + esc(short) + '</b>' +
+        '<span class="mbadge">' + esc(it.matkul || '') + '</span>' +
+        '<small>' + esc(desc || it.dosen || '') + '</small>' +
+      '</span>' +
+      '<span class="mradio"></span>';
+    list.appendChild(card);
+  });
+  if(MATERI.length){
+    topic = MATERI[0].slug;
+    topicTitle = shortTitle(MATERI[0].title) || MATERI[0].slug;
+  }
+}
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+async function loadMateri(){
+  try{
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 8000);
+    const r = await fetch(API + '/materi', { signal: ctrl.signal });
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('status ' + r.status);
+    const data = await r.json();
+    MATERI = Array.isArray(data.items) ? data.items : [];
+    if(!MATERI.length) throw new Error('kosong');
+    renderMateri();
+  }catch(e){
+    const grid = document.getElementById('topicGrid');
+    const list = document.getElementById('goalList');
+    const msg = 'Backend belum nyala — nyalakan uvicorn (port 8787) lalu muat ulang.';
+    if(grid) grid.innerHTML = '<div class="tload">' + msg + '</div>';
+    if(list) list.innerHTML = '<div class="tload">' + msg + '</div>';
+  }
 }
 /* pulihkan preferensi penjelasan suara */
 try{
@@ -676,6 +792,10 @@ function bukaTutor(){
     if(Math.hypot(t.clientX - x0, t.clientY - y0) <= 15) bukaTutor();
   }, { passive: true });
 })();
+
+/* ============ MUAT MATERI BACKEND ============ */
+loadMateri();
+updateResumeCard();
 
 setTheme('light');
 </script>
@@ -769,8 +889,7 @@ function hook(name, after){
   };
 }
 hook('pickTopic', () => {
-  const on = document.querySelector('.ttile.on');
-  setState(on && on.dataset.topic === 'graf' ? 'sad' : 'happy');
+  setState('happy');
 });
 
 /* Gerbang pause maskot: layar aktif + tab terlihat + TIDAK sedang scroll.
