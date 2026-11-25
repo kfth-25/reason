@@ -74,6 +74,17 @@
   }
   .chip:active{transform:scale(.96)}
   .chip.on{background:var(--nav-dark);border-color:var(--nav-dark);color:#F6F6F9}
+  .stat.s-mhs{background:#E7DDFF}
+  .stat.s-mhs b{color:#5A4BC7}
+  .add-btn{background:var(--nav-dark);color:#F6F6F9;font-size:11px;padding:7px 13px;border:none;white-space:nowrap}
+  .addform label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin:13px 0 6px}
+  .addform input,.addform select,.addform textarea{
+    width:100%;box-sizing:border-box;border:1.5px solid var(--line);border-radius:14px;
+    padding:11px 13px;font-family:var(--font);font-size:13px;background:var(--card);color:var(--text);outline:none}
+  .addform input:focus,.addform select:focus,.addform textarea:focus{border-color:var(--nav-dark)}
+  .addform textarea{min-height:120px;resize:vertical;line-height:1.55}
+  .addform code{font-size:11px;background:var(--card);padding:1px 5px;border-radius:6px}
+  .addform .sheet-actions{margin-top:16px}
 
   /* ============ FOLDER (per mata kuliah) ============ */
   .sec-title{font-size:16px;font-weight:700;color:var(--text);margin:20px 0 11px;display:flex;align-items:center;justify-content:space-between}
@@ -157,8 +168,10 @@
   .src{font-size:9.5px;font-weight:700;padding:4px 9px;border-radius:var(--r-pill)}
   .s-dosen{background:var(--green);color:#2E4A12}
   .s-scrape{background:var(--blue-soft);color:#1E5FA8}
+  .s-mhs{background:#E7DDFF;color:#5A4BC7}
   [data-theme="dark"] .s-dosen{background:#24401A;color:#C5EE93}
   [data-theme="dark"] .s-scrape{background:#1E3A5F;color:#9CC4F5}
+  [data-theme="dark"] .s-mhs{background:#2E2454;color:#C5BBFB}
   .mrow .meta{font-size:10.5px;color:var(--muted);font-weight:600}
   .readflag{
     display:none;font-size:9.5px;font-weight:700;color:#3F7A1E;
@@ -208,13 +221,13 @@
     <div class="pad">
       <div class="top-head">
         <div class="brand"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
-        <div class="ht"><b>Rak Materi</b><span>Per mata kuliah — unggahan dosen &amp; scraping</span></div>
+        <div class="ht"><b>Rak Materi</b><span>3 mata kuliah — unggahan dosen &amp; mahasiswa</span></div>
       </div>
 
       <div class="stats">
-        <div class="stat"><b id="stDoc">8</b><small>dokumen</small></div>
-        <div class="stat s-dosen"><b id="stDosen">4</b><small>dari dosen</small></div>
-        <div class="stat s-scrape"><b id="stScrape">4</b><small>dari scraping</small></div>
+        <div class="stat"><b id="stDoc">0</b><small>dokumen</small></div>
+        <div class="stat s-dosen"><b id="stDosen">0</b><small>dosen</small></div>
+        <div class="stat s-mhs"><b id="stMhs">0</b><small>mahasiswa</small></div>
       </div>
 
       <!-- Cari + filter sumber -->
@@ -224,219 +237,15 @@
       </div>
       <div class="chips" id="chips">
         <button class="chip on" data-f="all" onclick="pickFilter(this)">Semua</button>
-        <button class="chip" data-f="dosen" onclick="pickFilter(this)">🎓 Dari Dosen</button>
-        <button class="chip" data-f="scrape" onclick="pickFilter(this)">🌐 Scraping</button>
+        <button class="chip" data-f="dosen" onclick="pickFilter(this)">🎓 Dosen</button>
+        <button class="chip" data-f="mahasiswa" onclick="pickFilter(this)">📝 Mahasiswa</button>
       </div>
 
-      <div class="sec-title">Materi per mata kuliah <span class="hint">ketuk kartu untuk buka file \u00b7 \u2139 detail</span></div>
+      <div class="sec-title"><span>Materi per mata kuliah</span><button class="pill-btn add-btn" onclick="openAdd()">＋ Tambah materi</button></div>
 
-      <!-- ===== FOLDER 1: MATEMATIKA DISKRT (6 dokumen) ===== -->
-      <div class="folder open" id="f-diskrit">
-        <button class="folder-head" onclick="toggleFolder('f-diskrit')">
-          <span class="fico" style="background:var(--blue-soft)">📐</span>
-          <div class="finfo"><b>Matematika Diskrit</b><small>Dr. Rina Wijaya, M.T. · pengampu</small></div>
-          <div class="fmeta"><span class="fpct">6</span><span class="fcount">dokumen</span></div>
-          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="folder-body">
-          <div class="folder-inner">
+      <div id="rakFolders"><p class="note">Memuat materi dari backend…</p></div>
 
-            <div class="tgroup">
-              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="cardTap('modul4')">
-                <div class="tab">PDF</div>
-                <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
-                <div class="body">
-                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
-                  <div class="tinfo">
-                    <h3>Modul Diskrit — Bab 4.pdf</h3>
-                    <p>Bab 4.2 · Rekursi &amp; base case</p>
-                    <div class="mrow">
-                      <span class="src s-dosen">🎓 Dari Dosen</span>
-                      <span class="meta">2,4 MB · 12 Nov</span>
-                      <span class="readflag">✓ dibaca</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="tgroup">
-              <div class="tcard" style="--tc:#BFD9FF" data-src="dosen" onclick="cardTap('catatan-rek')">
-                <div class="tab">DOCX</div>
-                <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
-                <div class="body">
-                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
-                  <div class="tinfo">
-                    <h3>Catatan kuliah — Rekursi.docx</h3>
-                    <p>Sitasi utama umpan balik agen</p>
-                    <div class="mrow">
-                      <span class="src s-dosen">🎓 Dari Dosen</span>
-                      <span class="meta">184 KB · 12 Nov</span>
-                      <span class="readflag">✓ dibaca</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="tgroup">
-              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="cardTap('slide-rek')">
-                <div class="tab">PDF</div>
-                <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
-                <div class="body">
-                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
-                  <div class="tinfo">
-                    <h3>Slide Pertemuan 5 — Rekursi.pdf</h3>
-                    <p>Contoh jejak eksekusi &amp; call stack</p>
-                    <div class="mrow">
-                      <span class="src s-dosen">🎓 Dari Dosen</span>
-                      <span class="meta">3,1 MB · 10 Nov</span>
-                      <span class="readflag">✓ dibaca</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="tgroup">
-              <div class="tcard" style="--tc:#FFC9EC" data-src="dosen" onclick="cardTap('modul6')">
-                <div class="tab">PDF</div>
-                <div class="dpf"><i class="ava">RW</i><span>Dr. Rina W.</span></div>
-                <div class="body">
-                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
-                  <div class="tinfo">
-                    <h3>Modul Diskrit — Bab 6.pdf</h3>
-                    <p>Bab 6 · Induksi matematika</p>
-                    <div class="mrow">
-                      <span class="src s-dosen">🎓 Dari Dosen</span>
-                      <span class="meta">1,9 MB · 12 Nov</span>
-                      <span class="readflag">✓ dibaca</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="tgroup">
-              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="cardTap('scrape-rek')">
-                <div class="tab">PDF</div>
-                <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
-                <div class="body">
-                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
-                  <div class="tinfo">
-                    <h3>Ringkasan Rekursi — Web Kampus.pdf</h3>
-                    <p>Diambil dari halaman mata kuliah</p>
-                    <div class="mrow">
-                      <span class="src s-scrape">🌐 Scraping</span>
-                      <span class="meta">web kampus · 9 Nov</span>
-                      <span class="readflag">✓ dibaca</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="tgroup">
-              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="cardTap('scrape-ind')">
-                <div class="tab">DOCX</div>
-                <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
-                <div class="body">
-                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
-                  <div class="tinfo">
-                    <h3>Bukti Induksi — Catatan Web.docx</h3>
-                    <p>Contoh soal dari halaman mata kuliah</p>
-                    <div class="mrow">
-                      <span class="src s-scrape">🌐 Scraping</span>
-                      <span class="meta">web kampus · 9 Nov</span>
-                      <span class="readflag">✓ dibaca</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== FOLDER 2: KALKULUS (scraping) ===== -->
-      <div class="folder" id="f-kalkulus">
-        <button class="folder-head" onclick="toggleFolder('f-kalkulus')">
-          <span class="fico" style="background:var(--purple-soft)">∑</span>
-          <div class="finfo"><b>Kalkulus</b><small>Hasil scraping website kampus</small></div>
-          <div class="fmeta"><span class="fpct">1</span><span class="fcount">dokumen</span></div>
-          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="folder-body">
-          <div class="folder-inner">
-            <div class="tgroup">
-              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="cardTap('kalkulus')">
-                <div class="tab">PDF</div>
-                <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
-                <div class="body">
-                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
-                  <div class="tinfo">
-                    <h3>Rangkuman Kalkulus.pdf</h3>
-                    <p>Diambil dari halaman mata kuliah</p>
-                    <div class="mrow">
-                      <span class="src s-scrape">🌐 Scraping</span>
-                      <span class="meta">1,1 MB · 18 Nov</span>
-                      <span class="readflag">✓ dibaca</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== FOLDER 3: ALGORITMA (scraping) ===== -->
-      <div class="folder" id="f-algoritma">
-        <button class="folder-head" onclick="toggleFolder('f-algoritma')">
-          <span class="fico" style="background:var(--green)">⚙️</span>
-          <div class="finfo"><b>Algoritma</b><small>Hasil scraping website kampus</small></div>
-          <div class="fmeta"><span class="fpct">1</span><span class="fcount">dokumen</span></div>
-          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="folder-body">
-          <div class="folder-inner">
-            <div class="tgroup">
-              <div class="tcard" style="--tc:#D6E8FF" data-src="scrape" onclick="cardTap('algoritma')">
-                <div class="tab">PDF</div>
-                <div class="dpf scrape"><i class="ava">🌐</i><span>Web Kampus</span></div>
-                <div class="body">
-                  <div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>
-                  <div class="tinfo">
-                    <h3>Simulasi Algoritma.pdf</h3>
-                    <p>Diambil dari halaman mata kuliah</p>
-                    <div class="mrow">
-                      <span class="src s-scrape">🌐 Scraping</span>
-                      <span class="meta">860 KB · 17 Nov</span>
-                      <span class="readflag">✓ dibaca</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== FOLDER 4: PEMROGRAMAN BERORIENTASI OBJEK (dari backend lokal) ===== -->
-      <div class="folder" id="f-pbo">
-        <button class="folder-head" onclick="toggleFolder('f-pbo')">
-          <span class="fico" style="background:#FFE8CC">🧩</span>
-          <div class="finfo"><b>Pemrograman Berorientasi Objek</b><small>Backend lokal REASON · dokumen API</small></div>
-          <div class="fmeta"><span class="fpct">0</span><span class="fcount">dokumen</span></div>
-          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="folder-body">
-          <div class="folder-inner" id="f-pbo-inner"></div>
-        </div>
-      </div>
-
-      <p class="note">Materi datang dari dua sumber: unggahan langsung dosen pengampu dan hasil scraping website kampus. Semua kutipan agen hanya mengambil dari materi yang sudah terindeks di rak ini.</p>
+      <p class="note">Materi datang dari unggahan dosen dan mahasiswa (form Tambah). Semua kutipan agen hanya mengambil dari materi yang sudah terindeks di rak ini.</p>
     </div>
   </section>
 
@@ -475,6 +284,32 @@
     </div>
   </div>
 
+  <!-- Sheet tambah materi (mahasiswa/dosen) -->
+  <div class="sheet" id="sheetAdd">
+    <div class="grab"></div>
+    <h3>Tambah materi</h3>
+    <div class="meta">Teks markdown · atau unggah PPT/DOC/PDF (≤10 MB) → otomatis jadi md</div>
+    <form class="addform" id="addForm" onsubmit="return submitAdd(event)">
+      <label for="addTitle">Judul</label>
+      <input id="addTitle" name="title" type="text" maxlength="120" placeholder="opsional bila unggah file — default nama file" />
+      <label for="addMatkul">Mata kuliah</label>
+      <select id="addMatkul" name="matkul" required>
+        <option value="">Pilih matkul…</option>
+        <option value="Metodologi Penelitian">Metodologi Penelitian</option>
+        <option value="Manajemen Operasional">Manajemen Operasional</option>
+        <option value="Sistematika Penulisan Business Plan">Sistematika Penulisan Business Plan</option>
+      </select>
+      <label for="addFile">Unggah dokumen <span class="hint">(opsional — .pptx .docx .pdf .txt .md)</span></label>
+      <input id="addFile" name="file" type="file" accept=".pptx,.ppt,.docx,.doc,.pdf,.txt,.md" />
+      <label for="addContent">Isi markdown <span class="hint">(wajib jika tidak unggah file — minimal <code>## Judul Bagian</code>)</span></label>
+      <textarea id="addContent" name="content" rows="5" placeholder="## Pendahuluan\n\nTulis isi materi di sini…"></textarea>
+      <div class="sheet-actions">
+        <button type="button" class="ghost" onclick="closeSheets()">Batal</button>
+        <button type="submit" class="primary" id="addSubmit">Simpan ke rak</button>
+      </div>
+    </form>
+  </div>
+
   <div class="toast" id="toast"></div>
 </div>
 
@@ -501,65 +336,21 @@ function toggleFolder(id){
   document.getElementById(id).classList.toggle('open');
 }
 
-/* ============ DATA MATERI (per matkul) ============ */
-const DOSEN = 'Dr. Rina Wijaya, M.T.';
-const DOCS = {
-  'modul4': {
-    src:'dosen', title:'Modul Diskrit — Bab 4.pdf', file:'materi/modul-diskrit-bab4.pdf', dosen:DOSEN,
-    meta:DOSEN + ' · Matematika Diskrit · 2,4 MB · 12 Nov 2026',
-    body:'4.2 Rekursi\n\nSebuah fungsi disebut rekursif apabila di dalam definisinya fungsi tersebut memanggil dirinya sendiri. Rekursi selalu membutuhkan kasus dasar (base case) yang menghentikan pemanggilan diri.\n\nPada faktorial, kasus dasar n = 0 didefinisikan bernilai 1. Untuk n > 0, berlaku faktorial(n) = n × faktorial(n − 1).',
-    verified:'✓ Sumber diverifikasi dosen'
-  },
-  'catatan-rek': {
-    src:'dosen', title:'Catatan kuliah — Rekursi.docx', file:'materi/catatan-kuliah-rekursi.docx', dosen:DOSEN,
-    meta:DOSEN + ' · Matematika Diskrit · 184 KB · 12 Nov 2026',
-    body:'Catatan pertemuan 5 — Rekursi\n\n• Definisi: fungsi yang memanggil dirinya sendiri dengan input lebih kecil.\n• Wajib ada base case supaya pemanggilan berhenti.\n• Jejak eksekusi: setiap pemanggilan menumpuk di call stack; kasus dasar baru dikembalikan ke atas.\n• Kesalahan umum: lupa base case → stack overflow.',
-    verified:'✓ Sumber diverifikasi dosen'
-  },
-  'slide-rek': {
-    src:'dosen', title:'Slide Pertemuan 5 — Rekursi.pdf', file:'materi/slide-pertemuan5-rekursi.pdf', dosen:DOSEN,
-    meta:DOSEN + ' · Matematika Diskrit · 3,1 MB · 10 Nov 2026',
-    body:'Slide Pertemuan 5\n\n1. Rekursi vs iterasi\n2. Anatomi panggilan: pemanggil → tumpukan frame\n3. Contoh jejak eksekusi faktorial(3)\n4. Latihan: tulis jejak f(f(2))\n5. Pengumuman: baca Bab 4.2 sebelum pertemuan berikutnya',
-    verified:'✓ Sumber diverifikasi dosen'
-  },
-  'modul6': {
-    src:'dosen', title:'Modul Diskrit — Bab 6.pdf', file:'materi/modul-diskrit-bab6.pdf', dosen:DOSEN,
-    meta:DOSEN + ' · Matematika Diskrit · 1,9 MB · 12 Nov 2026',
-    body:'6.1 Induksi Matematika\n\nBukti induksi bekerja dalam tiga langkah: (1) basis — buktikan untuk n = 1; (2) asumsi — anggap benar untuk n = k; (3) langkah induksi — buktikan berlaku untuk n = k + 1.\n\nJika ketiga langkah terpenuhi, maka pernyataan benar untuk semua n ≥ 1.',
-    verified:'✓ Sumber diverifikasi dosen'
-  },
-  'scrape-rek': {
-    src:'scrape', title:'Ringkasan Rekursi — Web Kampus.pdf', file:'materi/ringkasan-rekursi-webkampus.pdf', dosen:DOSEN,
-    meta:'Hasil scraping website kampus · ' + DOSEN + ' · diambil 9 Nov 2026',
-    body:'Ringkasan dari halaman mata kuliah\n\nRekursi adalah teknik penyelesaian masalah dengan memecah masalah menjadi submasalah sejenis yang lebih kecil, sampai menemukan kasus dasar. Materi lengkap beserta contoh soal tersedia di berkas modul yang diunggah dosen.\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
-    verified:'✓ Terindeks dari web kampus'
-  },
-  'scrape-ind': {
-    src:'scrape', title:'Bukti Induksi — Catatan Web.docx', file:'materi/bukti-induksi-catatan-web.docx', dosen:DOSEN,
-    meta:'Hasil scraping website kampus · ' + DOSEN + ' · diambil 9 Nov 2026',
-    body:'Contoh soal dari halaman mata kuliah\n\nBuktikan bahwa 1 + 3 + 5 + … + (2n − 1) = n² untuk semua n ≥ 1.\n\nBasis: n = 1 → 1 = 1². Asumsi benar untuk n = k. Langkah induksi: tambahkan suku berikutnya (2k + 1) dan sederhanakan menjadi (k + 1)².\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
-    verified:'✓ Terindeks dari web kampus'
-  },
-  'kalkulus': {
-    src:'scrape', title:'Rangkuman Kalkulus.pdf', file:'materi/rangkuman-kalkulus.pdf', dosen:null,
-    meta:'Hasil scraping website kampus · 1,1 MB · 18 Nov 2026',
-    body:'Rangkuman Kalkulus\n\nBerkas ini diambil otomatis dari halaman mata kuliah kalkulus di website kampus.\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
-    verified:'✓ Terindeks dari web kampus'
-  },
-  'algoritma': {
-    src:'scrape', title:'Simulasi Algoritma.pdf', file:'materi/simulasi-algoritma.pdf', dosen:null,
-    meta:'Hasil scraping website kampus · 860 KB · 17 Nov 2026',
-    body:'Simulasi Algoritma\n\nBerkas ini diambil otomatis dari halaman mata kuliah algoritma di website kampus.\n\n(Agen hanya mengutip bagian yang ditemukan di halaman ini.)',
-    verified:'✓ Terindeks dari web kampus'
-  }
-};
+/* ============ DATA MATERI (dinamis dari backend) ============ */
+const MATKUL_GROUPS = [
+  { name: 'Metodologi Penelitian', short: 'Penelitian', icon: '📐', color: 'var(--blue-soft)' },
+  { name: 'Manajemen Operasional', short: 'Manajemen', icon: '📊', color: 'var(--purple-soft)' },
+  { name: 'Sistematika Penulisan Business Plan', short: 'Business Plan', icon: '💼', color: '#FFE8CC' },
+];
+/* cache isi sheet detail: key 'api:slug' (mesin openDoc/markRead tetap dipakai) */
+const DOCS = {};
+let RAK_ITEMS = [];   // daftar flat utk statistik
 
-/* ============ STAT (dihitung dari DOCS) ============ */
+/* ============ STAT (dihitung dari RAK_ITEMS) ============ */
 function updateStats(){
-  const ids = Object.keys(DOCS);
-  document.getElementById('stDoc').textContent = ids.length;
-  document.getElementById('stDosen').textContent = ids.filter(i => DOCS[i].src === 'dosen').length;
-  document.getElementById('stScrape').textContent = ids.filter(i => DOCS[i].src === 'scrape').length;
+  document.getElementById('stDoc').textContent = String(RAK_ITEMS.length);
+  document.getElementById('stDosen').textContent = String(RAK_ITEMS.filter(i => i.src === 'dosen').length);
+  document.getElementById('stMhs').textContent = String(RAK_ITEMS.filter(i => i.src === 'mahasiswa').length);
 }
 
 /* ============ FILTER SUMBER + PENCARIAN ============ */
@@ -621,7 +412,9 @@ function openDoc(id){
   document.getElementById('docTitle').textContent = d.title;
   document.getElementById('docMeta').textContent = d.meta;
   const line = document.getElementById('docSrcLine');
-  if(d.src === 'dosen'){
+  if(d.src === 'mahasiswa'){
+    line.innerHTML = '<span class="src s-mhs">📝 Ditambahkan Mahasiswa</span><span class="src" style="background:var(--purple-soft);color:#5A4BC7">' + (d.dosen || '—') + '</span>';
+  } else if(d.src === 'dosen'){
     line.innerHTML = '<span class="src s-dosen">🎓 Dari Dosen</span><span class="src" style="background:var(--purple-soft);color:#5A4BC7">' + d.dosen + '</span>';
   } else if(d.dosen){
     line.innerHTML = '<span class="src s-scrape">🌐 Scraping</span><span class="src" style="background:var(--purple-soft);color:#5A4BC7">Pengampu: ' + d.dosen + '</span>';
@@ -675,11 +468,14 @@ async function openApiDoc(slug){
     const r = await fetch(API + '/materi/' + slug);
     if(!r.ok){ toast('Materi tidak ditemukan di backend'); return; }
     const d = await r.json();
+    const src = d.src === 'mahasiswa' ? 'mahasiswa' : 'dosen';
     DOCS['api:' + slug] = {
-      src:'dosen', title: d.title + '.md', dosen: d.dosen,
-      meta: d.dosen + ' · ' + d.matkul + ' · dokumen backend lokal',
+      src, title: d.title + '.md', dosen: d.dosen,
+      meta: (d.dosen || '—') + ' · ' + d.matkul + ' · dokumen backend lokal',
       body: d.content,
-      verified: '✓ Diverifikasi dosen · disimpan di backend lokal'
+      verified: src === 'mahasiswa'
+        ? '✓ Ditambahkan mahasiswa · disimpan di backend lokal'
+        : '✓ Diverifikasi dosen · disimpan di backend lokal'
     };
     openDoc('api:' + slug);
   }catch(e){
@@ -688,48 +484,148 @@ async function openApiDoc(slug){
 }
 
 async function loadBackendMateri(){
+  const host = document.getElementById('rakFolders');
+  if(!host) return;
   try{
     const headers = apiToken() ? {'Authorization':'Bearer ' + apiToken()} : {};
     const r = await fetch(API + '/materi', {headers});
-    if(!r.ok) return;
+    if(!r.ok) throw new Error('http ' + r.status);
     const data = await r.json();
-    const added = {};
-    data.items.forEach(it => {
-      if(it.read) readSet.add(it.slug);
-      const fid = it.matkul === 'Matematika Diskrit' ? 'f-diskrit' : 'f-pbo';
-      const inner = document.getElementById(fid) && document.getElementById(fid).querySelector('.folder-inner');
-      if(!inner) return;
-      if(inner.querySelector('[data-api-slug="' + it.slug + '"]')) return;
-      const g = document.createElement('div');
-      g.className = 'tgroup';
-      const dosenShort = (it.dosen || 'Dosen').replace('Dr. ', '').split(',')[0];
-      const inisial = (dosenShort.split(' ').map(w => w[0]).join('')).slice(0,2).toUpperCase();
-      g.innerHTML =
-        '<div class="tcard" style="--tc:#E7DDFF" data-src="dosen" data-api-slug="' + it.slug + '" onclick="cardTapApi(\'' + it.slug + '\')">' +
-          '<div class="tab">MD</div>' +
-          '<div class="dpf"><i class="ava">' + inisial + '</i><span>' + dosenShort + '</span></div>' +
-          '<div class="body">' +
-            '<div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>' +
-            '<div class="tinfo">' +
-              '<h3>' + it.title + '.md</h3>' +
-              '<p>' + it.matkul + ' · dokumen backend</p>' +
-              '<div class="mrow">' +
-                '<span class="src s-dosen">🎓 Dari Dosen</span>' +
-                '<span class="meta">backend · lokal</span>' +
-                '<span class="readflag">✓ dibaca</span>' +
+    RAK_ITEMS = data.items || [];
+    RAK_ITEMS.forEach(it => { if(it.read) readSet.add(it.slug); });
+  }catch(e){
+    RAK_ITEMS = [];
+    host.innerHTML = '<p class="note">Backend belum nyala — rak kosong sementara. Nyalakan backend lalu muat ulang halaman.</p>';
+    updateStats();
+    return;
+  }
+
+  /* kelompokkan per matkul (urutan MATKUL_GROUPS; matkul asing tetap tampil) */
+  const byMatkul = {};
+  RAK_ITEMS.forEach(it => { (byMatkul[it.matkul] = byMatkul[it.matkul] || []).push(it); });
+  const names = MATKUL_GROUPS.map(g => g.name)
+    .concat(Object.keys(byMatkul).filter(m => !MATKUL_GROUPS.some(g => g.name === m)));
+
+  host.innerHTML = names.map((matkul, gi) => {
+    const g = MATKUL_GROUPS.find(x => x.name === matkul) ||
+      { short: matkul, icon: '📁', color: 'var(--card)' };
+    const items = byMatkul[matkul] || [];
+    const fid = 'f-matkul-' + gi;
+    const cards = items.map(it => {
+      const src = it.src === 'mahasiswa' ? 'mahasiswa' : 'dosen';
+      const badge = src === 'mahasiswa'
+        ? '<span class="src s-mhs">📝 Mahasiswa</span>'
+        : '<span class="src s-dosen">🎓 Dosen</span>';
+      const who = (it.dosen || '—').replace('Dr. ', '').split(',')[0];
+      const inisial = (who.split(' ').map(w => w[0]).join('')).slice(0, 2).toUpperCase() || 'M';
+      return (
+        '<div class="tgroup">' +
+          '<div class="tcard" style="--tc:#E7DDFF" data-src="' + src + '" data-api-slug="' + it.slug + '" onclick="cardTapApi(\'' + it.slug + '\')">' +
+            '<div class="tab">MD</div>' +
+            '<div class="dpf"><i class="ava">' + inisial + '</i><span>' + who + '</span></div>' +
+            '<div class="body">' +
+              '<div class="ticon"><svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3V4z"/><path d="M9 8h6M9 12h6"/></svg></div>' +
+              '<div class="tinfo">' +
+                '<h3>' + it.title + '.md</h3>' +
+                '<p>' + it.matkul + ' · dokumen backend</p>' +
+                '<div class="mrow">' + badge +
+                  '<span class="meta">backend · lokal</span>' +
+                  (it.read ? '<span class="readflag">✓ dibaca</span>' : '') +
+                '</div>' +
               '</div>' +
             '</div>' +
           '</div>' +
-        '</div>';
-      inner.appendChild(g);
-      added[fid] = (added[fid] || 0) + 1;
-    });
-    Object.keys(added).forEach(fid => {
-      const pct = document.querySelector('#' + fid + ' .fpct');
-      if(pct) pct.textContent = String((parseInt(pct.textContent, 10) || 0) + added[fid]);
-    });
-    decorateCards();
-  }catch(e){ /* backend mati — rak tetap jalan dengan data lokal */ }
+        '</div>'
+      );
+    }).join('');
+
+    return (
+      '<div class="folder' + (gi === 0 ? ' open' : '') + '" id="' + fid + '">' +
+        '<button class="folder-head" onclick="toggleFolder(\'' + fid + '\')">' +
+          '<span class="fico" style="background:' + g.color + '">' + g.icon + '</span>' +
+          '<div class="finfo"><b>' + matkul + '</b><small>' + (g.short || matkul) + ' · dosen &amp; mahasiswa</small></div>' +
+          '<div class="fmeta"><span class="fpct">' + items.length + '</span><span class="fcount">dokumen</span></div>' +
+          '<svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>' +
+        '</button>' +
+        '<div class="folder-body">' +
+          '<div class="folder-inner">' +
+            (cards || '<p class="note">Belum ada materi di matkul ini — ketuk “＋ Tambah materi”.</p>') +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }).join('');
+
+  updateStats();
+  decorateCards();
+  applyFilter();
+}
+
+/* ============ TAMBAH MAHASISWA (POST /api/materi) ============ */
+function openAdd(){
+  if(!apiToken()){ toast('Login dulu untuk menambah materi'); return; }
+  document.getElementById('sheetAdd').classList.add('show');
+  document.getElementById('overlay').classList.add('show');
+}
+async function submitAdd(ev){
+  ev.preventDefault();
+  const title = (document.getElementById('addTitle').value || '').trim();
+  const matkul = document.getElementById('addMatkul').value;
+  const content = document.getElementById('addContent').value || '';
+  const file = document.getElementById('addFile').files[0];
+  if(!matkul){ toast('Pilih mata kuliah'); return false; }
+  if(!file){
+    if(title.length < 3){ toast('Judul minimal 3 karakter'); return false; }
+    if(content.trim().length < 10){ toast('Isi materi terlalu pendek'); return false; }
+    if(!/## /.test(content)){ toast("Isi minimal satu bagian '## Judul Bagian'"); return false; }
+  } else if(file.size > 10 * 1024 * 1024){
+    toast('File terlalu besar (maks 10 MB)'); return false;
+  }
+  const btn = document.getElementById('addSubmit');
+  btn.disabled = true;
+  btn.textContent = file ? 'Mengonversi…' : 'Menyimpan…';
+  try{
+    let r;
+    if(file){
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('matkul', matkul);
+      if(title) fd.append('title', title);
+      r = await fetch(API + '/materi/upload', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + apiToken() },
+        body: fd,
+      });
+    } else {
+      r = await fetch(API + '/materi', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiToken(),
+        },
+        body: JSON.stringify({ title, matkul, content }),
+      });
+    }
+    if(r.status === 401){ toast('Sesi berakhir — login ulang'); return false; }
+    if(r.status === 429){ toast('Terlalu banyak tambahan — coba lagi nanti'); return false; }
+    if(!r.ok){
+      let msg = 'Gagal menyimpan';
+      try{ const e = await r.json(); if(e.detail) msg = e.detail; }catch(_){}
+      toast(typeof msg === 'string' ? msg : 'Gagal menyimpan');
+      return false;
+    }
+    const body = await r.json();
+    toast((file ? 'Dikonversi ✓ ' : 'Tersimpan ✓ ') + body.slug);
+    document.getElementById('addForm').reset();
+    closeSheets();
+    await loadBackendMateri();
+  }catch(e){
+    toast('Backend belum nyala (port 8787)');
+  }finally{
+    btn.disabled = false;
+    btn.textContent = 'Simpan ke rak';
+  }
+  return false;
 }
 
 updateStats();

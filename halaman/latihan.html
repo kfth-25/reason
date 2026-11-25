@@ -1095,7 +1095,6 @@ function showCheckResult(res){
     const mastery=JSON.parse(localStorage.getItem('reason_mastery')||'{}');
     if(slug)mastery[slug]={status:stable?'stabil':'goyah',score:pct,updatedAt,criteria:criteria.map(k=>({id:k.id,label:k.label,skor:k.skor}))};
     // migrasi key legacy dulu sebelum dihapus — jangan hilangkan bukti rekursi lama tanpa pindah
-    if(mastery.callStack&&!mastery['diskrit-rekursi'])mastery['diskrit-rekursi']=mastery.callStack;
     delete mastery.callStack;
     localStorage.setItem('reason_mastery',JSON.stringify(mastery));
   }catch(e){}

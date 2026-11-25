@@ -134,9 +134,10 @@
   .row .rname{font-size:13.5px;font-weight:800;color:var(--navy);margin-bottom:7px}
   .bar{height:9px;border-radius:var(--r-pill);background:var(--line);overflow:hidden}
   .bar i{display:block;height:100%;border-radius:var(--r-pill)}
-  .bar i.g{background:linear-gradient(90deg,#8FDF5A,#5BC42E);width:90%}
-  .bar i.b{background:linear-gradient(90deg,#6FB2F5,#4392F0);width:75%}
-  .bar i.o{background:linear-gradient(90deg,#F7C06B,#F5A93F);width:52%}
+  .bar i.g{background:linear-gradient(90deg,#8FDF5A,#5BC42E)}
+  .bar i.b{background:linear-gradient(90deg,#6FB2F5,#4392F0)}
+  .bar i.o{background:linear-gradient(90deg,#F7C06B,#F5A93F)}
+  .bar i.n{background:var(--line)}
   .row .rpill{
     flex-shrink:0;font-size:11px;font-weight:800;color:var(--navy);
     background:#F1F1F5;border-radius:var(--r-pill);padding:5px 9px;
@@ -149,6 +150,34 @@
   .rbadge.green{color:#4BB32A}
   .rbadge.blue{color:var(--blue)}
   .rbadge.orange{color:#F57A1F}
+  .rbadge.none{color:#9A96B8}
+
+  /* Hierarki: kartu matkul (level-1) → sub-materi (level-2) */
+  .crumb{
+    display:none;align-items:center;gap:6px;margin-top:14px;
+    font-size:12.5px;font-weight:800;color:var(--purple);cursor:pointer;
+    background:none;border:none;font-family:var(--font);padding:0;text-align:left;
+  }
+  .crumb.show{display:inline-flex}
+  .crumb svg{width:16px;height:16px;stroke:var(--purple);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .matkul-row{
+    background:var(--card);border-radius:16px;padding:13px 12px;
+    display:flex;align-items:center;gap:10px;box-shadow:0 3px 10px rgba(40,35,90,.05);
+    width:100%;border:none;cursor:pointer;font-family:var(--font);text-align:left;
+    transition:transform .12s;
+  }
+  .matkul-row:active{transform:scale(.98)}
+  .matkul-row .chev{
+    flex-shrink:0;width:28px;height:28px;border-radius:50%;background:#F1F1F5;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .matkul-row .chev svg{width:14px;height:14px;stroke:var(--navy);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .matkul-row .msub{font-size:11px;font-weight:700;color:#8A8B98;margin-top:3px}
+  .empty-note{
+    margin-top:12px;background:var(--card);border-radius:16px;padding:14px 12px;
+    font-size:12.5px;line-height:1.55;color:#5C587F;box-shadow:0 3px 10px rgba(40,35,90,.05);
+  }
+  .empty-note b{color:var(--navy);display:block;margin-bottom:4px;font-size:13px}
 
   /* Rekomendasi */
   .reco{
@@ -249,7 +278,7 @@
       <svg viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></svg>
     </button>
     <span class="tb-title">Graph Knowledge</span>
-    <button class="tb-btn" onclick="toast('Peta ini menampilkan progres penguasaan konsep dari sesi belajarmu.')" aria-label="Bantuan">?</button>
+    <button class="tb-btn" onclick="toast('Ketuk mata kuliah untuk membuka sub-materi, lalu ketuk sub-materi untuk latihan terkait.')" aria-label="Bantuan">?</button>
   </header>
 
   <section class="peta-screen">
@@ -257,7 +286,6 @@
 
       <!-- Hero + maskot Bimo -->
       <h1 class="lead-h">Peta Penguasaan<br>Konsep Anda</h1>
-      <p style="font-size:11px;font-weight:600;color:#8A8B98;margin:4px 0 0">Data contoh ilustratif — belum terhubung ke progres nyata.</p>
       <div class="hero">
         <p class="lead">Lihat perkembangan pemahaman Anda di setiap konsep utama.</p>
         <div class="hero-m">
@@ -328,63 +356,32 @@
             <line x1="7" y1="32" x2="16" y2="30"/>
           </svg>
         </span>
-        <div class="donut" role="img" aria-label="78 persen total penguasaan">
-          <div class="donut-txt"><b>78%</b><span>Total Penguasaan</span></div>
+        <div class="donut" id="totalDonut" role="img" aria-label="total penguasaan">
+          <div class="donut-txt"><b id="totalPct">—</b><span>Total Penguasaan</span></div>
         </div>
         <div class="stat-div"></div>
         <div class="stat-right">
-          <span class="badge-bagus"><span class="sp">✨</span> Bagus!</span>
-          <p>Pemahaman Anda sudah cukup baik. Tetap lanjutkan untuk memperkuat konsep lainnya!</p>
+          <span class="badge-bagus" id="totalBadge"><span class="sp">✨</span> <span id="totalBadgeTxt">Belum diukur</span></span>
+          <p id="totalNote">Selesaikan latihan atau cek ulang agar peta ini terisi.</p>
         </div>
       </div>
 
-      <!-- Penguasaan per konsep -->
+      <!-- Hierarki: matkul → sub-materi -->
       <div class="sec-head">
         <span class="ico" aria-hidden="true">
           <svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg>
         </span>
-        <h2>Penguasaan per Konsep</h2>
-        <a onclick="location.href='ringkasan.html#map'">Lihat Detail →</a>
+        <h2 id="hierTitle">Penguasaan per Materi</h2>
+        <a id="hierLink" onclick="location.href='ringkasan.html#map'" style="display:none">Lihat Detail →</a>
       </div>
-      <p style="font-size:10.5px;font-weight:600;color:#8A8B98;margin:-4px 0 8px">Demo — bar & persentase contoh, bukan data sesi.</p>
+      <p style="font-size:10.5px;font-weight:600;color:#8A8B98;margin:-4px 0 8px" id="hierHint">Ketuk mata kuliah untuk melihat sub-materi di dalamnya.</p>
 
-      <div class="rows">
-        <div class="row">
-          <span class="ric green" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M7 7h6a4 4 0 010 8H9"/><path d="M9 11l-2 4 4 0"/><path d="M17 17h-6a4 4 0 010-8h4"/><path d="M15 13l2-4-4 0"/></svg>
-          </span>
-          <div class="rmain">
-            <div class="rname">Rekursi</div>
-            <div class="bar"><i class="g"></i></div>
-          </div>
-          <span class="rpill">90%</span>
-          <span class="rbadge green">Sangat Baik</span>
-        </div>
+      <button class="crumb" id="crumbBack" type="button" aria-label="Kembali ke daftar mata kuliah">
+        <svg viewBox="0 0 24 24"><path d="M14.5 6l-6 6 6 6"/></svg>
+        <span id="crumbLabel">Semua mata kuliah</span>
+      </button>
 
-        <div class="row">
-          <span class="ric blue" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M7 6h10M7 10h10M7 14h6"/><path d="M16 14l3 4 3-4" transform="translate(-4 0)"/></svg>
-          </span>
-          <div class="rmain">
-            <div class="rname">Induksi</div>
-            <div class="bar"><i class="b"></i></div>
-          </div>
-          <span class="rpill">75%</span>
-          <span class="rbadge blue">Baik</span>
-        </div>
-
-        <div class="row">
-          <span class="ric orange" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><circle cx="5" cy="7" r="2"/><circle cx="19" cy="7" r="2"/><circle cx="12" cy="17" r="2"/><path d="M7 8l3.5 7M17 8l-3.5 7M7 7h10"/></svg>
-          </span>
-          <div class="rmain">
-            <div class="rname">Teori Graf</div>
-            <div class="bar"><i class="o"></i></div>
-          </div>
-          <span class="rpill">52%</span>
-          <span class="rbadge orange">Perlu Latihan</span>
-        </div>
-      </div>
+      <div class="rows" id="hierList" aria-live="polite"></div>
 
       <!-- Rekomendasi belajar -->
       <div class="reco">
@@ -404,9 +401,9 @@
         </span>
         <div class="rtxt">
           <b>Rekomendasi Belajar</b>
-          <p>Perkuat konsep 'Teori Graf' dengan latihan tambahan.</p>
+          <p id="recoText">Pilih materi di Beranda, lalu selesaikan latihan untuk membangun rekomendasi.</p>
         </div>
-        <button class="go" onclick="location.href='latihan.html'">Mulai Latihan →</button>
+        <button class="go" id="recoGo" onclick="location.href='latihan.html'">Mulai Latihan →</button>
       </div>
 
       <!-- Tren penguasaan -->
@@ -492,6 +489,279 @@ document.getElementById('sesiTabs').addEventListener('click', e => {
   document.querySelectorAll('#sesiTabs button').forEach(x => x.classList.remove('on'));
   b.classList.add('on');
 });
+
+/* ============ PETA PENGUASAAN HIERARKIS ============
+   Level-1: mata kuliah (Penelitian, Manajemen, Business Plan) — klik → level-2 sub-materi.
+   Sumber kebenaran: localStorage.reason_mastery (tulis di latihan.html)
+   + daftar judul dari GET /api/materi (fallback statis bila offline). */
+const API = (() => { try { const s=localStorage.getItem('reason_api'); if(s)return s; const h=location.hostname; return (!h||h==='localhost'||h==='127.0.0.1'||h.indexOf('192.168.')===0)?'http://127.0.0.1:8787/api':'https://shieldkartika.my.id/reason/api'; } catch(e){ return 'http://127.0.0.1:8787/api'; } })();
+
+/* Struktur hierarki statis (selalu ada walau backend mati).
+   matkul = key grup; slug sub-materi = key mastery. */
+const TREE = [
+  {
+    id: 'penelitian',
+    name: 'Metodologi Penelitian',
+    short: 'Penelitian',
+    icon: 'graph',
+    subs: [
+      { slug: 'penelitian-etika-plagiarisme', name: 'Etika & Plagiarisme', fallback: 'Etika Penelitian — Prinsip, Pelanggaran, dan Plagiarisme' },
+      { slug: 'penelitian-sitasi-authorship', name: 'Sitasi & Authorship', fallback: 'Sitasi, Fabrikasi, Authorship, dan Etika AI' },
+      { slug: 'penelitian-struktur-skripsi', name: 'Struktur Skripsi', fallback: 'Struktur Skripsi dan Penulisan BAB I–III' },
+      { slug: 'penelitian-menulis-laporan', name: 'Menulis Laporan', fallback: 'Menulis BAB IV–V, Abstrak, dan Proses Penulisan' },
+    ],
+  },
+  {
+    id: 'manajemen',
+    name: 'Manajemen Operasional',
+    short: 'Manajemen',
+    icon: 'class',
+    subs: [
+      { slug: 'manajemen-konsep-perencanaan', name: 'Konsep Perencanaan', fallback: 'Perencanaan Operasional — Konsep dan Tahapan' },
+      { slug: 'manajemen-sumberdaya-kualitas', name: 'Sumber Daya & Kualitas', fallback: 'Pengelolaan Sumber Daya dan Pengendalian Kualitas' },
+      { slug: 'manajemen-persediaan-efisiensi', name: 'Persediaan & Efisiensi', fallback: 'Persediaan, Efisiensi, dan Produktivitas' },
+    ],
+  },
+  {
+    id: 'businessplan',
+    name: 'Sistematika Penulisan Business Plan',
+    short: 'Business Plan',
+    icon: 'rec',
+    subs: [
+      { slug: 'businessplan-sistematika', name: 'Sistematika BP', fallback: 'Sistematika Penulisan Business Plan' },
+      { slug: 'businessplan-executive-summary', name: 'Executive Summary', fallback: 'Executive Summary dan Deskripsi Usaha' },
+      { slug: 'businessplan-model-pasar', name: 'Model & Pasar', fallback: 'Analisis Pasar dan Business Model' },
+    ],
+  },
+];
+
+const ICO = {
+  graph: '<svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg>',
+  class: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>',
+  rec: '<svg viewBox="0 0 24 24"><path d="M7 7h6a4 4 0 010 8H9"/><path d="M9 11l-2 4 4 0"/><path d="M17 17h-6a4 4 0 010-8h4"/><path d="M15 13l2-4-4 0"/></svg>',
+  ind: '<svg viewBox="0 0 24 24"><path d="M7 6h10M7 10h10M7 14h6"/><path d="M16 14l3 4 3-4" transform="translate(-4 0)"/></svg>',
+  graf: '<svg viewBox="0 0 24 24"><circle cx="5" cy="7" r="2"/><circle cx="19" cy="7" r="2"/><circle cx="12" cy="17" r="2"/><path d="M7 8l3.5 7M17 8l-3.5 7M7 7h10"/></svg>',
+  exc: '<svg viewBox="0 0 24 24"><path d="M12 3l9 16H3L12 3z"/><path d="M12 10v4M12 16.5v.01"/></svg>',
+  inh: '<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="5" rx="1.5"/><rect x="3" y="16" width="6" height="5" rx="1.5"/><rect x="15" y="16" width="6" height="5" rx="1.5"/><path d="M12 8v4M6 16v-2h12v2"/></svg>',
+};
+function subIcon(slug){
+  if (slug.startsWith('mhs-')) return ICO.class;
+  if (slug.includes('etika') || slug.includes('sitasi')) return ICO.rec;
+  if (slug.includes('struktur') || slug.includes('menulis')) return ICO.ind;
+  if (slug.includes('manajemen')) return ICO.graf;
+  if (slug.includes('businessplan')) return ICO.exc;
+  return ICO.class;
+}
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function loadMastery(){
+  try { return JSON.parse(localStorage.getItem('reason_mastery') || '{}') || {}; }
+  catch(e){ return {}; }
+}
+/* status bar: stabil→hijau, goyah→oranye, belum→abu; skor null = belum diukur */
+function subMeta(m){
+  if (!m || !Number.isFinite(Number(m.score))) {
+    return { measured: false, score: 0, bar: 'n', badge: 'none', label: 'Belum diukur', pill: '—' };
+  }
+  const score = Math.max(0, Math.min(100, Math.round(Number(m.score))));
+  const stabil = m.status === 'stabil';
+  let bar = 'o', badge = 'orange', label = 'Perlu Latihan';
+  if (score >= 80 && stabil) { bar = 'g'; badge = 'green'; label = 'Sangat Baik'; }
+  else if (score >= 60 || stabil) { bar = 'b'; badge = 'blue'; label = 'Baik'; }
+  return { measured: true, score, bar, badge, label, pill: score + '%' };
+}
+function avgOf(list){
+  const vals = list.map(x => x.score).filter(Number.isFinite);
+  if (!vals.length) return null;
+  return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
+}
+function shortTitle(t){
+  return String(t || '').split('—')[0].split('–')[0].trim();
+}
+
+let openMatkul = null;   // null = level-1; string id = level-2
+let titles = {};         // slug → judul penuh dari /api/materi
+
+function setTotal(){
+  const mastery = loadMastery();
+  const all = [];
+  TREE.forEach(g => g.subs.forEach(s => {
+    const m = mastery[s.slug];
+    if (m && Number.isFinite(Number(m.score))) all.push(Number(m.score));
+  }));
+  const avg = all.length ? Math.round(all.reduce((a, b) => a + b, 0) / all.length) : null;
+  const pctEl = document.getElementById('totalPct');
+  const donut = document.getElementById('totalDonut');
+  const badgeTxt = document.getElementById('totalBadgeTxt');
+  const note = document.getElementById('totalNote');
+  if (avg === null) {
+    pctEl.textContent = '—';
+    donut.style.background = 'conic-gradient(#E4DFF8 0deg 360deg)';
+    donut.setAttribute('aria-label', 'belum ada data penguasaan');
+    badgeTxt.textContent = 'Belum diukur';
+    note.textContent = 'Selesaikan latihan atau cek ulang agar peta ini terisi.';
+    return;
+  }
+  const deg = (avg / 100) * 360;
+  pctEl.textContent = avg + '%';
+  donut.style.background = 'conic-gradient(#8B7BF0 0deg ' + deg + 'deg,#E4DFF8 ' + deg + 'deg 360deg)';
+  donut.setAttribute('aria-label', avg + ' persen total penguasaan');
+  badgeTxt.textContent = avg >= 80 ? 'Sangat Baik' : avg >= 60 ? 'Bagus!' : 'Terus berlatih';
+  note.textContent = avg >= 70
+    ? 'Pemahaman Anda sudah cukup baik. Tetap lanjutkan untuk memperkuat materi lainnya!'
+    : 'Beberapa materi masih perlu latihan tambahan — buka sub-materi untuk mulai.';
+}
+
+function setReco(){
+  const mastery = loadMastery();
+  let weakest = null;
+  TREE.forEach(g => g.subs.forEach(s => {
+    const m = mastery[s.slug];
+    if (!m || !Number.isFinite(Number(m.score))) return;
+    if (!weakest || Number(m.score) < weakest.score) {
+      weakest = { slug: s.slug, name: s.name, score: Number(m.score), status: m.status };
+    }
+  }));
+  const el = document.getElementById('recoText');
+  const go = document.getElementById('recoGo');
+  if (!weakest) {
+    el.textContent = 'Pilih materi di Beranda, lalu selesaikan latihan untuk membangun rekomendasi.';
+    go.onclick = () => { location.href = 'beranda-reason.html'; };
+    go.textContent = 'Pilih Materi →';
+    return;
+  }
+  if (weakest.status === 'stabil' && weakest.score >= 80) {
+    el.textContent = 'Semua bukti yang ada cukup kokoh — coba latihan bebas di ' + weakest.name + '.';
+  } else {
+    el.textContent = 'Perkuat konsep “' + weakest.name + '” dengan latihan tambahan.';
+  }
+  go.textContent = 'Mulai Latihan →';
+  go.onclick = () => {
+    try {
+      localStorage.setItem('reason_goal', weakest.slug);
+      localStorage.setItem('reason_goal_title', weakest.name);
+      localStorage.setItem('reason_goal_display', weakest.name);
+    } catch(e){}
+    location.href = 'latihan.html';
+  };
+}
+
+function subRow(sub, mastery){
+  const meta = subMeta(mastery[sub.slug]);
+  const full = titles[sub.slug] || sub.fallback;
+  const short = shortTitle(full) || sub.name;
+  const aria = esc(short) + ', ' + esc(meta.label) + (meta.measured ? ', ' + meta.score + ' persen' : '');
+  return (
+    '<button type="button" class="matkul-row" data-slug="' + esc(sub.slug) + '" data-title="' + esc(short) + '" aria-label="' + aria + '">' +
+      '<span class="ric ' + (meta.measured ? meta.bar : '') + '" aria-hidden="true" style="' + (meta.measured ? '' : 'background:#F1F1F5') + '">' + subIcon(sub.slug) + '</span>' +
+      '<span class="rmain">' +
+        '<span class="rname">' + esc(short) + '</span>' +
+        '<span class="bar"><i class="' + meta.bar + '" style="width:' + (meta.measured ? meta.score : 0) + '%"></i></span>' +
+      '</span>' +
+      '<span class="rpill">' + esc(meta.pill) + '</span>' +
+      '<span class="rbadge ' + meta.badge + '">' + esc(meta.label) + '</span>' +
+    '</button>'
+  );
+}
+
+function matkulRow(group, mastery){
+  const metas = group.subs.map(s => subMeta(mastery[s.slug]));
+  const measured = metas.filter(m => m.measured);
+  const avg = avgOf(metas);
+  const meta = avg === null
+    ? { bar: 'n', badge: 'none', label: 'Belum diukur', pill: '—', measured: false, score: 0 }
+    : subMeta({ score: avg, status: measured.some(m => m.badge === 'orange') ? 'goyah' : 'stabil' });
+  const aria = esc(group.name) + ', ' + esc(meta.label) + ', buka ' + group.subs.length + ' sub-materi';
+  return (
+    '<button type="button" class="matkul-row" data-matkul="' + esc(group.id) + '" aria-label="' + aria + '">' +
+      '<span class="ric ' + (meta.measured ? meta.bar : '') + '" aria-hidden="true" style="' + (meta.measured ? '' : 'background:#F1F1F5') + '">' + ICO[group.icon] + '</span>' +
+      '<span class="rmain">' +
+        '<span class="rname">' + esc(group.name) + '</span>' +
+        '<span class="bar"><i class="' + meta.bar + '" style="width:' + (meta.measured ? meta.score : 0) + '%"></i></span>' +
+        '<span class="msub">' + group.subs.length + ' sub-materi · ' + esc(meta.label) + '</span>' +
+      '</span>' +
+      '<span class="rpill">' + esc(meta.pill) + '</span>' +
+      '<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></svg></span>' +
+    '</button>'
+  );
+}
+
+function renderHier(){
+  const mastery = loadMastery();
+  const list = document.getElementById('hierList');
+  const crumb = document.getElementById('crumbBack');
+  const title = document.getElementById('hierTitle');
+  const hint = document.getElementById('hierHint');
+  const link = document.getElementById('hierLink');
+  if (!list) return;
+
+  if (!openMatkul) {
+    crumb.classList.remove('show');
+    title.textContent = 'Penguasaan per Materi';
+    hint.textContent = 'Ketuk mata kuliah untuk melihat sub-materi di dalamnya.';
+    link.style.display = 'none';
+    list.innerHTML = TREE.map(g => matkulRow(g, mastery)).join('') ||
+      '<div class="empty-note"><b>Belum ada materi</b>Daftar materi akan muncul setelah tersedia.</div>';
+    list.querySelectorAll('[data-matkul]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        openMatkul = btn.getAttribute('data-matkul');
+        renderHier();
+        document.querySelector('.peta-screen').scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+    return;
+  }
+
+  const group = TREE.find(g => g.id === openMatkul);
+  if (!group) { openMatkul = null; renderHier(); return; }
+  crumb.classList.add('show');
+  document.getElementById('crumbLabel').textContent = 'Semua mata kuliah';
+  title.textContent = group.name;
+  hint.textContent = group.subs.length + ' sub-materi · ketuk untuk latihan terkait.';
+  link.style.display = '';
+  list.innerHTML = group.subs.map(s => subRow(s, mastery)).join('');
+  list.querySelectorAll('[data-slug]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const slug = btn.getAttribute('data-slug');
+      const name = btn.getAttribute('data-title') || slug;
+      try {
+        localStorage.setItem('reason_goal', slug);
+        localStorage.setItem('reason_goal_title', name);
+        localStorage.setItem('reason_goal_display', group.name + ' — ' + name);
+      } catch(e){}
+      location.href = 'latihan.html';
+    });
+  });
+}
+
+document.getElementById('crumbBack').addEventListener('click', () => {
+  openMatkul = null;
+  renderHier();
+  document.querySelector('.peta-screen').scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* judul dari backend (opsional); offline → fallback TREE */
+async function loadTitles(){
+  try{
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 6000);
+    const r = await fetch(API + '/materi', { signal: ctrl.signal });
+    clearTimeout(timer);
+    if(!r.ok) throw new Error('status ' + r.status);
+    const data = await r.json();
+    (data.items || []).forEach(it => {
+      if (it && it.slug) titles[it.slug] = it.title || it.slug;
+    });
+  }catch(e){ /* offline: pakai fallback */ }
+  renderHier();
+}
+
+setTotal();
+setReco();
+renderHier();
+loadTitles();
 </script>
 
 <script type="module">

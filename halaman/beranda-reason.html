@@ -594,6 +594,8 @@ const API = (() => { try { const s=localStorage.getItem('reason_api'); if(s)retu
 
 /* ---- Materi nyata dari backend (/api/materi) ---- */
 const ICON_SVG = {
+  rec: '<svg viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="5" rx="1.5"/><rect x="2.5" y="16.5" width="6" height="5" rx="1.5"/><rect x="15.5" y="16.5" width="6" height="5" rx="1.5"/><path d="M12 7.5v3M5.5 16.5v-3a1 1 0 011-1h11a1 1 0 011 1v3"/></svg>',
+  ind: '<span class="sigma">∑</span>',
   rekursi: '<svg viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="5" rx="1.5"/><rect x="2.5" y="16.5" width="6" height="5" rx="1.5"/><rect x="15.5" y="16.5" width="6" height="5" rx="1.5"/><path d="M12 7.5v3M5.5 16.5v-3a1 1 0 011-1h11a1 1 0 011 1v3"/></svg>',
   induksi: '<span class="sigma">∞</span>',
   graf: '<svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 7.5l3.5 8M17 7.5l-3.5 8M7.5 6h9"/></svg>',
@@ -602,19 +604,18 @@ const ICON_SVG = {
   inheritance: '<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="5" rx="1.5"/><rect x="3" y="16" width="6" height="5" rx="1.5"/><rect x="15" y="16" width="6" height="5" rx="1.5"/><path d="M12 8v4M6 16v-2h12v2"/></svg>',
 };
 function iconKey(slug){
-  if (slug.includes('rekursi')) return 'rekursi';
-  if (slug.includes('induksi')) return 'induksi';
-  if (slug.includes('graf')) return 'graf';
-  if (slug.includes('exception')) return 'exception';
-  if (slug.includes('inheritance') || slug.includes('polymorphism')) return 'inheritance';
+  if (slug.startsWith('mhs-')) return 'class';
+  if (slug.includes('etika') || slug.includes('sitasi')) return 'rec';
+  if (slug.includes('struktur') || slug.includes('menulis')) return 'ind';
+  if (slug.includes('manajemen')) return 'graf';
+  if (slug.includes('businessplan')) return 'exception';
   return 'class';
 }
 function icoClass(slug){
-  if (slug.includes('rekursi')) return 'k-rec';
-  if (slug.includes('induksi')) return 'k-ind';
-  if (slug.includes('graf')) return 'k-graf';
-  if (slug.includes('exception')) return 'k-exc';
-  if (slug.includes('class') || slug.includes('object')) return 'k-obj';
+  if (slug.startsWith('mhs-')) return 'k-obj';
+  if (slug.startsWith('penelitian')) return 'k-rec';
+  if (slug.startsWith('manajemen')) return 'k-graf';
+  if (slug.startsWith('businessplan')) return 'k-exc';
   return 'k-pbo';
 }
 function tileClass(slug, i){
@@ -623,12 +624,19 @@ function tileClass(slug, i){
 function shortTitle(t){
   return String(t || '').split('—')[0].split('–')[0].trim();
 }
+const MATKUL_SHORT = {
+  'Metodologi Penelitian': 'Penelitian',
+  'Manajemen Operasional': 'Manajemen',
+  'Sistematika Penulisan Business Plan': 'Business Plan',
+};
 function matkulShort(m){
-  return m === 'Matematika Diskrit' ? 'Diskrit' : 'PBO';
+  if(!m) return '';
+  if(MATKUL_SHORT[m]) return MATKUL_SHORT[m];
+  return String(m).split(/\s+/)[0] || m;
 }
 
 let MATERI = [];
-let topic = '';          // slug asli backend, mis. diskrit-rekursi
+let topic = '';          // slug asli backend, mis. penelitian-etika-plagiarisme
 let topicTitle = '';
 
 function pickTopic(el){
@@ -686,8 +694,9 @@ function updateResumeCard(){
   if(!goal && !title){ card.hidden = true; return; }
   const b = card.querySelector('#resumeTitle');
   if(!display){
-    const matkul = goal.startsWith('pbo') ? 'PBO' : 'Matematika Diskrit';
-    display = title ? (matkul + ' — ' + title) : (goal || matkul);
+    const it = MATERI.find(m => m.slug === goal);
+    const matkul = it && it.matkul ? matkulShort(it.matkul) : '';
+    display = title ? (matkul ? (matkul + ' — ' + title) : title) : (goal || matkul || 'Sesi lanjutan');
   }
   if(b) b.textContent = display;
   card.hidden = false;

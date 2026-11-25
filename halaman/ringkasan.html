@@ -190,15 +190,16 @@ function openMap(){renderMap();showScreen('s-map')}
 
 /* ============ TOPIK dari reason_goal (sinkron diagnostik/latihan) ============ */
 const TOPIC_NAMES = {
-  'diskrit-rekursi': 'Rekursi · Matematika Diskrit',
-  'diskrit-induksi': 'Induksi · Matematika Diskrit',
-  'diskrit-graf': 'Teori Graf · Matematika Diskrit',
-  'pbo-class-object': 'Class & Object · PBO',
-  'pbo-exception': 'Exception · PBO',
-  'pbo-inheritance-polymorphism': 'Inheritance & Polimorfisme · PBO',
-  rekursi: 'Rekursi · Matematika Diskrit',
-  induksi: 'Induksi · Matematika Diskrit',
-  graf: 'Teori Graf · Matematika Diskrit',
+  'penelitian-etika-plagiarisme': 'Etika & Plagiarisme · Metodologi Penelitian',
+  'penelitian-sitasi-authorship': 'Sitasi & Authorship · Metodologi Penelitian',
+  'penelitian-struktur-skripsi': 'Struktur Skripsi · Metodologi Penelitian',
+  'penelitian-menulis-laporan': 'Menulis Laporan · Metodologi Penelitian',
+  'manajemen-konsep-perencanaan': 'Konsep Perencanaan · Manajemen Operasional',
+  'manajemen-sumberdaya-kualitas': 'Sumber Daya & Kualitas · Manajemen Operasional',
+  'manajemen-persediaan-efisiensi': 'Persediaan & Efisiensi · Manajemen Operasional',
+  'businessplan-sistematika': 'Sistematika BP · Business Plan',
+  'businessplan-executive-summary': 'Executive Summary · Business Plan',
+  'businessplan-model-pasar': 'Model & Pasar · Business Plan',
 };
 function reasonGoalSlug(){ try { return localStorage.getItem('reason_goal') || ''; } catch(e){ return ''; } }
 function reasonGoalTitle(){
@@ -214,29 +215,46 @@ function topicShort(){
 /* Daftar konsep authored; skor hanya muncul setelah ada bukti grade/recheck. */
 function baseConcepts(slug){
   const B=(id,name,icon)=>({id,name,icon,status:'unmeasured',score:null,source:'Belum ada bukti penilaian.'});
-  if(slug==='diskrit-rekursi'||slug==='rekursi')return[
-    B('function','Fungsi & pemanggilan','ƒ'),B('notation','Membaca notasi','≠'),B('baseCase','Base case','⏹'),
-    B('callStack','Jejak eksekusi (call stack)','↕'),B('trace','Menelusuri nilai kembali','↩'),B('branch','Rekursi bercabang','⑂')
+  if(slug.startsWith('mhs-'))return[];
+  if(slug==='penelitian-etika-plagiarisme')return[
+    B('etika','Prinsip etika','§'),B('allea','Prinsip ALLEA','⚖'),B('plagiat','Jenis plagiarisme','©'),
+    B('selfplag','Self-plagiarism','🔁'),B('tingkat','Tingkat keseriusan','▲'),B('pelanggaran','Bentuk pelanggaran','⚠')
   ];
-  if(slug==='diskrit-induksi'||slug==='induksi')return[
-    B('basis','Basis (n = 0 / 1)','①'),B('asumsi','Asumsi induktif','∴'),B('langkah','Langkah induktif (k → k+1)','→'),
-    B('rumus','Membaca rumus Σ','Σ'),B('pola','Pola & hipotesis','∴'),B('bukti','Menulis bukti lengkap','✓')
+  if(slug==='penelitian-sitasi-authorship')return[
+    B('parafrase','Teknik parafrase','✎'),B('kutipan','Kutipan APA 7','❝'),B('turnitin','Baca Turnitin','%'),
+    B('fabrif','Fabrikasi & falsifikasi','⚠'),B('author','Kriteria ICMJE','✍'),B('ai','Etika AI','🤖')
   ];
-  if(slug==='diskrit-graf'||slug==='graf')return[
-    B('derajat','Derajat simpul','●'),B('jalur','Jalur & lintasan','↗'),B('siklus','Siklus','⟳'),
-    B('adj','Matriks adjasensi','▦'),B('traverse','DFS / BFS','⇅'),B('bobot','Graf berbobot','⚖')
+  if(slug==='penelitian-struktur-skripsi')return[
+    B('proposal','Proposal vs skripsi','⇄'),B('struktur','Struktur BAB I–V','☰'),B('latar','Alur latar belakang','→'),
+    B('rumusan','Rumusan masalah','?'),B('literatur','Fungsi literatur','📖'),B('metode','Elemen BAB III','⚙')
   ];
-  if(slug==='pbo-class-object')return[
-    B('class','Class blueprint','▣'),B('object','Object / instance','◉'),B('attr','Atribut & field','⊞'),
-    B('method','Method & behavior','ƒ'),B('encap','Enkapsulasi','🔐'),B('abstract','Abstraksi data','◈')
+  if(slug==='penelitian-menulis-laporan')return[
+    B('hasil','Hasil vs pembahasan','≠'),B('formula','Formula 6 langkah','⑥'),B('kesimpulan','Dasar kesimpulan','✓'),
+    B('abstrak','Abstrak 500 kata','Σ'),B('proses','Proses menulis','↻'),B('sitasi','Sinkron sitasi','⇄')
   ];
-  if(slug==='pbo-exception')return[
-    B('trycatch','try – catch','⚡'),B('finally','finally','⏷'),B('throw','throw / throws','throw'),
-    B('types','Jenis exception','⚠'),B('cleanup','Resource cleanup','🧹'),B('custom','Custom exception','✎')
+  if(slug==='manajemen-konsep-perencanaan')return[
+    B('pengertian','Pengertian','§'),B('tahapan','Tahapan perencanaan','①'),B('tujuan','Tujuan operasional','◎'),
+    B('manfaat','Manfaat','＋'),B('evaluasi','Evaluasi rencana','⟳'),B('contoh','Contoh usaha','💡')
   ];
-  if(slug==='pbo-inheritance-polymorphism')return[
-    B('inherit','Inheritance','⇈'),B('override','Override method','✎'),B('poly','Polimorfisme','◈'),
-    B('super','super / this','⬆'),B('abstract','Abstract class','_abstract'),B('iface','Interface','interface')
+  if(slug==='manajemen-sumberdaya-kualitas')return[
+    B('bahan','Bahan baku','📦'),B('sdm','Tenaga kerja','👥'),B('kualprod','Kualitas produk','◈'),
+    B('kualjasa','Kualitas jasa','✿'),B('standar','Standar & pemeriksaan','📏'),B('peralatan','Peralatan','⚙')
+  ];
+  if(slug==='manajemen-persediaan-efisiensi')return[
+    B('fifo','Metode FIFO','⇉'),B('eoq','EOQ','Σ'),B('jit','Just in Time','⏱'),
+    B('efisiensi','Efisiensi','↓'),B('produktivitas','Produktivitas','↑'),B('stok','Risiko stok','⚠')
+  ];
+  if(slug==='businessplan-sistematika')return[
+    B('pengertian','Pengertian BP','§'),B('tujuan','Tujuan BP','◎'),B('isi','10 bagian isi','☰'),
+    B('awal','Bagian awal','≡'),B('akhir','Bagian akhir','∎'),B('alur','Urutan penulisan','→')
+  ];
+  if(slug==='businessplan-executive-summary')return[
+    B('waktu','Waktu penulisan','⏱'),B('komponen','8 komponen','☰'),B('fungsi','Fungsi ES','◎'),
+    B('visi','Visi & misi','★'),B('latar','Latar belakang','→'),B('deskripsi','Deskripsi usaha','§')
+  ];
+  if(slug==='businessplan-model-pasar')return[
+    B('segmentasi','Segmenting','◧'),B('targeting','Targeting','◎'),B('positioning','Positioning','◈'),
+    B('produk','Deskripsi produk','▣'),B('canvas','Business model canvas','▦'),B('bp_bm','BP vs BM','⇄')
   ];
   /* tanpa topik aktif: jangan menampilkan daftar konsep seolah ada materi */
   return[];
