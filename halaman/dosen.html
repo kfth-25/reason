@@ -17,6 +17,17 @@
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{font-family:var(--font);background:#DDE1EA;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.phone{width:390px;height:844px;max-height:100vh;background:var(--bg);border-radius:44px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 0 11px #111318,0 0 0 13px #2a2d35}
   @media(max-width:520px){body{padding:0}.phone{width:100%;height:100vh;border-radius:0;box-shadow:none}}.notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;background:#0B0D12;border-radius:20px;z-index:60}.statusbar{position:absolute;top:0;left:0;right:0;height:52px;z-index:55;display:flex;align-items:center;justify-content:space-between;padding:16px 28px 0;font-size:14px;font-weight:600;color:var(--text);pointer-events:none}.statusbar span:last-child{display:flex;gap:6px}.statusbar svg{width:16px;height:16px;fill:var(--text)}
   .screen{position:absolute;inset:0;padding-top:52px;padding-bottom:116px;overflow-y:auto;opacity:0;visibility:hidden;transform:translateX(16px);transition:opacity .3s,transform .3s,visibility .3s}.screen.active{opacity:1;visibility:visible;transform:translateX(0)}.screen::-webkit-scrollbar{display:none}.pad{padding:0 20px}.nav{position:absolute;left:50%;bottom:26px;bottom:calc(26px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--nav-dark);border-radius:var(--r-pill);display:flex;gap:6px;padding:8px;z-index:50;box-shadow:0 12px 32px rgba(0,0,0,.28)}.nav button{width:58px;height:58px;border:none;border-radius:50%;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center}.nav button svg{width:23px;height:23px;stroke:#7C8496;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.nav button.on{background:#F6F6F9}.nav button.on svg{stroke:#15161C}.nav-dosen{position:absolute;left:16px;right:16px;bottom:calc(26px + env(safe-area-inset-bottom,0px));background:var(--nav-dark);border-radius:22px;display:flex;gap:4px;padding:8px 6px;z-index:50;box-shadow:0 12px 32px rgba(0,0,0,.28)}.nav-dosen button{flex:1;min-width:0;border:none;border-radius:16px;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px 6px;font-family:var(--font);transition:background .15s}.nav-dosen button svg{width:21px;height:21px;stroke:#7C8496;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.nav-dosen button span{font-size:9.5px;font-weight:600;letter-spacing:.2px;color:#7C8496;white-space:nowrap}.nav-dosen button.on{background:#F6F6F9}.nav-dosen button.on svg{stroke:#15161C}.nav-dosen button.on span{color:#15161C}.home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:var(--text);opacity:.85;z-index:50}.theme-fab{position:absolute;top:60px;right:16px;z-index:70;width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;background:var(--card);box-shadow:var(--shadow);font-size:16px}.pill-btn{border:none;font-family:var(--font);cursor:pointer;border-radius:var(--r-pill);font-weight:600;transition:transform .15s}.pill-btn:active{transform:scale(.96)}.toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%) translateY(20px);background:var(--nav-dark);color:#F6F6F9;font-size:12px;font-weight:600;padding:12px 20px;border-radius:var(--r-pill);z-index:85;max-width:86%;text-align:center;opacity:0;pointer-events:none;transition:all .3s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* GATE LOGIN DOSEN — tulis rubrik ke server butuh sesi dosen */
+  .gate{position:absolute;inset:0;background:rgba(10,12,20,.55);z-index:90;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+  .gate.show{display:flex}
+  .gate-card{background:var(--bg);border-radius:24px;padding:22px 20px;width:100%;max-width:320px;box-shadow:var(--shadow)}
+  .gate-card b{font-size:15px;color:var(--text)}
+  .gate-card>p{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+  .gate-err{color:#C0392B !important;font-weight:600}
+  .gate-actions{display:flex;gap:8px;margin-top:14px}
+  .gate-actions .pill-btn{flex:1;width:auto;margin-top:0;padding:12px;font-size:12px}
+  .gate-actions .primary{background:var(--blue);color:#fff}
+  .gate-actions .secondary{background:var(--card);color:var(--text);border:1.5px solid var(--line)}
   .top-head{display:flex;align-items:center;gap:12px;padding:13px 44px 0 0}.brand{width:42px;height:42px;border-radius:14px;background:var(--nav-dark);display:flex;align-items:center;justify-content:center;flex-shrink:0}.brand svg{width:22px;height:22px;stroke:var(--blue);fill:none;stroke-width:2;stroke-linecap:round}.top-head .ht{flex:1}.top-head b{display:block;font-size:15px;color:var(--text)}.top-head span{font-size:11.5px;color:var(--muted)}
   .privacy{display:flex;align-items:center;gap:7px;margin-top:14px;font-size:10.5px;color:var(--muted);line-height:1.45}.privacy svg{width:14px;height:14px;stroke:var(--blue);fill:none;stroke-width:2;flex-shrink:0}.topic-select{width:100%;margin-top:12px;border:1.5px solid var(--line);border-radius:15px;background:var(--card);padding:13px 15px;font-family:var(--font);font-size:13px;font-weight:600;color:var(--text);outline:none}.topic-select:focus{border-color:var(--blue)}
   .hero{margin-top:14px;background:var(--purple);border-radius:26px;padding:21px 19px;color:#15161C;position:relative;overflow:hidden}.hero::after{content:"📊";position:absolute;right:13px;top:13px;font-size:26px;transform:rotate(13deg);opacity:.9;pointer-events:none}.hero h1{max-width:82%}.hero .eyebrow{font-size:10px;font-weight:700;letter-spacing:.4px}.hero h1{font-size:20px;line-height:1.3;margin-top:6px}.hero p{font-size:11.5px;font-weight:600;line-height:1.55;margin-top:6px;opacity:.8}.stats{display:flex;gap:9px;margin-top:12px}.stat{flex:1;background:var(--card);border-radius:18px;padding:13px 12px;box-shadow:var(--shadow)}.stat b{display:block;font-size:20px;color:var(--text)}.stat small{display:block;font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4}
@@ -147,6 +158,19 @@
   <div class="overlay" id="overlay" onclick="closeSheet()"></div>
   <div class="sheet" id="sheet"><div class="grab"></div><h3 id="sheetTitle"></h3><div class="meta" id="sheetMeta"></div><span class="anon">🛡️ Contoh agregat & anonim</span><div id="sheetContent"></div><button class="pill-btn primary" onclick="closeSheet()">Tutup</button></div>
   <div class="home-ind"></div><div class="toast" id="toast"></div>
+  <!-- GATE: password dosen sebelum sesi dipakai menulis rubrik ke backend -->
+  <div class="gate" id="dosenGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <div class="gate-card">
+      <b id="gateTitle">Masuk sebagai dosen</b>
+      <p id="gateWho">Sandi akun dosen diperlukan untuk menyimpan rubrik ke server.</p>
+      <input type="password" id="gatePw" class="input" placeholder="Password akun dosen" autocomplete="current-password">
+      <p class="gate-err" id="gateErr" style="display:none"></p>
+      <div class="gate-actions">
+        <button class="pill-btn primary" id="gateGo" onclick="gateSubmit()">Masuk</button>
+        <button class="pill-btn secondary" onclick="closeGate()">Batal</button>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
 function setTheme(mode){document.getElementById('phone').dataset.theme=mode;document.getElementById('themeBtn').textContent=mode==='dark'?'☀️':'🌙'}
@@ -298,6 +322,52 @@ const DOSEN=[
 ];
 
 let currentDosen=null,currentTopic=null,scope='all',currentStudent=null,currentClass=null;
+
+/* ============ AUTH DOSEN — gate password sebelum menulis rubrik ============ */
+let gateFor=null;
+function dosenTok(){try{return{nim:localStorage.getItem('reason_dosen_nim'),tok:localStorage.getItem('reason_dosen_token')}}catch(e){return{nim:null,tok:null}}}
+function dosenAuthHeaders(){const s=dosenTok();return s.tok&&s.nim?{'Authorization':'Bearer '+s.tok}:null}
+function openDosenGate(id){
+  const d=DOSEN.find(x=>x.id===id);if(!d)return;
+  gateFor=id;
+  document.getElementById('gateWho').textContent='Masuk sebagai '+d.short+' — sandi akun dosen dipakai menyimpan rubrik ke server.';
+  document.getElementById('gatePw').value='';
+  document.getElementById('gateErr').style.display='none';
+  document.getElementById('dosenGate').classList.add('show');
+  setTimeout(()=>document.getElementById('gatePw').focus(),60);
+}
+function closeGate(){gateFor=null;document.getElementById('dosenGate').classList.remove('show')}
+function showGateErr(m){const el=document.getElementById('gateErr');el.textContent=m;el.style.display='block'}
+function gateSubmit(){
+  const id=gateFor,pw=document.getElementById('gatePw').value;
+  if(!id)return;
+  if(!pw){showGateErr('Password perlu diisi');return}
+  fetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nim:id,password:pw})})
+    .then(r=>r.ok?r.json():Promise.reject(r.status))
+    .then(data=>{
+      try{localStorage.setItem('reason_dosen_token',data.token);localStorage.setItem('reason_dosen_nim',id)}catch(e){}
+      closeGate();toast('Masuk sebagai '+ (DOSEN.find(x=>x.id===id)||{}).short);pilihDosen(id);
+    })
+    .catch(st=>{
+      showGateErr(st===429?'Terlalu banyak percobaan — tunggu sebentar':(st===401?'Password salah':'Backend tidak merespons — coba lagi'));
+    });
+}
+document.getElementById('gatePw').addEventListener('keydown',e=>{if(e.key==='Enter')gateSubmit()});
+function rubricWriteHeaders(extra){
+  const hd=Object.assign({'Content-Type':'application/json'},extra||{});
+  const auth=dosenAuthHeaders();if(auth)Object.assign(hd,auth);
+  return hd;
+}
+function onRubricAuthFail(status){
+  if(status===401||status===403){
+    try{localStorage.removeItem('reason_dosen_token');localStorage.removeItem('reason_dosen_nim')}catch(e){}
+    if(currentDosen)openDosenGate(currentDosen.id);
+    toast('Sesi dosen kedaluwarsa — masuk ulang untuk menyimpan');
+    return true;
+  }
+  return false;
+}
+
 function renderDosenList(){
   document.getElementById('dosenList').innerHTML=DOSEN.map(d=>`
     <button class="dosen-card" onclick="pilihDosen('${d.id}')">
@@ -322,8 +392,12 @@ function renderClassList(){
   }).join('');
 }
 function pilihDosen(id){
-  currentDosen=DOSEN.find(d=>d.id===id)||null;
-  if(!currentDosen)return;
+  const d=DOSEN.find(x=>x.id===id)||null;
+  if(!d)return;
+  /* gate: sesi dosen harus cocok dengan akun yang dipilih sebelum panel terbuka */
+  const s=dosenTok();
+  if(!s.tok||s.nim!==id){openDosenGate(id);return;}
+  currentDosen=d;
   document.getElementById('clsName').textContent=currentDosen.name;
   document.getElementById('matMatkul').textContent=currentDosen.matkul+' · '+currentDosen.name;
   scope='all';currentStudent=null;currentTopic=null;currentClass=null;
@@ -493,9 +567,12 @@ function syncRubrics(){
     if(serverRubricNames.has(r.name)||syncPending.has(r.name))return;
     syncPending.add(r.name);
     fetch(API+'/rubrics',{
-      method:'POST',headers:{'Content-Type':'application/json'},
+      method:'POST',headers:rubricWriteHeaders(),
       body:JSON.stringify({dosen_id:currentDosen.id,name:r.name,criteria:r.criteria,topic:r.topic||null,scope:r.scope||{type:'all'}})
-    }).then(x=>x.ok?x.json():null).then(d=>{
+    }).then(x=>{
+      if(onRubricAuthFail(x.status)){syncPending.delete(r.name);return null}
+      return x.ok?x.json():null;
+    }).then(d=>{
       syncPending.delete(r.name);
       if(!d||!d.rubric)return;
       serverRubricNames.add(r.name);
@@ -520,7 +597,7 @@ function rubricScopeTypeChange(){
   else box.innerHTML=currentDosen?currentDosen.students.map(s=>`<label><input type="checkbox" class="rsStu" value="${s.id}"> ${escapeHTML(s.name)} · ${s.nim}</label>`).join(''):'';
 }
 function renderRubrics(){document.getElementById('rubricList').innerHTML=rubrics.map(r=>`<div class="rubric-card"><div class="rubric-head"><div class="rc"><b>${escapeHTML(r.name)}</b><small>Berlaku untuk · ${escapeHTML(scopeLabel(r.scope))}</small></div><span class="status ${r.status}">${r.status==='approved'?'Disetujui':'Draf'}</span></div><div class="rc-label">Alasan yang memenuhi rubrik</div><p>${escapeHTML(r.criteria)}</p><div class="rubric-actions"><button class="pill-btn small-btn alt" onclick="editRubric(${r.id})">Edit</button><button class="pill-btn small-btn" ${r.status==='approved'?'disabled':''} onclick="approveRubric(${r.id})">${r.status==='approved'?'✓ Disetujui':'Setujui rubrik'}</button></div></div>`).join('')}
-function approveRubric(id){const r=rubrics.find(x=>x.id===id);if(!r)return;r.status='approved';saveRubrics();renderRubrics();fetch(API+'/rubrics/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status:'approved'})}).catch(()=>{});toast('Rubrik disetujui — dapat dipakai agen untuk menilai alasan')}
+function approveRubric(id){const r=rubrics.find(x=>x.id===id);if(!r)return;r.status='approved';saveRubrics();renderRubrics();fetch(API+'/rubrics/'+id,{method:'PATCH',headers:rubricWriteHeaders(),body:JSON.stringify({status:'approved'})}).then(x=>{onRubricAuthFail(x.status)}).catch(()=>{});toast('Rubrik disetujui — dapat dipakai agen untuk menilai alasan')}
 function editRubric(id){const r=rubrics.find(x=>x.id===id);if(!r)return;document.getElementById('rubricEditor').style.display='block';document.getElementById('newConcept').value=r.name;document.getElementById('newReason').value=r.criteria;document.getElementById('newMisconception').value='Contoh miskonsepsi akan ditinjau dosen.';const type=r.scope&&(r.scope.type==='classes'||r.scope.type==='people')?r.scope.type:'all';document.getElementById('rubricScopeType').value=type;rubricScopeTypeChange();if(type==='classes')(r.scope.keys||[]).forEach(k=>{const cb=document.querySelector('.rsCls[value="'+k+'"]');if(cb)cb.checked=true});if(type==='people')(r.scope.ids||[]).forEach(sid=>{const cb=document.querySelector('.rsStu[value="'+sid+'"]');if(cb)cb.checked=true});if(r.scope&&r.scope.type==='one'){const cb=document.querySelector('.rsStu[value="'+r.scope.id+'"]');if(cb)cb.checked=true}document.getElementById('rubricEditor').scrollIntoView({behavior:'smooth',block:'start'});toast('Ubah lalu simpan sebagai draf baru')}
 function openRubricEditor(){document.getElementById('rubricEditor').style.display=document.getElementById('rubricEditor').style.display==='none'?'block':'none'}
 function saveRubric(){const name=document.getElementById('newConcept').value.trim(),criteria=document.getElementById('newReason').value.trim();if(!name||!criteria){toast('Nama konsep dan kriteria alasan perlu diisi');return}const type=document.getElementById('rubricScopeType').value;let sc={type:'all'};if(type==='classes'){const keys=Array.from(document.querySelectorAll('.rsCls:checked')).map(i=>i.value);if(!keys.length){toast('Pilih minimal satu kelas');return}sc={type:'classes',keys}}else if(type==='people'){const ids=Array.from(document.querySelectorAll('.rsStu:checked')).map(i=>i.value);if(!ids.length){toast('Pilih minimal satu mahasiswa');return}sc={type:'people',ids}}rubrics.push({id:Date.now(),name,criteria,status:'draft',scope:sc});saveRubrics();renderRubrics();document.getElementById('rubricEditor').style.display='none';document.getElementById('newConcept').value='';document.getElementById('newReason').value='';document.getElementById('newMisconception').value='';document.getElementById('rubricScopeType').value='all';rubricScopeTypeChange();toast('Rubrik tersimpan — '+scopeLabel(sc))}
