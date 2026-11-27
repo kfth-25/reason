@@ -222,13 +222,26 @@ const DOSEN=[
       ],
       insight:'Tekankan alur <b>basis → hipotesis → langkah induktif → simpulan</b>. Minta mahasiswa menulis ulang satu bukti dengan menomori tiap langkah sebelum masuk soal berikutnya.'},
     graf:{label:'Teori Graf Dasar · rubrik masih draf',draft:true,
-      hero:{t:'',p:''},stats:[],chart:[],gaps:[],insight:''}
+      hero:{t:'',p:''},stats:[],chart:[],gaps:[],insight:''},
+    metodologi:{label:'Metodologi Penelitian · 22 mahasiswa',
+      hero:{t:'Etika & sitasi paling sering terlewat saat menyusun karya.',p:'Jawaban menyebut sumber, tetapi alasan belum membedakan kutipan langsung dan parafrasa.'},
+      stats:[['22','mahasiswa dalam agregat'],['63%','rata-rata penguasaan'],['6','benar, alasan keliru']],
+      chart:[['Etika',78],['Sitasi',64],['Struktur',52,'var(--orange)'],['Menulis laporan',43,'var(--pink)']],
+      gaps:[
+        {k:'met1',t:'Sitasi & parafrasa',s:'10 dari 22 perlu penguatan',pct:49,foot:['5 jawaban benar, alasan keliru','10 sesi cek ulang'],bar:'var(--pink)',
+         ex:[{q:'“Paragraf dari jurnal boleh dipakai langsung asal dicantumkan daftar pustaka.”',w:'Kutipan langsung tetap butuh penanda kutip dan nomor halaman; daftar pustaka saja tidak cukup.'},{q:'“Ganti beberapa kata sudah dianggap bukan plagiat.”',w:'Parafrasa menuntut penulisan ulang ide dengan struktur kalimat sendiri, bukan sekadar sinonim.'}]},
+        {k:'met2',t:'Struktur skripsi',s:'8 dari 22 perlu penguatan',pct:45,foot:['4 jawaban benar, alasan keliru','8 sesi cek ulang'],bar:'var(--orange)',
+         ex:[{q:'“Bagian pembahasan boleh ditulis sebelum metode.”',w:'Urutan bab mengikuti alur penelitian: metode mendahului hasil dan pembahasan.'}]},
+        {k:'met3',t:'Menulis laporan',s:'6 dari 22 perlu penguatan',pct:34,foot:['3 jawaban benar, alasan keliru','7 sesi cek ulang'],bar:'var(--purple)',
+         ex:[{q:'“Laporan cukup berisi angka-angka.”',w:'Laporan harus memuat tujuan, metode, temuan, dan penafsiran yang saling terhubung.'}]}
+      ],
+      insight:'Telusuri satu paragraf jurnal: minta mahasiswa menandai mana <b>kutipan langsung</b>, mana <b>parafrasa</b>, dan mana ide sendiri. Ulangi dengan satu kasus hasil cek plagiarism.'}
   },
   materials:[
     {ico:'📘',name:'Modul Metodologi Penelitian — Etika & Plagiarisme.pdf',meta:'2,4 MB · diunggah 12 Nov 2026'},
     {ico:'📝',name:'Catatan kuliah — Sitasi & Authorship.docx',meta:'184 KB · diunggah 12 Nov 2026'}
   ],
-  concepts:['Fungsi & pemanggilan','Base case','Jejak eksekusi','Nilai saat kembali'],
+  concepts:['Fungsi & pemanggilan','Base case','Jejak eksekusi','Nilai saat kembali','Etika & plagiarisme','Sitasi & authorship','Struktur skripsi','Menulis laporan'],
   rubrics:[
     {id:1,name:'Base case',criteria:'Menjelaskan bahwa kasus dasar menghentikan pemanggilan diri dan menyebut nilai kembalian yang sesuai.',status:'approved'},
     {id:2,name:'Jejak eksekusi (call stack)',criteria:'Menelusuri urutan masuk, keadaan menunggu, dan urutan kembali dari kasus dasar.',status:'approved'},
